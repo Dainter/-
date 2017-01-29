@@ -357,7 +357,7 @@ namespace GraphDB.Core
         }
 
         //加入节点（接口）
-        public void AddNode(string sName, string sType, ref ErrorCode err, string sProperities = "1")
+        public void AddNode(string sName, string sType, ref ErrorCode err, XmlNode payload)
         {
             Node newNode = null;
 
@@ -368,7 +368,7 @@ namespace GraphDB.Core
                 return;
             }
             //构造新的节点
-            newNode = new Node(intMaxNodeNum,sName, sType, sProperities);
+            newNode = new Node(intMaxNodeNum,sName, sType, payload);
             if (newNode == null)
             {
                 err = ErrorCode.CreateNodeFailed;
@@ -447,7 +447,7 @@ namespace GraphDB.Core
 
         //修改节点内部数据（接口）
         public void ModifyNode(string sName, string sType,
-                                                     ModifyOperation opt, string sProperities, ref ErrorCode err)
+                                                     ModifyOperation opt, XmlNode newPayload, ref ErrorCode err)
         {
             Node tarNode;
 
@@ -458,14 +458,7 @@ namespace GraphDB.Core
                 err = ErrorCode.NodeNotExists;
                 return;
             }
-            if (opt == ModifyOperation.Delete)
-            {
-                tarNode.RemoveProperty(sProperities);
-            }
-            else
-            {
-                tarNode.AddProperty(sProperities, opt);
-            }
+            tarNode.Payload = newPayload;
             err = ErrorCode.NoError;
             return;
         }

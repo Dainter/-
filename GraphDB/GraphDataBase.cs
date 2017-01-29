@@ -5,7 +5,6 @@ using System.Text;
 using System.Xml;
 using GraphDB.Core;
 using GraphDB.IO;
-using GraphDB.Parser;
 using GraphDB.Layout;
 
 namespace GraphDB
@@ -15,7 +14,6 @@ namespace GraphDB
     {
         Graph graph;
         IfIOStrategy IOhandler;
-        CypherParser parser;
         CircleLayout circo;
 
         //属性
@@ -84,7 +82,6 @@ namespace GraphDB
         public GraphDataBase()
         {
             graph = new Graph();
-            parser = new CypherParser();
         }
 
         public GraphDataBase(int iNum, int iRadius)
@@ -134,9 +131,9 @@ namespace GraphDB
         }
 
         //插入数据节点
-        public void AddNodeData(string sName, string sType, ref ErrorCode err, string sProperities = "1")
+        public void AddNodeData(string sName, string sType, ref ErrorCode err, XmlNode payload)
         {
-            graph.AddNode(sName, sType, ref err, sProperities);
+            graph.AddNode(sName, sType, ref err, payload);
         }
 
         //插入数据节点2
@@ -153,9 +150,9 @@ namespace GraphDB
         }
         //修改节点内部数据
         public void ModifyNodeData(string sName, string sType,
-                                                     ModifyOperation opt, string sProperities, ref ErrorCode err)
+                                                     ModifyOperation opt, XmlNode payload, ref ErrorCode err)
         {
-            graph.ModifyNode(sName, sType, opt, sProperities, ref err);
+            graph.ModifyNode(sName, sType, opt, payload, ref err);
         }
         //修改连边取值
         public void ModifyEdgeData(string sStartName, string sStartType,
@@ -176,12 +173,7 @@ namespace GraphDB
         {
             graph.RemoveEdge(sStartName, sStartType, sEndName, sEndType, sType, ref err);
         }
-        //执行查询语句
-        public string DataQueryExecute(string strCypher, ref ErrorCode err)
-        {
-            //查询语句传入解析器
-            return parser.QueryExecute(ref graph, strCypher, ref err);
-        }
+        
         //查询函数，返回指定索引处的节点
         public Node GetNodeByIndex(int index)
         {

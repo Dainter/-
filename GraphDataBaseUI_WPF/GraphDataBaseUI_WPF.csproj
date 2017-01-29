@@ -25,6 +25,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -127,12 +129,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GraphDB\GraphDB.csproj">
-      <Project>{FE3FF803-3314-4205-B03C-3F31C187BCD6}</Project>
-      <Name>GraphDB</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\Network.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +217,12 @@
   <ItemGroup>
     <Resource Include="images\RemoveProperty.png" />
     <Resource Include="images\RemoveProperty_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphDB\GraphDB.csproj">
+      <Project>{fe3ff803-3314-4205-b03c-3f31c187bcd6}</Project>
+      <Name>GraphDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

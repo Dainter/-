@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GraphDB.Parser;
 
 namespace GraphDB.Core
 {
@@ -13,7 +12,7 @@ namespace GraphDB.Core
         int intNodeNum;                           //节点编号
         string nodeName;
         string nodeType;
-        List<NodeProperty> Attribute;
+        XmlNode xmlPayload;
         List<Edge> OutLink;       //连边 使用字典结构存放（目标节点号，连边对象）
         List<Edge> InLink;
         int intSaveIndex;
@@ -39,13 +38,18 @@ namespace GraphDB.Core
                 return nodeType;
             }
         }
-        public List<NodeProperty> Properties
+        public XmlNode Payload
         {
             get
             {
-                return Attribute;
+                return xmlPayload;
+            }
+            set
+            {
+                xmlPayload = value;
             }
         }
+
         public int InDegree
         {
             get
@@ -87,19 +91,19 @@ namespace GraphDB.Core
         }
         //方法///////////////////////////////
         //节点类Node构造函数
-        public Node(int intMaxNodeNum, string newName, string newType, string sProperities = "")    
+        public Node(int intMaxNodeNum, string newName, string newType, XmlNode payload = null)    
         {
             this.intNodeNum = intMaxNodeNum;
             this.nodeName = newName;
             this.nodeType = newType;
             this.intSaveIndex = this.intNodeNum;
-            Attribute = new List<NodeProperty>();
+            this.xmlPayload = new XmlDocument().CreateElement("Payload");
+            if (payload != null)
+            {
+                this.xmlPayload.AppendChild(payload);
+            }
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
-            if(sProperities != "")
-            {
-                AddProperty(sProperities);
-            }
             intMaxNodeNum++;
         }
 
@@ -109,37 +113,35 @@ namespace GraphDB.Core
             this.nodeName = string.Copy(oriNode.Name);
             this.nodeType = string.Copy(oriNode.Type);
             this.intSaveIndex = this.intNodeNum;
-            Attribute = new List<NodeProperty>();
+            this.Payload = oriNode.Payload.CloneNode(true);
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
-            foreach (NodeProperty np in oriNode.Attribute)
-            {
-                Attribute.Add(new NodeProperty(string.Copy(np.Key), string.Copy(np.Value)));
-            }
         }
         //xml构造函数
         public Node(int intMaxNodeNum, XmlElement xNode)
         {
             string newType, newName;
-            XmlNode xmlProperties;
+            XmlNodeList xmlProperties;
 
             this.intNodeNum = intMaxNodeNum;
             //取出制定标签的Inner Text
             newType = GetText(xNode, "Type");
             newName = GetText(xNode, "Name");
-            xmlProperties = xNode.GetElementsByTagName("Properties").Item(0);
+            xmlProperties = xNode.GetElementsByTagName("Payload");
+            if (xmlProperties.Count > 0)
+            {
+                xmlPayload = xmlProperties.Item(0);
+            }
+            else
+            {
+                this.xmlPayload = new XmlDocument().CreateElement("Payload");
+            }
             //赋值与初始化
             this.nodeType = newType;
             this.nodeName = newName;
             this.intSaveIndex = this.intNodeNum;
-            Attribute = new List<NodeProperty>();
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
-            //加入用户自定义属性
-            foreach(XmlElement curNode in xmlProperties.ChildNodes)
-            {
-                Attribute.Add(new NodeProperty(curNode));
-            }
         }
         //工具函数，从xml节点中读取某个标签的InnerText
         string GetText(XmlElement curNode, string sLabel)
@@ -162,7 +164,6 @@ namespace GraphDB.Core
         public virtual XmlElement ToXML(ref XmlDocument doc)
         {
             XmlElement curNode = doc.CreateElement("Node");
-            XmlElement curProperties = doc.CreateElement("Properties");
             XmlElement type_xml, name_xml;
             XmlText type_txt, name_txt;
 
@@ -176,115 +177,11 @@ namespace GraphDB.Core
             //将标题元素赋予文本内容
             name_xml.AppendChild(name_txt);
             type_xml.AppendChild(type_txt);
-            foreach (NodeProperty np in Attribute)
-            {
-                curProperties.AppendChild(np.ToXML(ref doc));
-            }
             //向当前节点中加入各属性节点
             curNode.AppendChild(name_xml);
             curNode.AppendChild(type_xml);
-            curNode.AppendChild(curProperties);
+            curNode.AppendChild(doc.ImportNode(xmlPayload, true));
             return curNode;
-        }
-
-        //增加自定义属性对
-        public void AddProperty(string sProperities, ModifyOperation opt = ModifyOperation.Append)
-        {
-            const string strKeyPairPattern = @"[\w]+:[\w]+";  //匹配目标"名称+取值"组合
-            MatchCollection matches;
-            Regex regObj;
-            NodeProperty newProperty;
-
-            if (opt == ModifyOperation.ReplaceAll)
-            {
-                Attribute.Clear();
-            }
-            regObj = new Regex(strKeyPairPattern);//正则表达式初始化，载入匹配模式
-            matches = regObj.Matches(sProperities);//正则表达式对分词结果进行匹配
-            if (matches.Count == 0)
-            {
-                return;
-            }
-            foreach (Match match in matches)//遍历匹配列表
-            {
-                newProperty = null;
-                newProperty = BuildProperty(match.Value);
-                if (newProperty != null)
-                {
-                    if (GetProperty(newProperty.Key) == null)
-                    {
-                        if (opt != ModifyOperation.Replace)
-                        {
-                            this.Attribute.Add(newProperty);
-                        }
-                    }
-                    else
-                    {
-                        if (opt == ModifyOperation.Replace)
-                        {
-                            ModifyProperty(newProperty);
-                        }
-                    }
-                }
-            }
-            return;
-        }
-        //构造属性对
-        NodeProperty BuildProperty(string sProperty)
-        {
-            string[] strSeg;
-            NodeProperty newProperty = null;
-
-            strSeg = sProperty.Split(new char[]{':'});
-            newProperty = new NodeProperty(strSeg[0], strSeg[1]);
-            return newProperty;
-        }
-        //检查属性对的key是否已经存在
-        NodeProperty GetProperty(string sKey)
-        {
-            foreach (NodeProperty tP in Attribute)
-            {
-                if (tP.Key == sKey)
-                {
-                    return tP;
-                }
-            }
-            return null;
-        }
-        //修改指定key的属性
-        void ModifyProperty(NodeProperty sProperty)
-        {
-            foreach (NodeProperty tP in Attribute)
-            {
-                if (tP.Key == sProperty.Key)
-                {
-                    tP.Value = sProperty.Value;
-                }
-            }
-        }
-        //删除属性对
-        public void RemoveProperty(string sProperities)
-        {
-            const string strKeyPairPattern = @"[\w]+";  //匹配目标"名称"组合
-            MatchCollection matches;
-            Regex regObj;
-            NodeProperty tp;
-
-            regObj = new Regex(strKeyPairPattern);//正则表达式初始化，载入匹配模式
-            matches = regObj.Matches(sProperities);//正则表达式对分词结果进行匹配
-            if (matches.Count == 0)
-            {
-                return;
-            }
-            foreach (Match match in matches)//遍历匹配列表
-            {
-                tp = GetProperty(match.Value);
-                if (tp != null)
-                {
-                    this.Attribute.Remove(tp);
-                }
-            }
-            return;
         }
 
         //增加连边
@@ -444,10 +341,6 @@ namespace GraphDB.Core
 
             strResult += "Name\t";
             strResult += "Type\t";
-            foreach (NodeProperty sProperty in this.Attribute)
-            {
-                strResult += sProperty.Key + "\t";
-            }
             return strResult + "\n";
         }
 
@@ -465,14 +358,6 @@ namespace GraphDB.Core
                 {
                     strResult += "Type\t";
                 }
-                foreach (NodeProperty sProperty in this.Attribute)
-                {
-                    if (sProperty.Key != label)
-                    {
-                        continue;
-                    }
-                    strResult += sProperty.Key + "\t";
-                }
             }
             return strResult + "\n";
         }
@@ -483,10 +368,6 @@ namespace GraphDB.Core
 
             strResult += this.Name+"\t";
             strResult += this.Type + "\t";
-            foreach (NodeProperty sProperty in this.Attribute)
-            {
-                strResult += sProperty.Value + "\t";
-            }
             return strResult + "\n";
         }
 
@@ -504,14 +385,6 @@ namespace GraphDB.Core
                 {
                     strResult += this.Type + "\t";
                 }
-                foreach (NodeProperty sProperty in this.Attribute)
-                {
-                    if (sProperty.Key != label)
-                    {
-                        continue;
-                    }
-                    strResult += sProperty.Value + "\t";
-                }
             }
             return strResult + "\n";
         }
@@ -522,10 +395,6 @@ namespace GraphDB.Core
 
             strResult +="Name:" + this.Name + "\n";
             strResult +="Type:" + this.Type ;
-            foreach (NodeProperty sProperty in this.Attribute)
-            {
-                strResult +="\n" + sProperty.Key + ":" + sProperty.Value;
-            }
             
             return strResult;
         }
@@ -561,47 +430,5 @@ namespace GraphDB.Core
             }
         }
 
-        public TreeNode Search(List<MatchRule> mRule, int level)
-        {
-            List<Edge> SearchList;
-	        TreeNode CurrentTN, ChildTN;
-	
-	        CurrentTN = new TreeNode(this.intNodeNum.ToString());
-	        if(level == mRule.Count)
-	        {//到底
-		        return CurrentTN;
-	        }
-	        if(mRule[level].Direction == "IN")
-	        {
-		        SearchList = this.InBound;
-	        }
-	        else
-	        {
-		        SearchList = this.OutBound;
-	        }
-	        foreach(Edge edge in SearchList)
-	        {
-		        if(mRule[level].MatchType(edge.Type) == true)
-		        {
-                    if (mRule[level].Direction == "IN")
-                    {
-                        ChildTN = edge.Start.Search(mRule, level + 1);
-                    }
-                    else
-                    {
-                        ChildTN = edge.End.Search(mRule, level + 1);
-                    }
-			        if(ChildTN != null)
-			        {
-                        CurrentTN.Nodes.Add(ChildTN);
-			        }
-		        }
-	        }
-            if (mRule[level].MatchCount(CurrentTN.Nodes.Count) == true)
-	        {
-		        return CurrentTN;
-	        }
-	        return null;
-        }
     }
 }

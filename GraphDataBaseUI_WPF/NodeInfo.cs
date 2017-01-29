@@ -10,7 +10,7 @@ namespace GraphDataBaseUI_WPF
     {
         string nodeName;
         string nodeType;
-        List<NodeProperty> Attribute;
+        //List<NodeProperty> Attribute;
 
         public string Name
         {
@@ -26,30 +26,30 @@ namespace GraphDataBaseUI_WPF
                 return nodeType;
             }
         }
-        public List<NodeProperty> Properties
-        {
-            get
-            {
-                return Attribute;
-            }
-        }
+        //public List<NodeProperty> Properties
+        //{
+        //    get
+        //    {
+        //        return Attribute;
+        //    }
+        //}
 
         public NodeInfo()
         {
             this.nodeName = "";
             this.nodeType = "";
-            Attribute = new List<NodeProperty>();
+            //Attribute = new List<NodeProperty>();
         }
 
         public NodeInfo(Node oriNode)
         {
             this.nodeName = string.Copy(oriNode.Name);
             this.nodeType = string.Copy(oriNode.Type);
-            Attribute = new List<NodeProperty>();
-            foreach (NodeProperty np in oriNode.Properties)
-            {
-                Attribute.Add(new NodeProperty(string.Copy(np.Key), string.Copy(np.Value)));
-            }
+            //Attribute = new List<NodeProperty>();
+            //foreach (NodeProperty np in oriNode.Properties)
+            //{
+            //    Attribute.Add(new NodeProperty(string.Copy(np.Key), string.Copy(np.Value)));
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

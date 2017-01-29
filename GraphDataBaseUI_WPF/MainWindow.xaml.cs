@@ -636,17 +636,17 @@ namespace GraphDataBaseUI_WPF
         //查询按钮执行函数
         private void ExecuteButton_Click(object sender, RoutedEventArgs e)
         {
-            ErrorCode err = ErrorCode.NoError;
-            string strResult, strCommand;
+            //ErrorCode err = ErrorCode.NoError;
+            //string strResult, strCommand;
 
             if (isDbAvailable == false)
             {
                 return;
             }
             //START node('*-国家') MATCH (Kingdom)-[:统治]->(District)<-[:连通 5..5]-(Neibhour) WHERE * RETURN Kingdom.Name, District.*
-            strCommand = CommandBox.Text;
-            strResult = gdb.DataQueryExecute(strCommand, ref err);//
-            ResultBox.Text = strResult;
+            //strCommand = CommandBox.Text;
+            //strResult = gdb.DataQueryExecute(strCommand, ref err);//
+            //ResultBox.Text = strResult;
         }
         //节点列表框选中事件处理函数
         private void NodeListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -848,10 +848,10 @@ namespace GraphDataBaseUI_WPF
         {
             ModifyPropertyComboBox.Items.Clear();
             ModifyPropertyTextBox.Text = "";
-            foreach (NodeProperty np in curSelectNode.Properties)
-            {
-                ModifyPropertyComboBox.Items.Add(np.Key);
-            }
+            //foreach (NodeProperty np in curSelectNode.Properties)
+            //{
+            //    ModifyPropertyComboBox.Items.Add(np.Key);
+            //}
         }
         //更新属性值
         private void ModifyPropertyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -860,13 +860,13 @@ namespace GraphDataBaseUI_WPF
             {
                 return;
             }
-            foreach (NodeProperty np in curSelectNode.Properties)
-            {
-                if (np.Key == ModifyPropertyComboBox.SelectedItem.ToString())
-                {
-                    ModifyPropertyTextBox.Text = np.Value;
-                }
-            }
+            //foreach (NodeProperty np in curSelectNode.Properties)
+            //{
+            //    if (np.Key == ModifyPropertyComboBox.SelectedItem.ToString())
+            //    {
+            //        ModifyPropertyTextBox.Text = np.Value;
+            //    }
+            //}
         }
         //名称文本框值改变
         private void NameTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -1034,7 +1034,7 @@ namespace GraphDataBaseUI_WPF
                 ShowStatus("Name and Type are necessary.");
                 return;
             }
-            gdb.AddNodeData(strName, strType, ref err, strProperty);
+            //gdb.AddNodeData(strName, strType, ref err, strProperty);
             if (err != ErrorCode.NoError)
             {
                 switch (err)
@@ -1270,7 +1270,7 @@ namespace GraphDataBaseUI_WPF
         {
             //获取值
             string strKey, strValue;
-            NodeProperty npDel = null;
+            //NodeProperty npDel = null;
 
             strKey = ModifyPropertyComboBox.Text;
             strValue = ModifyPropertyTextBox.Text;
@@ -1284,36 +1284,36 @@ namespace GraphDataBaseUI_WPF
                 ShowStatus("Modify Property Failed, no node be selected.");
                 return;
             }
-            //如果存在该key则修改
-            foreach (NodeProperty np in curModifyNode.Properties)
-            {
-                if (strKey != np.Key)
-                {
-                    continue;
-                }
-                if (strValue == "")
-                {
-                    npDel = np;
-                    break;
-                }
-                np.Value = strValue;
-                ShowStatus("Modify Property Success.");
-                return;
-            }
+            ////如果存在该key则修改
+            //foreach (NodeProperty np in curModifyNode.Properties)
+            //{
+            //    if (strKey != np.Key)
+            //    {
+            //        continue;
+            //    }
+            //    if (strValue == "")
+            //    {
+            //        npDel = np;
+            //        break;
+            //    }
+            //    np.Value = strValue;
+            //    ShowStatus("Modify Property Success.");
+            //    return;
+            //}
             //如果value为空则删除该属性
-            if (npDel != null)
-            {
-                curModifyNode.Properties.Remove(npDel);
-                ShowStatus("Delete Property Success.");
-                return;
-            }
+            //if (npDel != null)
+            //{
+            //    curModifyNode.Properties.Remove(npDel);
+            //    ShowStatus("Delete Property Success.");
+            //    return;
+            //}
             if (strValue == "")
             {
                 ShowStatus("Add Property Failed, Value field can't be empty.");
                 return;
             }
             //如果不存在则插入新属性
-            curModifyNode.Properties.Add(new NodeProperty(strKey, strValue));
+            //curModifyNode.Properties.Add(new NodeProperty(strKey, strValue));
             ShowStatus("Add Property Success.");
             return;
         }
