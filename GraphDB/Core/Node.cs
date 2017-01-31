@@ -93,14 +93,14 @@ namespace GraphDB.Core
         //节点类Node构造函数
         public Node(int intMaxNodeNum, string newName, string newType, XmlNode payload = null)    
         {
+            XmlDocument doc = new XmlDocument();
             this.intNodeNum = intMaxNodeNum;
             this.nodeName = newName;
             this.nodeType = newType;
             this.intSaveIndex = this.intNodeNum;
-            this.xmlPayload = new XmlDocument().CreateElement("Payload");
             if (payload != null)
             {
-                this.xmlPayload.AppendChild(payload);
+                this.xmlPayload = doc.ImportNode(payload, true);
             }
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
@@ -113,7 +113,10 @@ namespace GraphDB.Core
             this.nodeName = string.Copy(oriNode.Name);
             this.nodeType = string.Copy(oriNode.Type);
             this.intSaveIndex = this.intNodeNum;
-            this.Payload = oriNode.Payload.CloneNode(true);
+            if(oriNode.Payload != null)
+            {
+                this.Payload = oriNode.Payload.CloneNode(true);
+            }
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
         }

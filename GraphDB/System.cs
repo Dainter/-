@@ -9,9 +9,10 @@ namespace GraphDB
     public enum ErrorCode
     {
         NoError = 0,
-        OpenFileFailed = 1,
-        SaveFileFailed = 2,
-        NoXmlRoot = 3,
+        FileNotExists = 1,
+        OpenFileFailed = 2,
+        SaveFileFailed = 3,
+        NoXmlRoot = 4,
         InvaildIndex = 10,
         NodeExists = 11,
         CreateNodeFailed = 12,

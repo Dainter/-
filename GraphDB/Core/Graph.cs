@@ -357,7 +357,7 @@ namespace GraphDB.Core
         }
 
         //加入节点（接口）
-        public void AddNode(string sName, string sType, ref ErrorCode err, XmlNode payload)
+        public void AddNode(string sName, string sType, XmlNode payload, ref ErrorCode err)
         {
             Node newNode = null;
 
@@ -368,7 +368,7 @@ namespace GraphDB.Core
                 return;
             }
             //构造新的节点
-            newNode = new Node(intMaxNodeNum,sName, sType, payload);
+            newNode = new Node(intMaxNodeNum, sName, sType, payload);
             if (newNode == null)
             {
                 err = ErrorCode.CreateNodeFailed;

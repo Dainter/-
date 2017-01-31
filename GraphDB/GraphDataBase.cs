@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Xml;
 using GraphDB.Core;
 using GraphDB.IO;
@@ -98,9 +98,14 @@ namespace GraphDB
         //打开数据库，输入当前文件路径
         public void OpenDataBase(string sPath, ref ErrorCode err)
         {
+            if(err != ErrorCode.NoError)
+            {
+                return;
+            }
             IOhandler = new XMLStrategy(sPath);
             DataImport(ref err);
         }
+
         //XML批量数据导入
         public void DataImport(ref ErrorCode err)
         {
@@ -131,9 +136,9 @@ namespace GraphDB
         }
 
         //插入数据节点
-        public void AddNodeData(string sName, string sType, ref ErrorCode err, XmlNode payload)
+        public void AddNodeData(string sName, string sType, XmlNode payload, ref ErrorCode err)
         {
-            graph.AddNode(sName, sType, ref err, payload);
+            graph.AddNode(sName, sType, payload , ref err);
         }
 
         //插入数据节点2
