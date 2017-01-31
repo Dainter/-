@@ -45,8 +45,8 @@ namespace SmartTaskChain
         private void WindowMain_Loaded(object sender, RoutedEventArgs e)
         {
             DataInit();
-            //ConfigWindow WinConfig = new ConfigWindow();
-            //WinConfig.ShowDialog();
+            ConfigWindow WinConfig = new ConfigWindow();
+            WinConfig.ShowDialog();
             //Submit();
             //BuildQlevelNodes();
             //BuildProcedure();

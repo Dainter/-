@@ -222,32 +222,32 @@
         <Setter Property="Shape.Fill" Value="AliceBlue"/>
         <Setter Property="Shape.Stroke" Value="SteelBlue"/>
         <Setter Property="Shape.StrokeThickness" Value="3"/>
-        <Setter Property="Shape.Height" Value="40"/>
-        <Setter Property="Shape.Width" Value="40"/>
+        <Setter Property="Shape.Height" Value="54"/>
+        <Setter Property="Shape.Width" Value="54"/>
         <Setter Property="Control.Foreground" Value="Black"/>
     </Style>
     <Style x:Key="PurpleNodeStyle">
         <Setter Property="Shape.Fill" Value="#FF4B0082"/>
         <Setter Property="Shape.Stroke" Value="#FF00008B"/>
         <Setter Property="Shape.StrokeThickness" Value="3"/>
-        <Setter Property="Shape.Height" Value="40"/>
-        <Setter Property="Shape.Width" Value="40"/>
+        <Setter Property="Shape.Height" Value="54"/>
+        <Setter Property="Shape.Width" Value="54"/>
         <Setter Property="Control.Foreground" Value="#FFFFFF00"/>
     </Style>
     <Style x:Key="BlueNodeStyle">
         <Setter Property="Shape.Fill" Value="#FF00BFFF"/>
         <Setter Property="Shape.Stroke" Value="#FF4169E1"/>
         <Setter Property="Shape.StrokeThickness" Value="3"/>
-        <Setter Property="Shape.Height" Value="40"/>
-        <Setter Property="Shape.Width" Value="40"/>
+        <Setter Property="Shape.Height" Value="54"/>
+        <Setter Property="Shape.Width" Value="54"/>
         <Setter Property="Control.Foreground" Value="#FF000080"/>
     </Style>
     <Style x:Key="PinkNodeStyle">
         <Setter Property="Shape.Fill" Value="#FFF49AC1"/>
         <Setter Property="Shape.Stroke" Value="#FF8000FF"/>
         <Setter Property="Shape.StrokeThickness" Value="3"/>
-        <Setter Property="Shape.Height" Value="40"/>
-        <Setter Property="Shape.Width" Value="40"/>
+        <Setter Property="Shape.Height" Value="54"/>
+        <Setter Property="Shape.Width" Value="54"/>
         <Setter Property="Control.Foreground" Value="#FF800040"/>
     </Style>
 </ResourceDictionary>

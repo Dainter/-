@@ -410,7 +410,7 @@ namespace SmartTaskChain.Config
         private Pen LinePen = new Pen(Brushes.Gray, 2);
         private Pen TextPen = new Pen(Brushes.White, 1);
         private List<Visual> visuals = new List<Visual>();
-        private int radius = 20;
+        private int radius = 30;
         private bool bolScrolltoCenter = false;
 
         // 渲染原型.
@@ -421,6 +421,10 @@ namespace SmartTaskChain.Config
                 Brush brush = drawingBrush;
 
                 dc.DrawEllipse(brush, drawingPen, center, radius, radius);
+                if (sName.Length > 4)
+                {
+                    sName = sName.Insert((int)Math.Ceiling(sName.Length *1.0 / 2),"\n");
+                }
                 FormattedText text = new FormattedText(sName, 
                                                         System.Globalization.CultureInfo.CurrentCulture, 
                                                         System.Windows.FlowDirection.LeftToRight, 
@@ -762,7 +766,7 @@ namespace SmartTaskChain.Config
             Style curStyle;
             string strKey;
             Brush bBack = Brushes.AliceBlue, bStroke = Brushes.SteelBlue, bFore = Brushes.Black;
-            double dubHeight = 40.0, dubWidth = 40.0, dubStrokeThickness = 3.0;
+            double dubHeight = 60.0, dubWidth = 60.0, dubStrokeThickness = 5.0;
 
             switch (strStyle)
             {
