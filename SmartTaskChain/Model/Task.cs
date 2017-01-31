@@ -74,7 +74,7 @@ namespace SmartTaskChain.Model
             this.datStartTime = dStart;
             this.datDeadLine = dDead;
             this.eQlevel = QLevelFactory.GetFactory().GetQlevel(IsImportant, IsEmergency);
-            this.taskStatus = TaskStatus.EnumTaskStatus.Created;
+            this.taskStatus = TaskStatus.EnumTaskStatus.Process;
         }
 
         public Task(XmlElement ModelPayload)
@@ -111,7 +111,7 @@ namespace SmartTaskChain.Model
             XmlText name_txt, btype_txt, start_txt, dead_txt, qlevel_txt, status_txt;
             XmlElement name_xml, btype_xml, start_xml, dead_xml, qlevel_xml, status_xml, modelPayload;
 
-            modelPayload = doc.CreateElement("ModelPayload");
+            modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
             btype_xml = doc.CreateElement("BusinessType");
             start_xml = doc.CreateElement("StartTime");

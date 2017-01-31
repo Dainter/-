@@ -91,7 +91,7 @@ namespace GraphDB.Core
         }
         //方法///////////////////////////////
         //节点类Node构造函数
-        public Node(int intMaxNodeNum, string newName, string newType, XmlNode payload = null)    
+        public Node(int intMaxNodeNum, string newName, string newType, XmlNode payload)    
         {
             XmlDocument doc = new XmlDocument();
             this.intNodeNum = intMaxNodeNum;
@@ -101,6 +101,10 @@ namespace GraphDB.Core
             if (payload != null)
             {
                 this.xmlPayload = doc.ImportNode(payload, true);
+            }
+            else
+            {
+                this.xmlPayload = doc.CreateElement("Payload");
             }
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
@@ -115,7 +119,11 @@ namespace GraphDB.Core
             this.intSaveIndex = this.intNodeNum;
             if(oriNode.Payload != null)
             {
-                this.Payload = oriNode.Payload.CloneNode(true);
+                this.Payload = (XmlElement)oriNode.Payload.CloneNode(true);
+            }
+            else
+            {
+                this.xmlPayload = new XmlDocument().CreateElement("Payload");
             }
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
@@ -124,20 +132,15 @@ namespace GraphDB.Core
         public Node(int intMaxNodeNum, XmlElement xNode)
         {
             string newType, newName;
-            XmlNodeList xmlProperties;
 
             this.intNodeNum = intMaxNodeNum;
             //取出制定标签的Inner Text
             newType = GetText(xNode, "Type");
             newName = GetText(xNode, "Name");
-            xmlProperties = xNode.GetElementsByTagName("Payload");
-            if (xmlProperties.Count > 0)
+            this.xmlPayload = GetNode(xNode, "Payload");
+            if(this.xmlPayload == null)
             {
-                xmlPayload = xmlProperties.Item(0);
-            }
-            else
-            {
-                this.xmlPayload = new XmlDocument().CreateElement("Payload");
+                    this.xmlPayload = new XmlDocument().CreateElement("Payload");
             }
             //赋值与初始化
             this.nodeType = newType;
@@ -146,6 +149,24 @@ namespace GraphDB.Core
             OutLink = new List<Edge>();
             InLink = new List<Edge>();
         }
+        //工具函数，从xml节点中读取某个标签的InnerText
+        XmlElement GetNode(XmlElement curNode, string sLabel)
+        {
+            if (curNode == null)
+            {
+                return null;
+            }
+            //遍历子节点列表
+            foreach (XmlElement xNode in curNode.ChildNodes)
+            {
+                if (xNode.Name == sLabel)
+                {//查找和指定内容相同的标签，返回其Innner Text
+                    return xNode;
+                }
+            }
+            return null;
+        }
+
         //工具函数，从xml节点中读取某个标签的InnerText
         string GetText(XmlElement curNode, string sLabel)
         {

@@ -49,6 +49,8 @@ namespace SmartTaskChain
             //WinConfig.ShowDialog();
             //Submit();
             //BuildQlevelNodes();
+            //BuildProcedure();
+            //BuildUserRole();
         }
 
         private void BuildQlevelNodes()
@@ -66,7 +68,37 @@ namespace SmartTaskChain
             DataReader.AcceptModification();
         }
 
+        private void BuildProcedure()
+        {
+            Procedure newProce = new Procedure("客服咨询处理流程", "客服咨询处理处理流程");
+            DataReader.InsertRecord(new Record(newProce.Name, newProce.Type, newProce.XMLSerialize()));
+            ProcedureStep newStep;
+            newStep = new ProcedureStep("问题提交", 1, "客户提交问题");
+            DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
+            newStep = new ProcedureStep("问题审核", 2, "客服人员审核问题");
+            DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
+            newStep = new ProcedureStep("维修单分配", 3, "客服经理收集维修单");
+            DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
+            newStep = new ProcedureStep("维修单处理", 4, "工程师处理维修单");
+            DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
+            newStep = new ProcedureStep("维修结果反馈", 5, "客户反馈维修结果");
+            DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
+            DataReader.AcceptModification();
+        }
         
+        private void BuildUserRole()
+        {
+            UserRole newRole;
+            newRole = new UserRole("客户", "权限：提交维修单，查看自己提交的维修单。");
+            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
+            newRole = new UserRole("客服人员", "权限：审核维修单，查看自己处理的维修单。");
+            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
+            newRole = new UserRole("客服经理", "权限：收集维修单，查看自己处理的维修单，查看自己下属的维修单。");
+            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
+            newRole = new UserRole("维修工程师", "权限：处理维修单，查看自己处理的维修单。");
+            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
+            DataReader.AcceptModification();
+        }
 
         private void Submit()
         {

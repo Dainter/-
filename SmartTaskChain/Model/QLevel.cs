@@ -126,7 +126,7 @@ namespace SmartTaskChain.Model
             XmlText name_txt, desc_txt, priority_txt;
             XmlElement name_xml, desc_xml, priority_xml, modelPayload;
 
-            modelPayload = doc.CreateElement("ModelPayload");
+            modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
             desc_xml = doc.CreateElement("Description");
             priority_xml = doc.CreateElement("Priority");

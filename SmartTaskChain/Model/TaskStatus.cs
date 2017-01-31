@@ -11,18 +11,24 @@ namespace SmartTaskChain.Model
         public enum EnumTaskStatus
         {
             Unknown =0,
-            Created = 1,
-            Delay = 2,
-            Abort = 3,
-            Completed = 4,
+            Process = 1,
+            Wait = 2,
+            Rollback = 3,
+            Delay = 4,
+            Abort = 5,
+            Completed = 6,
         }
 
         public static string ToString(EnumTaskStatus eStatus)
         {
             switch(eStatus)
             {
-                case EnumTaskStatus.Created:
+                case EnumTaskStatus.Process:
                     return "Created";
+                case EnumTaskStatus.Wait:
+                    return "Wait";
+                case EnumTaskStatus.Rollback:
+                    return "Rollback";
                 case EnumTaskStatus.Delay:
                     return "Delay";
                 case EnumTaskStatus.Abort:
@@ -39,7 +45,11 @@ namespace SmartTaskChain.Model
             switch (strStatus)
             {
                 case "Created":
-                    return EnumTaskStatus.Created;
+                    return EnumTaskStatus.Process;
+                case "Wait":
+                    return EnumTaskStatus.Wait;
+                case "Rollback":
+                    return EnumTaskStatus.Rollback;
                 case "Delay":
                     return EnumTaskStatus.Delay;
                 case "Abort":
