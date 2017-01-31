@@ -10,6 +10,7 @@ namespace SmartTaskChain.Model
     {
         string strName;
         int intPriority;
+        string strDescription;
 
         public string Name
         {
@@ -20,6 +21,12 @@ namespace SmartTaskChain.Model
         public string Type
         {
             get { return this.GetType().Name; }
+        }
+
+        public string Description
+        {
+            get
+            { return strDescription; }
         }
 
         public int Priority
@@ -33,12 +40,14 @@ namespace SmartTaskChain.Model
             {
                 if (IsEmergency == true)
                 {
-                    strName = "Q1:紧急且重要";
+                    strName = "Q1";
+                    strDescription = "紧急且重要";
                     intPriority = 40;
                 }
                 else
                 {
-                    strName = "Q2:重要不紧急";
+                    strName = "Q2";
+                    strDescription = "重要不紧急";
                     intPriority = 30;
                 }
             }
@@ -46,12 +55,14 @@ namespace SmartTaskChain.Model
             {
                 if (IsEmergency == true)
                 {
-                    strName = "Q3:紧急但不重要";
+                    strName = "Q3";
+                    strDescription = "重要不紧急";
                     intPriority = 20;
                 }
                 else
                 {
-                    strName = "Q4:不重要不紧急";
+                    strName = "Q4";
+                    strDescription = "不重要不紧急";
                     intPriority = 10;
                 }
             }
@@ -63,16 +74,20 @@ namespace SmartTaskChain.Model
 
             switch(sDescription)
             {
-                case "Q1:紧急且重要":
+                case "Q1":
+                    strDescription = "紧急且重要";
                     intPriority = 40;
                     break;
-                case "Q2:重要不紧急":
+                case "Q2":
+                    strDescription = "重要不紧急";
                     intPriority = 30;
                     break;
-                case "Q3:紧急但不重要":
+                case "Q3":
+                    strDescription = "重要不紧急";
                     intPriority = 20;
                     break;
-                case "Q4:不重要不紧急":
+                case "Q4":
+                    strDescription = "不重要不紧急";
                     intPriority = 10;
                     break;
                 default:
@@ -83,6 +98,7 @@ namespace SmartTaskChain.Model
         public QLevel(XmlElement ModelPayload)
         {
             this.strName = GetText(ModelPayload, "Name");
+            this.strDescription = GetText(ModelPayload, "Description");
             this.intPriority = Convert.ToInt32(GetText(ModelPayload, "Priority"));
         }
 
@@ -107,20 +123,24 @@ namespace SmartTaskChain.Model
         public XmlElement XMLSerialize()
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt, priority_txt;
-            XmlElement name_xml, priority_xml, modelPayload;
+            XmlText name_txt, desc_txt, priority_txt;
+            XmlElement name_xml, desc_xml, priority_xml, modelPayload;
 
             modelPayload = doc.CreateElement("ModelPayload");
             name_xml = doc.CreateElement("Name");
+            desc_xml = doc.CreateElement("Description");
             priority_xml = doc.CreateElement("Priority");
 
             name_txt = doc.CreateTextNode(this.Name);
+            desc_txt = doc.CreateTextNode(this.Description);
             priority_txt = doc.CreateTextNode(this.intPriority.ToString());
 
             name_xml.AppendChild(name_txt);
+            desc_xml.AppendChild(desc_txt);
             priority_xml.AppendChild(priority_txt);
 
             modelPayload.AppendChild(name_xml);
+            modelPayload.AppendChild(desc_xml);
             modelPayload.AppendChild(priority_xml);
 
             return modelPayload;

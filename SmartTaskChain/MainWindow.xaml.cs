@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using SmartTaskChain.DataAbstract;
 using SmartTaskChain.Model;
 using SmartTaskChain.Business;
+using SmartTaskChain.Config;
 using GraphDB;
 
 namespace SmartTaskChain
@@ -44,6 +45,8 @@ namespace SmartTaskChain
         private void WindowMain_Loaded(object sender, RoutedEventArgs e)
         {
             DataInit();
+            //ConfigWindow WinConfig = new ConfigWindow();
+            //WinConfig.ShowDialog();
             //Submit();
             //BuildQlevelNodes();
         }

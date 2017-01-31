@@ -35,8 +35,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Ribbon for WPF\V4.0\RibbonControlsLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +60,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Config\ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\UI_Resources\CommandResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Config\UI_Resources\ConverterResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Config\UI_Resources\StyleResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Config\UI_Resources\ToolTipResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,6 +93,12 @@
     <Compile Include="Business\Engineer.cs" />
     <Compile Include="Business\Manager.cs" />
     <Compile Include="Business\ServiceUser.cs" />
+    <Compile Include="Config\ConfigWindow.xaml.cs">
+      <DependentUpon>ConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Drawing\Arrow.cs" />
+    <Compile Include="Config\Drawing\DrawingCanvas.cs" />
+    <Compile Include="Config\NodeInfo.cs" />
     <Compile Include="DataAbstract\DataStrategyFactory.cs" />
     <Compile Include="DataAbstract\GraphDBStrategy.cs" />
     <Compile Include="DataAbstract\IfDataStrategy.cs" />
@@ -123,8 +154,65 @@
       <Name>GraphDB</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Config\" />
+    <Resource Include="Config\images\AddEdge.png" />
+    <Resource Include="Config\images\AddEdge_small.png" />
+    <Resource Include="Config\images\AddNode.png" />
+    <Resource Include="Config\images\AddNode_small.png" />
+    <Resource Include="Config\images\AddProperty.png" />
+    <Resource Include="Config\images\AddProperty_small.png" />
+    <Resource Include="Config\images\AutoFilterClassic.png" />
+    <Resource Include="Config\images\ChooseColor_16x16.png" />
+    <Resource Include="Config\images\ClearText.png" />
+    <Resource Include="Config\images\ClearText_16x16.png" />
+    <Resource Include="Config\images\ColorPalette.png" />
+    <Resource Include="Config\images\ConnectionManager_48x48.png" />
+    <Resource Include="Config\images\CustomActionsMenu.png" />
+    <Resource Include="Config\images\EditRedo_16x16.png" />
+    <Resource Include="Config\images\EditUndo_16x16.png" />
+    <Resource Include="Config\images\Exit.png" />
+    <Resource Include="Config\images\Exit_16x16.png" />
+    <Resource Include="Config\images\File PrintPreview_16x16.png" />
+    <Resource Include="Config\images\FileClose.png" />
+    <Resource Include="Config\images\FileNew.png" />
+    <Resource Include="Config\images\FileNewDocument_16x16.png" />
+    <Resource Include="Config\images\FileNew_16x16.png" />
+    <Resource Include="Config\images\FileOpen.png" />
+    <Resource Include="Config\images\FileOpen_16x16.png" />
+    <Resource Include="Config\images\FileOpen_small.png" />
+    <Resource Include="Config\images\FilePrint.png" />
+    <Resource Include="Config\images\FilePrintPreview.png" />
+    <Resource Include="Config\images\FilePrintPreview_small.png" />
+    <Resource Include="Config\images\FilePrintQuick.png" />
+    <Resource Include="Config\images\FilePrintQuick_small.png" />
+    <Resource Include="Config\images\FilePrint_16x16.png" />
+    <Resource Include="Config\images\FilePrint_small.png" />
+    <Resource Include="Config\images\FileProperties.png" />
+    <Resource Include="Config\images\FileSave.png" />
+    <Resource Include="Config\images\FileSaveAs.png" />
+    <Resource Include="Config\images\FileSave_16x16.png" />
+    <Resource Include="Config\images\File_close_small.png" />
+    <Resource Include="Config\images\Find_16x16.png" />
+    <Resource Include="Config\images\Find_32x32.png" />
+    <Resource Include="Config\images\FolderClosed_48x48.png" />
+    <Resource Include="Config\images\IronCross.png" />
+    <Resource Include="Config\images\IronCross_small.png" />
+    <Resource Include="Config\images\Modify.png" />
+    <Resource Include="Config\images\Modify_small.png" />
+    <Resource Include="Config\images\Network.ico" />
+    <Resource Include="Config\images\NodeStyles.png" />
+    <Resource Include="Config\images\NodeStyles_16x16.png" />
+    <Resource Include="Config\images\Option.png" />
+    <Resource Include="Config\images\Option_16x16.png" />
+    <Resource Include="Config\images\RemoveEdge.png" />
+    <Resource Include="Config\images\RemoveEdge_small.png" />
+    <Resource Include="Config\images\RemoveNode.png" />
+    <Resource Include="Config\images\RemoveNode_small.png" />
+    <Resource Include="Config\images\RemoveProperty.png" />
+    <Resource Include="Config\images\RemoveProperty_small.png" />
+    <Resource Include="Config\images\Tick_16x16.png" />
+    <Resource Include="Config\images\Tick_32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

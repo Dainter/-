@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows;
 
-namespace GraphDataBaseUI_WPF
+namespace SmartTaskChain.Config.Drawing
 {
     public class DrawingCanvas : Canvas
     {

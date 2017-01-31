@@ -6,7 +6,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace GraphDataBaseUI_WPF
+namespace SmartTaskChain.Config.Drawing
 {
 	public sealed class Arrow : Shape
 	{

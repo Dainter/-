@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using GraphDB;
 using GraphDB.Core;
 using GraphDB.Layout;
+using SmartTaskChain.Config;
+using SmartTaskChain.Config.Drawing;
 using Microsoft.Win32;
 using Microsoft.Windows.Controls.Ribbon;
 
@@ -27,12 +24,12 @@ using Microsoft.Windows.Controls.Ribbon;
 //(&#x000D;) 回车 
 //(&#x000A;) 换行 
 
-namespace GraphDataBaseUI_WPF
+namespace SmartTaskChain.Config
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow
+    public partial class ConfigWindow
     {
         GraphDataBase gdb;
         bool isDbAvailable = false;
@@ -42,8 +39,8 @@ namespace GraphDataBaseUI_WPF
         Node curModifyNode;
         Edge curModifyEdge;
         NodeInfo curSelectNode;
-
-        public MainWindow()
+        
+        public ConfigWindow()
         {
             InitializeComponent();
         }
@@ -55,7 +52,7 @@ namespace GraphDataBaseUI_WPF
             ChangeStyle("默认样式");
             StatusUpdateTimer_Init();
             gdb = new GraphDataBase();
-            gdb.OpenDataBase("1.xml", ref err);
+            gdb.OpenDataBase("Database.xml", ref err);
             FillNodeList();
             isDbAvailable = true;
         }

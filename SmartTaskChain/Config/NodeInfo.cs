@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using GraphDB.Core;
 
-namespace GraphDataBaseUI_WPF
+namespace SmartTaskChain
 {
     class NodeInfo:INotifyPropertyChanged
     {

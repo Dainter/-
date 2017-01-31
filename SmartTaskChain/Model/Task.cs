@@ -17,19 +17,19 @@ namespace SmartTaskChain.Model
         //Sumitter[1:1]
         //Handler[1:1]
         //CurrentStep[1:1]
-        ProcedureStep currentStep;
+        //ProcedureStep currentStep;
         //StartTime
         DateTime datStartTime;
         //DeadLine
         DateTime datDeadLine;
         //CompleteTime
-        DateTime datCompletedTime;
+        //DateTime datCompletedTime;
         //Priority[1:1]
         QLevel eQlevel;
         //TaskStatus
         TaskStatus.EnumTaskStatus taskStatus;
         //DelayReason(if TaskStatus == Delay then not null)
-        string strDelayReason;
+        //string strDelayReason;
         
         public string Name
         {
