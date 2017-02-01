@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml;
 using System.Text;
-using System.Threading.Tasks;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
-    class TaskType
+    public class TaskType
     {
         //Name = strBussinessType
         string strName;
-        //Type
-        string strType;
-        //BussinessType
         //string strBussinessType;
+        string strDescription;
         //Procedure(if IsDirectly = true then null)[1:1]
-        bool bolIsUseProcedure;
         Procedure procedure;
         
-
         public string Name
         {
             get{ return strName; }
@@ -26,18 +22,25 @@ namespace SmartTaskChain.Model
 
         public string Type
         {
-            get { return strType; }
+            get { return this.GetType().Name; }
         }
 
-        public string BussinessType
+        public string Description
         {
-            get { return strName; }
+            get
+            { return strDescription; }
         }
 
         public bool IsUseProcedure
         {
-            get { return bolIsUseProcedure; }
-            set { IsUseProcedure = value; }
+            get
+            {
+                if(procedure == null)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public Procedure BindingProcedure
@@ -46,13 +49,56 @@ namespace SmartTaskChain.Model
             set { procedure = value; }
         }
 
-        public TaskType(string sName, string sDescription = "", bool bIsUseProcedure = false, Procedure proce = null)
+        public TaskType(string sName, string sDescription = "")
         {
-            strName = sName;
-            strType = "TaskType";
-            bolIsUseProcedure = bIsUseProcedure;
-            //挂接处理流程
-            procedure = proce;
+            this.strName = sName;
+            this.strDescription = sDescription;
+        }
+
+        public TaskType(XmlElement ModelPayload)
+        {
+            this.strName = GetText(ModelPayload, "Name");
+            this.strDescription = GetText(ModelPayload, "Description");
+        }
+
+        //工具函数，从xml节点中读取某个标签的InnerText
+        string GetText(XmlElement curNode, string sLabel)
+        {
+            if (curNode == null)
+            {
+                return "";
+            }
+            //遍历子节点列表
+            foreach (XmlElement xNode in curNode.ChildNodes)
+            {
+                if (xNode.Name == sLabel)
+                {//查找和指定内容相同的标签，返回其Innner Text
+                    return xNode.InnerText;
+                }
+            }
+            return "";
+        }
+
+        public XmlElement XMLSerialize()
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlText name_txt, desc_txt;
+            XmlElement name_xml, desc_xml, modelPayload;
+
+            modelPayload = doc.CreateElement("Payload");
+            name_xml = doc.CreateElement("Name");
+            desc_xml = doc.CreateElement("Description");
+
+            name_txt = doc.CreateTextNode(this.Name);
+            desc_txt = doc.CreateTextNode(this.Description);
+
+            name_xml.AppendChild(name_txt);
+            desc_xml.AppendChild(desc_txt);
+
+            modelPayload.AppendChild(name_xml);
+            modelPayload.AppendChild(desc_xml);
+
+            return modelPayload;
         }
 
     }

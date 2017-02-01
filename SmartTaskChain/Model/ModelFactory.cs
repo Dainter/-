@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace SmartTaskChain.Model
 {
-    class QLevelFactory
+    class ModelFactory
     {
-        private QLevelFactory()
+        private ModelFactory()
         {
             //查表，维护Qlevel列表
         }     //(1)
 
-        private static QLevelFactory _factory; //(2)
+        private static ModelFactory _factory; //(2)
 
-        public static QLevelFactory GetFactory() //(3)
+        public static ModelFactory GetFactory() //(3)
         {
             if (_factory == null)
-                _factory = new QLevelFactory();
+                _factory = new ModelFactory();
             return _factory;
         }
 
@@ -30,8 +30,20 @@ namespace SmartTaskChain.Model
 
         public QLevel GetQlevel(string sDescription)
         {
-            //查表
+            //查表，找不到报错
             return new QLevel(sDescription);
+        }
+
+        public TaskType GetTaskType(string sName)
+        {
+            //查表，找不到可以创建新类型
+            return new TaskType(sName);
+        }
+
+        public Procedure GetProcedure(string sName)
+        {
+            //查表，找不到报错
+            return new Procedure(sName);
         }
     }
 }

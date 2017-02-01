@@ -12,8 +12,10 @@ namespace SmartTaskChain.Model
         string strName;
         //Description
         string strDescription;
-        //Users[1:n]
+        //Handler[1:n]
+        List<IfUser> usrHandlers;
         //ProcedureStep[1:1]
+        ProcedureStep procedureSteps;
 
         public string Name
         {
@@ -29,17 +31,31 @@ namespace SmartTaskChain.Model
             get
             { return strDescription; }
         }
+        public List<IfUser> Handlers
+        {
+            get { return usrHandlers; }
+        }
+        public ProcedureStep BindingStep
+        {
+            get { return procedureSteps; }
+            set { procedureSteps = value; }
+        }
+
 
         public UserRole(string sName, string sDescription = "")
         {
-            strName = sName;
-            strDescription = sDescription;
+            this.strName = sName;
+            this.strDescription = sDescription;
+            this.usrHandlers = new List<IfUser>();
+            this.procedureSteps = null;
         }
 
         public UserRole(XmlElement ModelPayload)
         {
             this.strName = GetText(ModelPayload, "Name");
             this.strDescription = GetText(ModelPayload, "Description");
+            this.usrHandlers = new List<IfUser>();
+            this.procedureSteps = null;
         }
 
         //工具函数，从xml节点中读取某个标签的InnerText

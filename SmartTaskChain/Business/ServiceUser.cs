@@ -9,5 +9,6 @@ namespace SmartTaskChain.Business
 {
     class ServiceUser : IfUser
     {
+
     }
 }

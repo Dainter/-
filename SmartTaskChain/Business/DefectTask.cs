@@ -27,6 +27,16 @@ namespace SmartTaskChain.Business
         {
             get { return this.GetType().Name; }
         }
+        public ProcedureStep CurrentStep
+        {
+            get { return this.task.CurrentStep; }
+            set { this.task.CurrentStep = value; }
+        }
+        public IfUser Handler
+        {
+            get { return this.task.Handler; }
+            set { this.task.Handler = value; }
+        }
         public DateTime StartTime
         {
             get
@@ -41,7 +51,21 @@ namespace SmartTaskChain.Business
                 return task.DeadLine;
             }
         }
-
+        public QLevel QLevel
+        {
+            get { return this.task.QLevel; }
+            set { this.task.QLevel = value; }
+        }
+        public string Status
+        {
+            get { return this.task.Status; }
+            set { this.task.Status = value; }
+        }
+        public string DelayReason
+        {
+            get { return this.task.DelayReason; }
+            set { this.task.DelayReason = value; }
+        }
         public string DefectDescription
         {
             get { return strDefectDescription; }
@@ -50,11 +74,9 @@ namespace SmartTaskChain.Business
         public DefectTask(string sName, DateTime dStart, DateTime dDead, string sDescription, bool IsImportant = false, bool IsEmergency = false)
         {
             this.task = new Task(sName,
-                                        BusinessType,
                                         dStart, 
-                                        dDead, 
-                                        IsImportant, 
-                                        IsEmergency);
+                                        dDead);
+            //taskupdate
             this.strDefectDescription = sDescription;
         }
 
@@ -113,8 +135,6 @@ namespace SmartTaskChain.Business
 
             return task.XMLSerialize(BusinessPayload);
         }
-
-        
     }
 
 }

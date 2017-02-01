@@ -17,18 +17,15 @@ namespace SmartTaskChain.Model
             get
             { return strName; }
         }
-
         public string Type
         {
             get { return this.GetType().Name; }
         }
-
         public string Description
         {
             get
             { return strDescription; }
         }
-
         public int Priority
         {
             get { return intPriority; }
@@ -40,30 +37,30 @@ namespace SmartTaskChain.Model
             {
                 if (IsEmergency == true)
                 {
-                    strName = "Q1";
-                    strDescription = "紧急且重要";
-                    intPriority = 40;
+                    this.strName = "Q1";
+                    this.strDescription = "紧急且重要";
+                    this.intPriority = 40;
                 }
                 else
                 {
-                    strName = "Q2";
-                    strDescription = "重要不紧急";
-                    intPriority = 30;
+                    this.strName = "Q2";
+                    this.strDescription = "重要不紧急";
+                    this.intPriority = 30;
                 }
             }
             else
             {
                 if (IsEmergency == true)
                 {
-                    strName = "Q3";
-                    strDescription = "重要不紧急";
-                    intPriority = 20;
+                    this.strName = "Q3";
+                    this.strDescription = "重要不紧急";
+                    this.intPriority = 20;
                 }
                 else
                 {
-                    strName = "Q4";
-                    strDescription = "不重要不紧急";
-                    intPriority = 10;
+                    this.strName = "Q4";
+                    this.strDescription = "不重要不紧急";
+                    this.intPriority = 10;
                 }
             }
         }
@@ -75,20 +72,20 @@ namespace SmartTaskChain.Model
             switch(sDescription)
             {
                 case "Q1":
-                    strDescription = "紧急且重要";
-                    intPriority = 40;
+                    this.strDescription = "紧急且重要";
+                    this.intPriority = 40;
                     break;
                 case "Q2":
-                    strDescription = "重要不紧急";
-                    intPriority = 30;
+                    this.strDescription = "重要不紧急";
+                    this.intPriority = 30;
                     break;
                 case "Q3":
-                    strDescription = "重要不紧急";
-                    intPriority = 20;
+                    this.strDescription = "重要不紧急";
+                    this.intPriority = 20;
                     break;
                 case "Q4":
-                    strDescription = "不重要不紧急";
-                    intPriority = 10;
+                    this.strDescription = "不重要不紧急";
+                    this.intPriority = 10;
                     break;
                 default:
                     break;

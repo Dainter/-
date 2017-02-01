@@ -115,11 +115,10 @@
     <Compile Include="Model\Procedure.cs" />
     <Compile Include="Model\ProcedureStep.cs" />
     <Compile Include="Model\QLevel.cs" />
-    <Compile Include="Model\QLevelFactory.cs" />
+    <Compile Include="Model\ModelFactory.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\TaskStatus.cs" />
     <Compile Include="Model\TaskType.cs" />
-    <Compile Include="Model\TaskTypeFactory.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

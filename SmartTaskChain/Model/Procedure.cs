@@ -10,7 +10,10 @@ namespace SmartTaskChain.Model
     {
         string strName;
         string strDescription;
+        //TaskType[1:1]
+        TaskType taskType;
         //ProcedureSteps()[1:n]
+        List<ProcedureStep> procedureSteps;
 
         public string Name
         {
@@ -29,16 +32,30 @@ namespace SmartTaskChain.Model
             { return strDescription; }
         }
 
+        public TaskType BindingType
+        {
+            get { return taskType; }
+            set { taskType = value; }
+        }
+
+        public List<ProcedureStep> ProcedureSteps
+        {
+            get { return procedureSteps; }
+            set { procedureSteps = value; }
+        }
+
         public Procedure(string sName, string sDescription="")
         {
-            strName = sName;
-            strDescription = sDescription;
+            this.strName = sName;
+            this.strDescription = sDescription;
+            this.procedureSteps = new List<ProcedureStep>();
         }
 
         public Procedure(XmlElement ModelPayload)
         {
             this.strName = GetText(ModelPayload, "Name");
             this.strDescription = GetText(ModelPayload, "Description");
+            this.procedureSteps = new List<ProcedureStep>();
         }
 
         //工具函数，从xml节点中读取某个标签的InnerText

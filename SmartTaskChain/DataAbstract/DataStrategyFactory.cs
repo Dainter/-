@@ -23,9 +23,13 @@ namespace SmartTaskChain.DataAbstract
             return _factory;
         }
 
-        public IfDataStrategy GetDataReader (string sPath)
+        public IfDataStrategy GetDataReader (string sPath = "")
         {
             ErrorCode err = ErrorCode.NoError;
+            if(sPath == "")
+            {
+                return _DBreader;
+            }
             //查表
             if(_DBreader == null)
             {

@@ -15,76 +15,107 @@ namespace SmartTaskChain.Model
         //TaskType[1:1]
         TaskType taskType;
         //Sumitter[1:1]
-        //Handler[1:1]
+        IfUser usrSubmitter;
         //CurrentStep[1:1]
-        //ProcedureStep currentStep;
+        ProcedureStep curStep;
+        //Handler[1:1]
+        IfUser usrHandler;
         //StartTime
         DateTime datStartTime;
         //DeadLine
         DateTime datDeadLine;
-        //CompleteTime
-        //DateTime datCompletedTime;
+        //CompleteTime(if TaskStatus == Completed then not null)
+        DateTime datCompletedTime;
         //Priority[1:1]
         QLevel eQlevel;
         //TaskStatus
         TaskStatus.EnumTaskStatus taskStatus;
         //DelayReason(if TaskStatus == Delay then not null)
-        //string strDelayReason;
+        string strDelayReason;
         
         public string Name
         {
             get { return strName; }
         }
-
         public string Type
         {
             get { return this.GetType().Name; }
         }
-
-        public string BusinessType
+        public TaskType BusinessType
         {
-            get { return this.taskType.Name; }
+            get { return this.taskType; }
         }
-
+        public IfUser Submitter
+        {
+            get { return usrSubmitter; }
+            set { usrSubmitter = value; }
+        }
+        public ProcedureStep CurrentStep
+        {
+            get { return curStep; }
+            set { curStep = value; }
+        }
+        public IfUser Handler
+        {
+            get { return usrHandler; }
+            set { usrHandler = value; }
+        }
         public DateTime StartTime
         {
             get { return datStartTime; }
         }
-
         public DateTime DeadLine
         {
             get { return datDeadLine; }
         }
-
+        public DateTime CompletedTime
+        {
+            get { return datCompletedTime; }
+        }
         public QLevel QLevel
         {
             get { return eQlevel; }
+            set { eQlevel = value; }
         }
-
         public string Status
         {
             get { return TaskStatus.ToString(taskStatus); }
             set { taskStatus = TaskStatus.ToEnum(value); }
         }
+        public string DelayReason
+        {
+            get { return strDelayReason; }
+            set { strDelayReason = value; }
+        }
 
-        public Task(string sName, string sBType, DateTime dStart, DateTime dDead, bool IsImportant = false, bool IsEmergency = false)
+        public Task(string sName, DateTime dStart, DateTime dDead)
         {
             this.strName = sName;
-            this.taskType = TaskTypeFactory.GetFactory().GetTaskType(sBType);
+            this.taskType = null;
+            this.usrSubmitter = null;
+            this.curStep = null;
+            this.usrHandler = null;
             this.datStartTime = dStart;
             this.datDeadLine = dDead;
-            this.eQlevel = QLevelFactory.GetFactory().GetQlevel(IsImportant, IsEmergency);
+            this.datCompletedTime = new DateTime(0);
+            this.eQlevel = null;
             this.taskStatus = TaskStatus.EnumTaskStatus.Process;
+            this.strDelayReason = "";
         }
 
         public Task(XmlElement ModelPayload)
         {
             this.strName = GetText(ModelPayload, "Name");
-            this.taskType = TaskTypeFactory.GetFactory().GetTaskType(GetText(ModelPayload, "BusinessType"));
+            this.taskType = null;
+            this.usrSubmitter = null;
+            this.curStep = null;
+            this.usrHandler = null;
             this.datStartTime = Convert.ToDateTime(GetText(ModelPayload, "StartTime"));
             this.datDeadLine = Convert.ToDateTime(GetText(ModelPayload, "DeadLine"));
-            this.eQlevel = QLevelFactory.GetFactory().GetQlevel(GetText(ModelPayload, "QLevel"));
+            this.datCompletedTime = Convert.ToDateTime(GetText(ModelPayload, "CompletedTime"));
+            this.eQlevel = null;
             this.taskStatus = TaskStatus.ToEnum(GetText(ModelPayload, "Status"));
+            this.strDelayReason = GetText(ModelPayload, "DelayReason"); ;
         }
 
         //工具函数，从xml节点中读取某个标签的InnerText
@@ -108,37 +139,37 @@ namespace SmartTaskChain.Model
         public XmlElement XMLSerialize(XmlElement BusinessPayload)
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt, btype_txt, start_txt, dead_txt, qlevel_txt, status_txt;
-            XmlElement name_xml, btype_xml, start_xml, dead_xml, qlevel_xml, status_xml, modelPayload;
+            XmlText name_txt, start_txt, dead_txt, comp_txt, status_txt, reason_txt;
+            XmlElement name_xml, start_xml, dead_xml, comp_xml, status_xml, reason_xml, modelPayload;
 
             modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
-            btype_xml = doc.CreateElement("BusinessType");
             start_xml = doc.CreateElement("StartTime");
             dead_xml = doc.CreateElement("DeadLine");
-            qlevel_xml = doc.CreateElement("QLevel");
+            comp_xml = doc.CreateElement("CompletedTime");
             status_xml = doc.CreateElement("Status");
+            reason_xml = doc.CreateElement("DelayReason");
 
             name_txt = doc.CreateTextNode(this.Name);
-            btype_txt = doc.CreateTextNode(this.BusinessType);
             start_txt = doc.CreateTextNode(this.StartTime.ToString());
             dead_txt = doc.CreateTextNode(this.DeadLine.ToString());
-            qlevel_txt = doc.CreateTextNode(this.QLevel.Name);
+            comp_txt = doc.CreateTextNode(this.CompletedTime.ToString());
             status_txt = doc.CreateTextNode(this.Status);
+            reason_txt = doc.CreateTextNode(this.DelayReason);
 
             name_xml.AppendChild(name_txt);
-            btype_xml.AppendChild(btype_txt);
             start_xml.AppendChild(start_txt);
             dead_xml.AppendChild(dead_txt);
-            qlevel_xml.AppendChild(qlevel_txt);
+            comp_xml.AppendChild(comp_txt);
             status_xml.AppendChild(status_txt);
+            reason_xml.AppendChild(reason_txt);
 
             modelPayload.AppendChild(name_xml);
-            modelPayload.AppendChild(btype_xml);
             modelPayload.AppendChild(start_xml);
             modelPayload.AppendChild(dead_xml);
-            modelPayload.AppendChild(qlevel_xml);
+            modelPayload.AppendChild(comp_xml);
             modelPayload.AppendChild(status_xml);
+            modelPayload.AppendChild(reason_xml);
             modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
 
             return modelPayload;

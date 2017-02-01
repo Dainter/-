@@ -13,8 +13,13 @@ namespace SmartTaskChain.Model
         //Description
         string strDescription;
         //Procedure[1:1]
+        Procedure procedure;
         //NextStep[1:1]
+        ProcedureStep nextStep;
         //PreviousStep[1:1]
+        ProcedureStep preStep;
+        //HandleRole[1:1]
+        UserRole handleRole;
 
 
         public string Name
@@ -22,28 +27,49 @@ namespace SmartTaskChain.Model
             get
             { return strName; }
         }
-
         public string Type
         {
             get { return this.GetType().Name; }
         }
-
         public int Index
         {
             get { return intIndex; }
         }
-
         public string Description
         {
             get
             { return strDescription; }
         }
+        public Procedure BelongToProcedure
+        {
+            get { return procedure; }
+            set { procedure = value; }
+        }
+        public ProcedureStep NextStep
+        {
+            get { return nextStep; }
+            set { nextStep = value; }
+        }
+        public ProcedureStep PreviousStep
+        {
+            get { return preStep; }
+            set { preStep = value; }
+        }
+        public UserRole HandleRole
+        {
+            get { return handleRole; }
+            set { handleRole = value; }
+        }
 
         public ProcedureStep(string sName, int iIndex, string sDescription = "")
         {
-            strName = sName;
-            intIndex = iIndex;
-            strDescription = sDescription;
+            this.strName = sName;
+            this.intIndex = iIndex;
+            this.strDescription = sDescription;
+            this.procedure = null;
+            this.nextStep = null;
+            this.preStep = null;
+            this.handleRole = null;
         }
 
         public ProcedureStep(XmlElement ModelPayload)
@@ -51,6 +77,10 @@ namespace SmartTaskChain.Model
             this.strName = GetText(ModelPayload, "Name");
             this.intIndex = Convert.ToInt32(GetText(ModelPayload, "Index"));
             this.strDescription = GetText(ModelPayload, "Description");
+            this.procedure = null;
+            this.nextStep = null;
+            this.preStep = null;
+            this.handleRole = null;
         }
 
         //工具函数，从xml节点中读取某个标签的InnerText
