@@ -1,23 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Windows;
-using System.Xml;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SmartTaskChain.Config;
 using SmartTaskChain.DataAbstract;
 using SmartTaskChain.Model;
 using SmartTaskChain.Business;
-using SmartTaskChain.Config;
-using GraphDB;
+
 
 namespace SmartTaskChain
 {
@@ -51,8 +39,10 @@ namespace SmartTaskChain
             //BuildQlevelNodes();
             //BuildProcedure1();
             //BuildProcedure2();
-            //BuildUserRole();
+            //BuildUserGroup();
             //BuildTaskType();
+            //BuildUser();
+            //BuildTask();
         }
 
         private void BuildQlevelNodes()
@@ -90,13 +80,23 @@ namespace SmartTaskChain
             RelationShip newRelation;
             newRelation = new RelationShip("报修处理流程", "Procedure", "报修_问题提交", "ProcedureStep", "Include", "1");
             DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("报修_问题提交", "ProcedureStep", "报修处理流程", "Procedure", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("报修处理流程", "Procedure", "报修_问题审核", "ProcedureStep", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("报修_问题审核", "ProcedureStep", "报修处理流程", "Procedure", "BelongTo", "1");
             DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("报修处理流程", "Procedure", "报修_维修单分配", "ProcedureStep", "Include", "1");
             DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("报修_维修单分配", "ProcedureStep", "报修处理流程", "Procedure", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("报修处理流程", "Procedure", "报修_维修单处理", "ProcedureStep", "Include", "1");
             DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("报修_维修单处理", "ProcedureStep", "报修处理流程", "Procedure", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("报修处理流程", "Procedure", "报修_维修结果反馈", "ProcedureStep", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("报修_维修结果反馈", "ProcedureStep", "报修处理流程", "Procedure", "BelongTo", "1");
             DataReader.InsertRelationShip(newRelation);
 
             //newRelation = new RelationShip("", "ProcedureStep", "", "ProcedureStep", "Include", "1");
@@ -135,10 +135,17 @@ namespace SmartTaskChain
             RelationShip newRelation;
             newRelation = new RelationShip("咨询处理流程", "Procedure", "咨询_问题提交", "ProcedureStep", "Include", "1");
             DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("咨询_问题提交", "ProcedureStep", "咨询处理流程", "Procedure", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("咨询处理流程", "Procedure", "咨询_问题回复", "ProcedureStep", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("咨询_问题回复", "ProcedureStep", "咨询处理流程", "Procedure", "BelongTo", "1");
             DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("咨询处理流程", "Procedure", "咨询_咨询结果反馈", "ProcedureStep", "Include", "1");
             DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("咨询_咨询结果反馈", "ProcedureStep", "咨询处理流程", "Procedure", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+
             //newRelation = new RelationShip("", "ProcedureStep", "", "ProcedureStep", "Include", "1");
             newRelation = new RelationShip("咨询_问题提交", "ProcedureStep", "咨询_问题回复", "ProcedureStep", "Next", "1");
             DataReader.InsertRelationShip(newRelation);
@@ -151,55 +158,55 @@ namespace SmartTaskChain
             DataReader.AcceptModification();
         }
 
-        private void BuildUserRole()
+        private void BuildUserGroup()
         {
-            UserGroup newRole;
-            newRole = new UserGroup("客户", "权限：提交维修单，查看自己提交的维修单。");
-            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserGroup("客服人员", "权限：审核维修单，查看自己处理的维修单。");
-            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserGroup("客服经理", "权限：收集维修单，查看自己处理的维修单，查看自己下属的维修单。");
-            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserGroup("维修工程师", "权限：处理维修单，查看自己处理的维修单。");
-            DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
+            UserGroup newGroup;
+            newGroup = new UserGroup("客户", "权限：提交维修单，查看自己提交的维修单。");
+            DataReader.InsertRecord(new Record(newGroup.Name, newGroup.Type, newGroup.XMLSerialize()));
+            newGroup = new UserGroup("客服人员", "权限：审核维修单，查看自己处理的维修单。");
+            DataReader.InsertRecord(new Record(newGroup.Name, newGroup.Type, newGroup.XMLSerialize()));
+            newGroup = new UserGroup("客服经理", "权限：收集维修单，查看自己处理的维修单，查看自己下属的维修单。");
+            DataReader.InsertRecord(new Record(newGroup.Name, newGroup.Type, newGroup.XMLSerialize()));
+            newGroup = new UserGroup("维修工程师", "权限：处理维修单，查看自己处理的维修单。");
+            DataReader.InsertRecord(new Record(newGroup.Name, newGroup.Type, newGroup.XMLSerialize()));
 
-            //newRelation = new RelationShip("", "UserRole", "", "ProcedureStep", "InCharge", "1");
-            //newRelation = new RelationShip("", "ProcedureStep", "", "UserRole", "HandleBy", "1");
+            //newRelation = new RelationShip("", "UserGroup", "", "ProcedureStep", "InCharge", "1");
+            //newRelation = new RelationShip("", "ProcedureStep", "", "UserGroup", "HandleBy", "1");
             RelationShip newRelation;
 
-            newRelation = new RelationShip("客户", "UserRole", "报修_问题提交", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客户", "UserGroup", "报修_问题提交", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("报修_问题提交", "ProcedureStep", "客户", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("报修_问题提交", "ProcedureStep", "客户", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("客服人员", "UserRole", "报修_问题审核", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客服人员", "UserGroup", "报修_问题审核", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("报修_问题审核", "ProcedureStep", "客服人员", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("报修_问题审核", "ProcedureStep", "客服人员", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("客服经理", "UserRole", "报修_维修单分配", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客服经理", "UserGroup", "报修_维修单分配", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("报修_维修单分配", "ProcedureStep", "客服经理", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("报修_维修单分配", "ProcedureStep", "客服经理", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("维修工程师", "UserRole", "报修_维修单处理", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("维修工程师", "UserGroup", "报修_维修单处理", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("报修_维修单处理", "ProcedureStep", "维修工程师", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("报修_维修单处理", "ProcedureStep", "维修工程师", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("客户", "UserRole", "报修_维修结果反馈", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客户", "UserGroup", "报修_维修结果反馈", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("报修_维修结果反馈", "ProcedureStep", "客户", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("报修_维修结果反馈", "ProcedureStep", "客户", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
 
 
-            newRelation = new RelationShip("客户", "UserRole", "咨询_问题提交", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客户", "UserGroup", "咨询_问题提交", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("咨询_问题提交", "ProcedureStep", "客户", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("咨询_问题提交", "ProcedureStep", "客户", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("客服人员", "UserRole", "咨询_问题回复", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客服人员", "UserGroup", "咨询_问题回复", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("咨询_问题回复", "ProcedureStep", "客服人员", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("咨询_问题回复", "ProcedureStep", "客服人员", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("客户", "UserRole", "咨询_咨询结果反馈", "ProcedureStep", "InCharge", "1");
+            newRelation = new RelationShip("客户", "UserGroup", "咨询_咨询结果反馈", "ProcedureStep", "InCharge", "1");
             DataReader.InsertRelationShip(newRelation);
-            newRelation = new RelationShip("咨询_咨询结果反馈", "ProcedureStep", "客户", "UserRole", "HandleBy", "1");
+            newRelation = new RelationShip("咨询_咨询结果反馈", "ProcedureStep", "客户", "UserGroup", "HandleBy", "1");
             DataReader.InsertRelationShip(newRelation);
 
             DataReader.AcceptModification();
@@ -222,6 +229,179 @@ namespace SmartTaskChain
             newRelation = new RelationShip("咨询任务", "TaskType", "咨询处理流程", "Procedure", "Assign", "1");
             DataReader.InsertRelationShip(newRelation);
             newRelation = new RelationShip("咨询处理流程", "Procedure", "咨询任务", "TaskType", "Binding", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            DataReader.AcceptModification();
+        }
+
+        private void BuildUser()
+        {
+            IfUser newUser;
+            newUser = new Customer("Alice", "", "159-1111-1111", "Intel");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+            newUser = new Customer("Bob", "", "159-2222-2222", "MicroSoft");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+
+            newUser = new ServiceUser("Clare", "", "S00001");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+            newUser = new ServiceUser("Douglas", "", "S00002");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+
+            newUser = new Engineer("Euler", "", "S00003");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+            newUser = new Engineer("Frank", "", "S00004");
+
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+            newUser = new Manager("Gloria", "", "S00005");
+            DataReader.InsertRecord(new Record(newUser.Name, newUser.Type, newUser.XMLSerialize()));
+
+
+            RelationShip newRelation;
+            //Inferior
+            newRelation = new RelationShip("Gloria", "Manager", "Clare", "ServiceUser", "Inferior", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Gloria", "Manager", "Douglas", "ServiceUser", "Inferior", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Gloria", "Manager", "Euler", "Engineer", "Inferior", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Gloria", "Manager", "Frank", "Engineer", "Inferior", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            //Include&Belong to
+            newRelation = new RelationShip("客户", "UserGroup", "Alice", "Customer", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Alice", "Customer", "客户", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("客户", "UserGroup", "Bob", "Customer", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Bob", "Customer", "客户", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            newRelation = new RelationShip("客服人员", "UserGroup", "Clare", "ServiceUser", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Clare", "ServiceUser", "客服人员", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("客服人员", "UserGroup", "Douglas", "ServiceUser", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Douglas", "ServiceUser", "客服人员", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            newRelation = new RelationShip("维修工程师", "UserGroup", "Euler", "Engineer", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Euler", "Engineer", "维修工程师", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("维修工程师", "UserGroup", "Frank", "Engineer", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Frank", "Engineer", "维修工程师", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            newRelation = new RelationShip("客服经理", "UserGroup", "Gloria", "Manager", "Include", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Gloria", "Manager", "客服经理", "UserGroup", "BelongTo", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            DataReader.AcceptModification();
+        }
+
+        private void BuildTask()
+        {
+            ProcedureTask newPTask;
+            CustomTask newCTask;
+            RelationShip newRelation;
+
+
+            //Q1////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            newPTask = new ProcedureTask("Question_1", DateTime.Now, DateTime.Now, "Qusestion1............");
+            DataReader.InsertRecord(new Record(newPTask.Name, newPTask.Type, newPTask.XMLSerialize()));
+            //Submitter&Submit
+            newRelation = new RelationShip("Question_1", "ProcedureTask", "Alice", "Customer", "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Alice", "Customer", "Question_1", "ProcedureTask", "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            newRelation = new RelationShip("Question_1", "ProcedureTask", "Q1", "QLevel", "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            newRelation = new RelationShip("Question_1", "ProcedureTask", "维修任务", "TaskType", "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //CurrentStep
+            newRelation = new RelationShip("Question_1", "ProcedureTask", "报修_问题审核", "ProcedureStep", "CurrentStep", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //Handler&Handle
+            newRelation = new RelationShip("Question_1", "ProcedureTask", "Clare", "ServiceUser", "Handler", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Clare", "ServiceUser", "Question_1", "ProcedureTask", "Handle", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+            //Q2/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            newPTask = new ProcedureTask("Question_2", DateTime.Now, DateTime.Now, "Qusestion2............");
+            DataReader.InsertRecord(new Record(newPTask.Name, newPTask.Type, newPTask.XMLSerialize()));
+            //Submitter&Submit
+            newRelation = new RelationShip("Question_2", "ProcedureTask", "Bob", "Customer", "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Bob", "Customer", "Question_1", "ProcedureTask", "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            newRelation = new RelationShip("Question_2", "ProcedureTask", "Q2", "QLevel", "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            newRelation = new RelationShip("Question_2", "ProcedureTask", "维修任务", "TaskType", "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //CurrentStep
+            newRelation = new RelationShip("Question_2", "ProcedureTask", "报修_维修单处理", "ProcedureStep", "CurrentStep", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //Handler&Handle
+            newRelation = new RelationShip("Question_2", "ProcedureTask", "Euler", "Engineer", "Handler", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Euler", "Engineer", "Question_2", "ProcedureTask", "Handle", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+
+            //PC1/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            newPTask = new ProcedureTask("Consulation_1", DateTime.Now, DateTime.Now, "Consulation_1............");
+            DataReader.InsertRecord(new Record(newPTask.Name, newPTask.Type, newPTask.XMLSerialize()));
+            //Submitter&Submit
+            newRelation = new RelationShip("Consulation_1", "ProcedureTask", "Bob", "Customer", "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Bob", "Customer", "Consulation_1", "ProcedureTask", "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            newRelation = new RelationShip("Consulation_1", "ProcedureTask", "Q3", "QLevel", "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            newRelation = new RelationShip("Consulation_1", "ProcedureTask", "咨询任务", "TaskType", "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //CurrentStep
+            newRelation = new RelationShip("Consulation_1", "ProcedureTask", "咨询_问题回复", "ProcedureStep", "CurrentStep", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //Handler&Handle
+            newRelation = new RelationShip("Consulation_1", "ProcedureTask", "Douglas", "ServiceUser", "Handler", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Douglas", "ServiceUser", "Consulation_1", "ProcedureTask", "Handle", "1");
+            DataReader.InsertRelationShip(newRelation);
+
+
+
+            //C1/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            newCTask = new CustomTask("CustomTask_1", DateTime.Now, DateTime.Now, "CustomTask_1............");
+            DataReader.InsertRecord(new Record(newCTask.Name, newCTask.Type, newCTask.XMLSerialize()));
+            //Submitter&Submit
+            newRelation = new RelationShip("CustomTask_1", "CustomTask", "Gloria", "Manager", "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Gloria", "Manager", "CustomTask_1", "CustomTask", "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            newRelation = new RelationShip("CustomTask_1", "CustomTask", "Q2", "QLevel", "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            TaskType newType = new TaskType("填报工时","填报本月工时");
+            DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
+            newRelation = new RelationShip("CustomTask_1", "CustomTask", "填报工时", "TaskType", "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //Handler&Handle
+            newRelation = new RelationShip("CustomTask_1", "CustomTask", "Douglas", "Engineer", "Handler", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip("Douglas", "Engineer", "CustomTask_1", "CustomTask", "Handle", "1");
             DataReader.InsertRelationShip(newRelation);
 
             DataReader.AcceptModification();

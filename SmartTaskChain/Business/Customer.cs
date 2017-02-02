@@ -50,7 +50,8 @@ namespace SmartTaskChain.Business
         public Customer(string sName, string sPwd, string sPhone, string sCompany)
         {
             this.user = new User(sName, sPwd, Type);
-
+            this.strPhone = sPhone;
+            this.strCompany = sCompany;
         }
 
         public Customer(XmlElement modelPayload)
@@ -71,8 +72,8 @@ namespace SmartTaskChain.Business
             phone_xml = doc.CreateElement("Phone");
             company_xml = doc.CreateElement("Company");
 
-            phone_txt = doc.CreateTextNode(this.Name);
-            company_txt = doc.CreateTextNode(this.Name);
+            phone_txt = doc.CreateTextNode(this.Phone);
+            company_txt = doc.CreateTextNode(this.Company);
 
             phone_xml.AppendChild(phone_txt);
             company_xml.AppendChild(company_txt);

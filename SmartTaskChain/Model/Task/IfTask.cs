@@ -8,6 +8,7 @@ namespace SmartTaskChain.Model
     {
         string Name { get; }
         string Type { get; }
+        TaskType BusinessType { get; set; }
         bool IsBindingProcedure { get; }
         IfUser Submitter { get; set; }
         IfUser Handler { get; set; }

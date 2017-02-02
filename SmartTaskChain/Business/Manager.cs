@@ -76,7 +76,7 @@ namespace SmartTaskChain.Business
             num_xml = doc.CreateElement("EmployeeNumber");
 
 
-            num_txt = doc.CreateTextNode(this.Name);
+            num_txt = doc.CreateTextNode(this.EmployeeNumber);
 
             num_xml.AppendChild(num_txt);
 

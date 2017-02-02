@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -421,7 +422,8 @@ namespace SmartTaskChain.Config
                 Brush brush = drawingBrush;
 
                 dc.DrawEllipse(brush, drawingPen, center, radius, radius);
-                if (sName.Length > 4)
+                
+                if (Encoding.Default.GetBytes(sName).Length > 8)
                 {
                     sName = sName.Insert((int)Math.Ceiling(sName.Length *1.0 / 2),"\n");
                 }

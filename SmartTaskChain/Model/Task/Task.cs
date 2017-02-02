@@ -42,6 +42,7 @@ namespace SmartTaskChain.Model
         public TaskType BusinessType
         {
             get { return this.taskType; }
+            set { this.taskType = value; }
         }
         public IfUser Submitter
         {
@@ -90,7 +91,6 @@ namespace SmartTaskChain.Model
             this.strName = sName;
             this.taskType = null;
             this.usrSubmitter = null;
-            
             this.usrHandler = null;
             this.datStartTime = dStart;
             this.datDeadLine = dDead;

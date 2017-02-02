@@ -13,5 +13,6 @@ namespace SmartTaskChain.Model
         List<IfTask> SubmitTasks { get; }
         List<IfTask> HandleTasks { get; }
 
+        XmlElement XMLSerialize();
     }
 }

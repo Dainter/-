@@ -19,11 +19,12 @@ namespace SmartTaskChain.Model
         }
         public string Type
         {
-            get { return task.Type; }
-        }
-        public string BusinessType
-        {
             get { return this.GetType().Name; }
+        }
+        public TaskType BusinessType
+        {
+            get { return this.task.BusinessType; }
+            set { this.task.BusinessType = value; }
         }
         public bool IsBindingProcedure
         {
@@ -92,7 +93,7 @@ namespace SmartTaskChain.Model
             this.strDescription = Utility.GetText(Utility.GetNode(modelPayload, "BussinessPayload"), "Description");
         }
 
-        public XmlElement XMLSerialize(XmlElement BusinessPayload)
+        public XmlElement XMLSerialize(XmlElement BusinessPayload = null)
         {
             XmlDocument doc = new XmlDocument();
             XmlText name_txt, start_txt, dead_txt, comp_txt, status_txt, reason_txt, desc_txt;
@@ -131,10 +132,12 @@ namespace SmartTaskChain.Model
             modelPayload.AppendChild(status_xml);
             modelPayload.AppendChild(reason_xml);
             modelPayload.AppendChild(desc_xml);
-            modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
+            if (BusinessPayload != null)
+            {
+                modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
+            }
 
             return modelPayload;
-
         }
     }
 }
