@@ -90,7 +90,7 @@
                 </r:RibbonGroupSizeDefinitionBaseCollection>
             </r:Ribbon.Resources>
             <r:Ribbon.ApplicationMenu>
-                <r:RibbonApplicationMenu SmallImageSource="/SmartTaskChain;component/config/images/IronCross_small.png">
+                <r:RibbonApplicationMenu SmallImageSource="/SmartTaskChain;component/config/images/siemens_logo_16.png">
                     <r:RibbonApplicationMenuItem Header="New" Command="{StaticResource NewCommand}" ImageSource="/SmartTaskChain;component/config/images/FileNew.png" ToolTipTitle="New" ToolTipDescription="{StaticResource NewTip}">
                     </r:RibbonApplicationMenuItem>
                     <r:RibbonApplicationMenuItem Header="Open" Command="{StaticResource OpenCommand}" ImageSource="/SmartTaskChain;component/config/images/FileOpen.png" ToolTipTitle="Open" ToolTipDescription="{StaticResource OpenTip}">

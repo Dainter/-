@@ -153,14 +153,14 @@ namespace SmartTaskChain
 
         private void BuildUserRole()
         {
-            UserRole newRole;
-            newRole = new UserRole("客户", "权限：提交维修单，查看自己提交的维修单。");
+            UserGroup newRole;
+            newRole = new UserGroup("客户", "权限：提交维修单，查看自己提交的维修单。");
             DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserRole("客服人员", "权限：审核维修单，查看自己处理的维修单。");
+            newRole = new UserGroup("客服人员", "权限：审核维修单，查看自己处理的维修单。");
             DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserRole("客服经理", "权限：收集维修单，查看自己处理的维修单，查看自己下属的维修单。");
+            newRole = new UserGroup("客服经理", "权限：收集维修单，查看自己处理的维修单，查看自己下属的维修单。");
             DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
-            newRole = new UserRole("维修工程师", "权限：处理维修单，查看自己处理的维修单。");
+            newRole = new UserGroup("维修工程师", "权限：处理维修单，查看自己处理的维修单。");
             DataReader.InsertRecord(new Record(newRole.Name, newRole.Type, newRole.XMLSerialize()));
 
             //newRelation = new RelationShip("", "UserRole", "", "ProcedureStep", "InCharge", "1");

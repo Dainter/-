@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartTaskChain.Model
 {
-    public class UserRole
+    public class UserGroup
     {
         //Name
         string strName;
@@ -42,7 +42,7 @@ namespace SmartTaskChain.Model
         }
 
 
-        public UserRole(string sName, string sDescription = "")
+        public UserGroup(string sName, string sDescription = "")
         {
             this.strName = sName;
             this.strDescription = sDescription;
@@ -50,30 +50,12 @@ namespace SmartTaskChain.Model
             this.procedureSteps = null;
         }
 
-        public UserRole(XmlElement ModelPayload)
+        public UserGroup(XmlElement ModelPayload)
         {
-            this.strName = GetText(ModelPayload, "Name");
-            this.strDescription = GetText(ModelPayload, "Description");
+            this.strName = Utility.GetText(ModelPayload, "Name");
+            this.strDescription = Utility.GetText(ModelPayload, "Description");
             this.usrHandlers = new List<IfUser>();
             this.procedureSteps = null;
-        }
-
-        //工具函数，从xml节点中读取某个标签的InnerText
-        string GetText(XmlElement curNode, string sLabel)
-        {
-            if (curNode == null)
-            {
-                return "";
-            }
-            //遍历子节点列表
-            foreach (XmlElement xNode in curNode.ChildNodes)
-            {
-                if (xNode.Name == sLabel)
-                {//查找和指定内容相同的标签，返回其Innner Text
-                    return xNode.InnerText;
-                }
-            }
-            return "";
         }
 
         public XmlElement XMLSerialize()

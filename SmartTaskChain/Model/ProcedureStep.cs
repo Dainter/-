@@ -19,7 +19,7 @@ namespace SmartTaskChain.Model
         //PreviousStep[1:1]
         ProcedureStep preStep;
         //HandleRole[1:1]
-        UserRole handleRole;
+        UserGroup handleRole;
 
 
         public string Name
@@ -55,7 +55,7 @@ namespace SmartTaskChain.Model
             get { return preStep; }
             set { preStep = value; }
         }
-        public UserRole HandleRole
+        public UserGroup HandleRole
         {
             get { return handleRole; }
             set { handleRole = value; }
@@ -74,31 +74,13 @@ namespace SmartTaskChain.Model
 
         public ProcedureStep(XmlElement ModelPayload)
         {
-            this.strName = GetText(ModelPayload, "Name");
-            this.intIndex = Convert.ToInt32(GetText(ModelPayload, "Index"));
-            this.strDescription = GetText(ModelPayload, "Description");
+            this.strName = Utility.GetText(ModelPayload, "Name");
+            this.intIndex = Convert.ToInt32(Utility.GetText(ModelPayload, "Index"));
+            this.strDescription = Utility.GetText(ModelPayload, "Description");
             this.procedure = null;
             this.nextStep = null;
             this.preStep = null;
             this.handleRole = null;
-        }
-
-        //工具函数，从xml节点中读取某个标签的InnerText
-        string GetText(XmlElement curNode, string sLabel)
-        {
-            if (curNode == null)
-            {
-                return "";
-            }
-            //遍历子节点列表
-            foreach (XmlElement xNode in curNode.ChildNodes)
-            {
-                if (xNode.Name == sLabel)
-                {//查找和指定内容相同的标签，返回其Innner Text
-                    return xNode.InnerText;
-                }
-            }
-            return "";
         }
 
         public XmlElement XMLSerialize()

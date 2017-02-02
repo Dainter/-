@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utility\Utility.cs" />
     <Page Include="Config\ConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -88,8 +89,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Task\CustomTask.cs" />
     <Compile Include="Business\Customer.cs" />
-    <Compile Include="Business\DefectTask.cs" />
+    <Compile Include="Model\Task\ProcedureTask.cs" />
     <Compile Include="Business\Engineer.cs" />
     <Compile Include="Business\Manager.cs" />
     <Compile Include="Business\ServiceUser.cs" />
@@ -110,17 +112,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\IfTask.cs" />
-    <Compile Include="Model\IfUser.cs" />
+    <Compile Include="Model\Task\IfTask.cs" />
+    <Compile Include="Model\User\IfUser.cs" />
     <Compile Include="Model\Procedure.cs" />
     <Compile Include="Model\ProcedureStep.cs" />
     <Compile Include="Model\QLevel.cs" />
     <Compile Include="Model\ModelFactory.cs" />
-    <Compile Include="Model\Task.cs" />
+    <Compile Include="Model\Task\Task.cs" />
     <Compile Include="Model\TaskStatus.cs" />
     <Compile Include="Model\TaskType.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="Model\UserRole.cs" />
+    <Compile Include="Model\User\User.cs" />
+    <Compile Include="Model\UserGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,7 +155,10 @@
       <Name>GraphDB</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Config\images\siemens_logo_16.png" />
+    <Resource Include="Config\images\siemens_logo_32.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Config\images\AddEdge.png" />
     <Resource Include="Config\images\AddEdge_small.png" />
@@ -213,6 +218,7 @@
     <Resource Include="Config\images\Tick_16x16.png" />
     <Resource Include="Config\images\Tick_32x32.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,8 +9,10 @@ namespace SmartTaskChain.Model
     {
         //Name
         string strName;
+        string strPassword;
+        string strBusinessType;
         //UserRoles[1:n]
-        List<UserRole> usrRoles;
+        List<UserGroup> usrGroups;
         //SubmitTasks[1:n]
         List<IfTask> taskSubmit;
         //HandleTasks[1:n]
@@ -23,13 +25,16 @@ namespace SmartTaskChain.Model
         }
         public string Type
         {
-            get { return this.GetType().Name; }
+            get { return this.strBusinessType; }
         }
-        public List<UserRole> UserRoles
+        public string Password
         {
-            get { return usrRoles; }
+            get { return strPassword; }
         }
-
+        public List<UserGroup> UserGroups
+        {
+            get { return usrGroups; }
+        }
         public List<IfTask> SubmitTasks
         {
             get { return taskSubmit; }
@@ -39,54 +44,44 @@ namespace SmartTaskChain.Model
             get { return taskHandle; }
         }
 
-        public User(string sName)
+        public User(string sName, string sPwd, string sBType)
         {
             this.strName = sName;
-            this.usrRoles = new List<UserRole>();
+            this.strBusinessType = sBType;
+            this.strPassword = sPwd;
+            this.usrGroups = new List<UserGroup>();
             this.taskSubmit =  new List<IfTask>();
             this.taskHandle = new List<IfTask>();
         }
 
         public User(XmlElement ModelPayload)
         {
-            this.strName = GetText(ModelPayload, "Name");
-            this.usrRoles = new List<UserRole>();
+            this.strName = Utility.GetText(ModelPayload, "Name");
+            this.strPassword = Utility.GetText(ModelPayload, "Password");
+            this.usrGroups = new List<UserGroup>();
             this.taskSubmit = new List<IfTask>();
             this.taskHandle = new List<IfTask>();
         }
 
-        //工具函数，从xml节点中读取某个标签的InnerText
-        string GetText(XmlElement curNode, string sLabel)
-        {
-            if (curNode == null)
-            {
-                return "";
-            }
-            //遍历子节点列表
-            foreach (XmlElement xNode in curNode.ChildNodes)
-            {
-                if (xNode.Name == sLabel)
-                {//查找和指定内容相同的标签，返回其Innner Text
-                    return xNode.InnerText;
-                }
-            }
-            return "";
-        }
-
-        public XmlElement XMLSerialize()
+        public XmlElement XMLSerialize(XmlElement BusinessPayload)
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt;
-            XmlElement name_xml, modelPayload;
+            XmlText name_txt, pwd_txt;
+            XmlElement name_xml, pwd_xml, modelPayload;
 
             modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
+            pwd_xml = doc.CreateElement("Password");
 
             name_txt = doc.CreateTextNode(this.Name);
+            pwd_txt = doc.CreateTextNode(this.Password);
 
             name_xml.AppendChild(name_txt);
+            pwd_xml.AppendChild(pwd_txt);
 
             modelPayload.AppendChild(name_xml);
+            modelPayload.AppendChild(pwd_xml);
+            modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
 
             return modelPayload;
         }
