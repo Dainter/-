@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using GraphDB;
+using GraphDB.Core;
 
 namespace SmartTaskChain.DataAbstract
 {
@@ -96,6 +97,68 @@ namespace SmartTaskChain.DataAbstract
                 }
             }
             return intCount;
+        }
+
+        public List<Record> GetRecordList(string sType = null)
+        {
+            List<Record> result = new List<Record>();
+
+            foreach(Node curNode in gdb.Nodes)
+            {
+                if(sType != null)
+                {
+                    if (curNode.Type != sType)
+                    {
+                        continue;
+                    }
+                }
+                result.Add(new Record(curNode));
+            }
+            return result;
+        }
+
+        public List<RelationShip> GetRelationList(string sSType, string sDType, string sRType)
+        {
+            List<RelationShip> result = new List<RelationShip>();
+
+            foreach (Edge curEdge in gdb.Edges)
+            {
+                if (sSType != null)
+                {
+                    if (curEdge.Start.Type != sSType)
+                    {
+                        continue;
+                    }
+                }
+                if (sDType != null)
+                {
+                    if (curEdge.End.Type != sDType)
+                    {
+                        continue;
+                    }
+                }
+                if (sRType != null)
+                {
+                    if (curEdge.Type != sRType)
+                    {
+                        continue;
+                    }
+                }
+                result.Add(new RelationShip(curEdge));
+            }
+            return result;
+        }
+
+        public Record GetDNodeBySNodeandEdgeType(string sSName, string sSType, string sRType)
+        {
+            string sDName, sDType;
+            gdb.GetDNodeBySNodeandEdgeType(sSName, sSType, sRType, out sDName,  out sDType);
+            return new Record(sDName, sDType, null);
+        }
+
+        public List<string> GetDNodesBySNodeandEdgeType(string sSName, string sSType, string sRType)
+        {
+            return gdb.GetNamesBySNodeandEdgeType(sSName, sSType, sRType);
         }
 
         public void AcceptModification()

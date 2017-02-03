@@ -4,6 +4,7 @@ using System.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using SmartTaskChain.Model;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Business
 {
@@ -64,6 +65,17 @@ namespace SmartTaskChain.Business
             this.user = new User(modelPayload);
             this.uInferiors = new List<IfUser>();
             this.strNumber = Utility.GetText(Utility.GetNode(modelPayload, "BussinessPayload"), "EmployeeNumber");
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            this.user.UpdateRelation(DataReader, dataset);
+            //UserRoles[1:n]
+            List<string> inferiors = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Inferior");
+            foreach (string username in inferiors)
+            {
+                this.uInferiors.Add(dataset.GetUserItem(username));
+            }
         }
 
         public XmlElement XMLSerialize()

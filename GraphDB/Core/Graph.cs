@@ -356,8 +356,36 @@ namespace GraphDB.Core
             return res;
         }
 
+        //查找Start开始的类型为Type的连边
+        public Edge GetEdgeBySNodeandEdgeType(string sSName, string sSType, string sRType)
+        {
+            Edge res;
+            Node start = GetNodesByNameAndType(sSName, sSType);
+
+            res = start.GetEdge(sRType, "Out");
+            if (res == null)
+            {
+                return null;
+            }
+            return res;
+        }
+
+        public List<string> GetNamesBySNodeandEdgeType(string sSName, string sSType, string sRType)
+        {
+            List<string> res = new List<string>();
+            List<Edge> edges;
+            Node start = GetNodesByNameAndType(sSName, sSType);
+
+            edges = start.GetEdges(sRType, "Out");
+            foreach(Edge edge in edges)
+            {
+                res.Add(edge.End.Name);
+            }
+            return res;
+        }
+
         //加入节点（接口）
-        public void AddNode(string sName, string sType, XmlNode payload, ref ErrorCode err)
+        public void AddNode(string sName, string sType, XmlElement payload, ref ErrorCode err)
         {
             Node newNode = null;
 
@@ -447,7 +475,7 @@ namespace GraphDB.Core
 
         //修改节点内部数据（接口）
         public void ModifyNode(string sName, string sType,
-                                                     ModifyOperation opt, XmlNode newPayload, ref ErrorCode err)
+                                                     ModifyOperation opt, XmlElement newPayload, ref ErrorCode err)
         {
             Node tarNode;
 

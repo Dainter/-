@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
@@ -31,7 +32,14 @@ namespace SmartTaskChain.Model
         }
         public bool IsBindingProcedure
         {
-            get { return this.task.IsBindingProcedure; }
+            get
+            {
+                if(task.BusinessType == null)
+                {
+                    return false;
+                }
+                return this.task.IsBindingProcedure;
+            }
         }
         public ProcedureStep CurrentStep
         {
@@ -100,6 +108,26 @@ namespace SmartTaskChain.Model
             this.task = new Task(modelPayload);
             this.curStep = null;
             this.strDescription = Utility.GetText(modelPayload, "Description");
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            Record record;
+            //TaskType[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "SetType");
+            this.task.BusinessType  = dataset.GetTypeItem(record.Name);
+            //Sumitter[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Submitter");
+            this.task.Submitter = dataset.GetUserItem(record.Name);
+            //Handler[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Handler");
+            this.task.Handler = dataset.GetUserItem(record.Name);
+            //Priority[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "SetPriority");
+            this.task.QLevel = dataset.GetQlevelItem(record.Name);
+            //CurrentStep[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "CurrentStep");
+            this.curStep = dataset.GetStepItem(record.Name);
         }
 
         public XmlElement XMLSerialize(XmlElement BusinessPayload = null)

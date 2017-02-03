@@ -37,7 +37,7 @@ namespace SmartTaskChain.Model
         public TaskType GetTaskType(string sName)
         {
             //查表，找不到可以创建新类型
-            return new TaskType(sName);
+            return new TaskType(sName, 50);
         }
 
         public Procedure GetProcedure(string sName)

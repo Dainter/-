@@ -17,7 +17,10 @@ namespace SmartTaskChain.DataAbstract
         //改
 
         //查
-
+        List<Record> GetRecordList(string sType = null);
+        List<RelationShip> GetRelationList(string sSType, string sDType, string strRType);
+        Record GetDNodeBySNodeandEdgeType(string sSName, string sSType, string sRType);
+        List<string> GetDNodesBySNodeandEdgeType(string sSName, string sSType, string sRType);
         //配置
         void AcceptModification();
 

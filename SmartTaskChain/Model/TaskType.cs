@@ -12,6 +12,7 @@ namespace SmartTaskChain.Model
         string strName;
         //string strBussinessType;
         string strDescription;
+        int intPriority;
         //Procedure(if IsDirectly = true then null)[1:1]
         Procedure procedure;
         
@@ -43,41 +44,65 @@ namespace SmartTaskChain.Model
             }
         }
 
+        public int Priority
+        {
+            get { return intPriority; }
+            set { intPriority = value; }
+        }
+
         public Procedure BindingProcedure
         {
             get { return procedure; }
             set { procedure = value; }
         }
 
-        public TaskType(string sName, string sDescription = "")
+        public TaskType(string sName, int iPriority, string sDescription = "")
         {
             this.strName = sName;
+            
+            this.intPriority = iPriority;
+            if (iPriority > 100 || iPriority <=0)
+            {
+                this.intPriority = 50;
+            }
             this.strDescription = sDescription;
         }
 
         public TaskType(XmlElement ModelPayload)
         {
             this.strName = Utility.GetText(ModelPayload, "Name");
+            this.intPriority = Convert.ToInt32(Utility.GetText(ModelPayload, "Priority"));
             this.strDescription = Utility.GetText(ModelPayload, "Description");
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            //Procedure
+            Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Assign");
+            this.procedure = dataset.GetProcedureItem(record.Name);
         }
 
         public XmlElement XMLSerialize()
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt, desc_txt;
-            XmlElement name_xml, desc_xml, modelPayload;
+            XmlText name_txt, desc_txt, prio_txt;
+            XmlElement name_xml, desc_xml, prio_xml, modelPayload;
 
             modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
+            prio_xml = doc.CreateElement("Priority");
             desc_xml = doc.CreateElement("Description");
 
             name_txt = doc.CreateTextNode(this.Name);
+            prio_txt = doc.CreateTextNode(this.Priority.ToString());
             desc_txt = doc.CreateTextNode(this.Description);
 
             name_xml.AppendChild(name_txt);
+            prio_xml.AppendChild(prio_txt);
             desc_xml.AppendChild(desc_txt);
 
             modelPayload.AppendChild(name_xml);
+            modelPayload.AppendChild(prio_xml);
             modelPayload.AppendChild(desc_xml);
 
             return modelPayload;

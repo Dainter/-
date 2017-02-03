@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using SmartTaskChain.Model;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Business
 {
@@ -53,6 +54,11 @@ namespace SmartTaskChain.Business
         {
             this.user = new User(modelPayload);
             this.strNumber = Utility.GetText(Utility.GetNode(modelPayload, "BussinessPayload"), "EmployeeNumber");
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            this.user.UpdateRelation(DataReader, dataset);
         }
 
         public XmlElement XMLSerialize()

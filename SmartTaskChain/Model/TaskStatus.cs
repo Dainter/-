@@ -24,7 +24,7 @@ namespace SmartTaskChain.Model
             switch(eStatus)
             {
                 case EnumTaskStatus.Process:
-                    return "Created";
+                    return "Process";
                 case EnumTaskStatus.Wait:
                     return "Wait";
                 case EnumTaskStatus.Rollback:
@@ -44,7 +44,7 @@ namespace SmartTaskChain.Model
         {
             switch (strStatus)
             {
-                case "Created":
+                case "Process":
                     return EnumTaskStatus.Process;
                 case "Wait":
                     return EnumTaskStatus.Wait;

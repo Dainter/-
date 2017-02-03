@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
-    public class ProcedureStep
+    public class ProcedureStep: IComparable
     {
         //Name
         string strName;
@@ -83,6 +84,23 @@ namespace SmartTaskChain.Model
             this.handleRole = null;
         }
 
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            Record record;
+            //Procedure
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "BelongTo");
+            this.procedure = dataset.GetProcedureItem(record.Name);
+            //NextStep
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Next");
+            this.nextStep = dataset.GetStepItem(record.Name);
+            //PreviousStep
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Previous");
+            this.preStep = dataset.GetStepItem(record.Name);
+            //HandleRole
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "HandleBy");
+            this.handleRole = dataset.GetGroupItem(record.Name);
+        }
+
         public XmlElement XMLSerialize()
         {
             XmlDocument doc = new XmlDocument();
@@ -109,5 +127,9 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
+        public int CompareTo(object other)
+        {
+            return this.Index.CompareTo(((ProcedureStep)other).Index);
+        }
     }
 }

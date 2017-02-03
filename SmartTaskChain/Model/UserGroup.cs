@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Text;
-using System.Threading.Tasks;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
@@ -12,10 +12,10 @@ namespace SmartTaskChain.Model
         string strName;
         //Description
         string strDescription;
-        //Handler[1:n]
-        List<IfUser> usrHandlers;
+        //Users[1:n]
+        List<IfUser> users;
         //ProcedureStep[1:1]
-        ProcedureStep procedureSteps;
+        List<ProcedureStep> procedureSteps;
 
         public string Name
         {
@@ -31,11 +31,11 @@ namespace SmartTaskChain.Model
             get
             { return strDescription; }
         }
-        public List<IfUser> Handlers
+        public List<IfUser> Users
         {
-            get { return usrHandlers; }
+            get { return users; }
         }
-        public ProcedureStep BindingStep
+        public List<ProcedureStep> BindingSteps
         {
             get { return procedureSteps; }
             set { procedureSteps = value; }
@@ -46,16 +46,32 @@ namespace SmartTaskChain.Model
         {
             this.strName = sName;
             this.strDescription = sDescription;
-            this.usrHandlers = new List<IfUser>();
-            this.procedureSteps = null;
+            this.users = new List<IfUser>();
+            this.procedureSteps = new List<ProcedureStep>();
         }
 
         public UserGroup(XmlElement ModelPayload)
         {
             this.strName = Utility.GetText(ModelPayload, "Name");
             this.strDescription = Utility.GetText(ModelPayload, "Description");
-            this.usrHandlers = new List<IfUser>();
-            this.procedureSteps = null;
+            this.users = new List<IfUser>();
+            this.procedureSteps = new List<ProcedureStep>();
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            //Users[1:n]
+            List<string> sUsers = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Include");
+            foreach (string username in sUsers)
+            {
+                this.users.Add(dataset.GetUserItem(username));
+            }
+            //ProcedureStep[1:n]
+            List<string> steps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "InCharge");
+            foreach (string step in steps)
+            {
+                this.procedureSteps.Add(dataset.GetStepItem(step));
+            }
         }
 
         public XmlElement XMLSerialize()

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using System.Collections.Generic;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
@@ -18,6 +18,8 @@ namespace SmartTaskChain.Model
         string Status { get; set; }
         string DelayReason { get; set; }
 
+        void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        
         //XmlElement XMLSerialize(XmlElement BusinessPayload);
     }
 }

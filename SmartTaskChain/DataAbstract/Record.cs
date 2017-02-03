@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Text;
-using System.Threading.Tasks;
-
+using GraphDB.Core;
 namespace SmartTaskChain.DataAbstract
 {
     public class Record
@@ -29,5 +27,13 @@ namespace SmartTaskChain.DataAbstract
             strType = sType;
             payload = pload;
         }
+
+        public Record(Node curNode)
+        {
+            strName = curNode.Name;
+            strType = curNode.Type;
+            payload = curNode.Payload;
+        }
+
     }
 }

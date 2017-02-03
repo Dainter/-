@@ -12,7 +12,7 @@ namespace GraphDB.Core
         int intNodeNum;                           //节点编号
         string nodeName;
         string nodeType;
-        XmlNode xmlPayload;
+        XmlElement xmlPayload;
         List<Edge> OutLink;       //连边 使用字典结构存放（目标节点号，连边对象）
         List<Edge> InLink;
         int intSaveIndex;
@@ -38,7 +38,7 @@ namespace GraphDB.Core
                 return nodeType;
             }
         }
-        public XmlNode Payload
+        public XmlElement Payload
         {
             get
             {
@@ -91,7 +91,7 @@ namespace GraphDB.Core
         }
         //方法///////////////////////////////
         //节点类Node构造函数
-        public Node(int intMaxNodeNum, string newName, string newType, XmlNode payload)    
+        public Node(int intMaxNodeNum, string newName, string newType, XmlElement payload)    
         {
             XmlDocument doc = new XmlDocument();
             this.intNodeNum = intMaxNodeNum;
@@ -100,7 +100,7 @@ namespace GraphDB.Core
             this.intSaveIndex = this.intNodeNum;
             if (payload != null)
             {
-                this.xmlPayload = doc.ImportNode(payload, true);
+                this.xmlPayload = (XmlElement)doc.ImportNode(payload, true);
             }
             else
             {
@@ -452,6 +452,63 @@ namespace GraphDB.Core
             {
                 return null;
             }
+        }
+
+        //查找连边
+        public Edge GetEdge(string sType, string opt)
+        {
+            if (opt == "In")
+            {
+                foreach (Edge edge in InBound)
+                {
+                    if (edge.Type == sType)
+                    {
+                        return edge;
+                    }
+                }
+                return null;
+            }
+            else if (opt == "Out")
+            {
+                foreach (Edge edge in OutBound)
+                {
+                    if (edge.Type == sType)
+                    {
+                        return edge;
+                    }
+                }
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<Edge> GetEdges(string sType, string opt)
+        {
+            List<Edge> res = new List<Edge>();
+            if (opt == "In")
+            {
+                foreach (Edge edge in InBound)
+                {
+                    if (edge.Type == sType)
+                    {
+                        res.Add(edge);
+                    }
+                }
+            }
+            else if (opt == "Out")
+            {
+                foreach (Edge edge in OutBound)
+                {
+                    if (edge.Type == sType)
+                    {
+                        res.Add(edge);
+                    }
+                }
+            }
+            return res;
         }
 
     }

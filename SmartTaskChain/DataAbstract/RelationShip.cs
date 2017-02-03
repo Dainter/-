@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using GraphDB.Core;
 
 namespace SmartTaskChain.DataAbstract
 {
@@ -50,6 +50,16 @@ namespace SmartTaskChain.DataAbstract
             strDestinationType = sDType;
             strRelationType = sType;
             strRelationValue = sValue;
+        }
+
+        public RelationShip(Edge curEdge)
+        {
+            strSourceName = curEdge.Start.Name;
+            strSourceType = curEdge.Start.Type;
+            strDestinationName = curEdge.End.Name;
+            strDestinationType = curEdge.End.Type;
+            strRelationType = curEdge.Type;
+            strRelationValue = curEdge.Value;
         }
 
     }

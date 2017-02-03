@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Text;
-using System.Threading.Tasks;
+using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
@@ -56,6 +56,20 @@ namespace SmartTaskChain.Model
             this.strName = Utility.GetText(ModelPayload, "Name");
             this.strDescription = Utility.GetText(ModelPayload, "Description");
             this.procedureSteps = new List<ProcedureStep>();
+        }
+
+        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            //TaskType
+            Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Binding");
+            this.taskType = dataset.GetTypeItem(record.Name);
+            //ProcedureSteps
+            List<string> steps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Include");
+            foreach(string stepname in steps)
+            {
+                procedureSteps.Add(dataset.GetStepItem(stepname));
+            }
+            procedureSteps.Sort();
         }
 
         public XmlElement XMLSerialize()

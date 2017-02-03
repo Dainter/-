@@ -53,6 +53,15 @@ namespace GraphDB
                 return graph.Nodes;
             }
         }
+
+        //获取连边列表
+        public List<Edge> Edges
+        {
+            get
+            {
+                return graph.Edges;
+            }
+        }
         //返回画布宽度
         public int Width
         {
@@ -136,7 +145,7 @@ namespace GraphDB
         }
 
         //插入数据节点
-        public void AddNodeData(string sName, string sType, XmlNode payload, ref ErrorCode err)
+        public void AddNodeData(string sName, string sType, XmlElement payload, ref ErrorCode err)
         {
             graph.AddNode(sName, sType, payload , ref err);
         }
@@ -155,7 +164,7 @@ namespace GraphDB
         }
         //修改节点内部数据
         public void ModifyNodeData(string sName, string sType,
-                                                     ModifyOperation opt, XmlNode payload, ref ErrorCode err)
+                                                     ModifyOperation opt, XmlElement payload, ref ErrorCode err)
         {
             graph.ModifyNode(sName, sType, opt, payload, ref err);
         }
@@ -189,6 +198,27 @@ namespace GraphDB
         {
             return graph.GetNodesByNameAndType(sName, sType);
         }
+
+        //查询函数，返回节点列表中指定名称和类型的节点outbound的类型
+        public void GetDNodeBySNodeandEdgeType(string sSName, string sSType, string sRType, out string sDName, out string sDType)
+        {
+            Edge edge = graph.GetEdgeBySNodeandEdgeType(sSName, sSType, sRType);
+            if (edge == null)
+            {
+                sDName = "";
+                sDType = "";
+                return;
+            }
+            sDName = edge.End.Name;
+            sDType = edge.End.Type;
+            return;
+        }
+
+        public List<string> GetNamesBySNodeandEdgeType(string sSName, string sSType, string sRType)
+        {
+            return graph.GetNamesBySNodeandEdgeType(sSName, sSType, sRType);
+        }
+
 
         //查询函数，返回指定名称和类型的节点的索引
         public int GetIndexByNameAndType(string sName, string sType)
