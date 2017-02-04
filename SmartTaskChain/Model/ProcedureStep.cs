@@ -131,5 +131,10 @@ namespace SmartTaskChain.Model
         {
             return this.Index.CompareTo(((ProcedureStep)other).Index);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

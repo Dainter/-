@@ -79,5 +79,10 @@ namespace SmartTaskChain.Business
 
             return this.user.XMLSerialize(businessPayload);
         }
+
+        public override string ToString()
+        {
+            return this.user.ToString();
+        }
     }
 }

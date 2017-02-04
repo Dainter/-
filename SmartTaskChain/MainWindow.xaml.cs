@@ -24,7 +24,7 @@ namespace SmartTaskChain
 
         private void WindowMain_Loaded(object sender, RoutedEventArgs e)
         {
-            ConfigWindow WinConfig = new ConfigWindow();
+            ConfigWindow WinConfig = new ConfigWindow(SmartChainDataSet);
             WinConfig.ShowDialog();
 
             

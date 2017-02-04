@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Text;
+using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,7 +11,7 @@ using System.Windows.Threading;
 using GraphDB;
 using GraphDB.Core;
 using GraphDB.Layout;
-using SmartTaskChain.Config;
+using SmartTaskChain.Model;
 using SmartTaskChain.Config.Drawing;
 using Microsoft.Win32;
 using Microsoft.Windows.Controls.Ribbon;
@@ -33,6 +34,7 @@ namespace SmartTaskChain.Config
     public partial class ConfigWindow
     {
         GraphDataBase gdb;
+        MainDataSet DataSet;
         bool isDbAvailable = false;
         DispatcherTimer StatusUpadteTimer;
         int intNodeIndex = -1;
@@ -41,19 +43,21 @@ namespace SmartTaskChain.Config
         Edge curModifyEdge;
         NodeInfo curSelectNode;
         
-        public ConfigWindow()
+        public ConfigWindow(MainDataSet dataset)
         {
             InitializeComponent();
+            DataSet = dataset;
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ErrorCode err = ErrorCode.NoError;
+            string strDBpath = Properties.Settings.Default.DataBasePath;
             AllReset();
             ChangeStyle("默认样式");
             StatusUpdateTimer_Init();
             gdb = new GraphDataBase();
-            gdb.OpenDataBase("Database.xml", ref err);
+            gdb.OpenDataBase(strDBpath, ref err);
             FillNodeList();
             isDbAvailable = true;
         }
@@ -491,6 +495,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            LoadNodeInfo(curSelNode.Name, curSelNode.Type);
             SetCurrentNodeInfo(index);
             DrawNodes = new List<Node>();
             NeibourNodes = new List<Node>();
@@ -528,6 +533,75 @@ namespace SmartTaskChain.Config
             SubGraph.StartCicro();
             DrawGarph();
         }
+        //显示节点细节信息
+        private void LoadNodeInfo(string sName, string sType)
+        {
+            int intRow = 0;
+            object curNode = DataSet.GetItem(sName, sType);
+            Label curTitle;
+            Control curContent;
+            RowDefinition newRow;
+            PropertyInfo[] pInfos = curNode.GetType().GetProperties();
+            NodeInfoGrid.Children.Clear();
+            NodeInfoGrid.RowDefinitions.Clear();
+            foreach (PropertyInfo pInfo in pInfos)
+            {
+                //TitleLabel
+                newRow = new RowDefinition() { Height = new GridLength(20, GridUnitType.Auto) }; 
+                NodeInfoGrid.RowDefinitions.Add(newRow);
+                curTitle = new Label();
+                curTitle.Content = pInfo.Name + ":";
+                NodeInfoGrid.Children.Add(curTitle);
+                curTitle.SetValue(Grid.RowProperty, intRow);
+                curTitle.SetValue(Grid.ColumnProperty, 0);
+                //Content
+                curContent = GetWidget(pInfo, curNode);
+                if(curContent == null)
+                {
+                    curContent = new TextBox();
+                    curContent.Margin = new Thickness(2);
+                    curContent.Width = 200;
+                }
+                NodeInfoGrid.Children.Add(curContent);
+                curContent.SetValue(Grid.RowProperty, intRow);
+                curContent.SetValue(Grid.ColumnProperty, 1);
+                intRow++;
+            }
+            return;
+        }
+
+        private Control GetWidget(PropertyInfo pInfo, object curNode)
+        {
+            
+            if(pInfo.PropertyType.Name == "List`1")
+            {
+                ListBox contentlistBox = new ListBox();
+                contentlistBox.Margin = new Thickness(2);
+                contentlistBox.Width = 200;
+                dynamic x = pInfo.GetValue(curNode, null);
+                foreach (var item in x)
+                {
+                    contentlistBox.Items.Add(item);
+                }
+                return contentlistBox;
+            }
+            TextBox contentBox;
+            Label newLabel;
+            contentBox = new TextBox();
+            newLabel = new Label();
+            contentBox.Margin = new Thickness(2);
+            contentBox.Width = 200;
+            contentBox.IsReadOnly = true;
+            newLabel.Content = pInfo.GetValue(curNode, null);
+            if(newLabel.Content == null)
+            {
+                newLabel.Content = "Null";
+            }
+            contentBox.Text = newLabel.Content.ToString();
+            return contentBox;
+        }
+
+
         //绘制节点图
         private void DrawGarph()
         {
@@ -639,17 +713,7 @@ namespace SmartTaskChain.Config
         //查询按钮执行函数
         private void ExecuteButton_Click(object sender, RoutedEventArgs e)
         {
-            //ErrorCode err = ErrorCode.NoError;
-            //string strResult, strCommand;
 
-            if (isDbAvailable == false)
-            {
-                return;
-            }
-            //START node('*-国家') MATCH (Kingdom)-[:统治]->(District)<-[:连通 5..5]-(Neibhour) WHERE * RETURN Kingdom.Name, District.*
-            //strCommand = CommandBox.Text;
-            //strResult = gdb.DataQueryExecute(strCommand, ref err);//
-            //ResultBox.Text = strResult;
         }
         //节点列表框选中事件处理函数
         private void NodeListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -712,42 +776,22 @@ namespace SmartTaskChain.Config
         //清除命令框内容命令执行
         private void ClearCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CommandBox.Text = "";
+            
         }
         //清除命令框按钮使能
         private void ClearCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (CommandBox == null)
-            {
-                return;
-            }
-            if (e.CanExecute == false && CommandBox.Text != "")
-            {
-                e.CanExecute = true;
-                return;
-            }
-            e.CanExecute = false;
-            return;
+            
         }
         //清除结果框内容命令执行
         private void ClearResultCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ResultBox.Text = "";
+            
         }
         //清除结果框按钮使能
         private void ClearResultCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (ResultBox == null)
-            {
-                return;
-            }
-            if (e.CanExecute == false && ResultBox.Text != "")
-            {
-                e.CanExecute = true;
-                return;
-            }
-            e.CanExecute = false;
-            return;
+            
         }
         //样式选择框
         private void NodeStyleSelection_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

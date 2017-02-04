@@ -164,5 +164,10 @@ namespace SmartTaskChain.Model
 
             return modelPayload;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

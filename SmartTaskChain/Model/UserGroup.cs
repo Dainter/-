@@ -41,7 +41,6 @@ namespace SmartTaskChain.Model
             set { procedureSteps = value; }
         }
 
-
         public UserGroup(string sName, string sDescription = "")
         {
             this.strName = sName;
@@ -61,12 +60,14 @@ namespace SmartTaskChain.Model
         public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             //Users[1:n]
+            this.users.Clear();
             List<string> sUsers = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Include");
             foreach (string username in sUsers)
             {
                 this.users.Add(dataset.GetUserItem(username));
             }
             //ProcedureStep[1:n]
+            this.procedureSteps.Clear();
             List<string> steps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "InCharge");
             foreach (string step in steps)
             {
@@ -96,5 +97,9 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
+        public override string ToString()
+        { 
+            return Name;
+        }
     }
 }

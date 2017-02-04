@@ -123,6 +123,34 @@ namespace SmartTaskChain.Model
             }
         }
 
+        public object GetItem(string sName, string sType)
+        {
+            switch (sType)
+            {
+                case "Customer":
+                case "ServiceUser":
+                case "Engineer":
+                case "Manager":
+                    return GetUserItem(sName);
+                case "ProcedureTask":
+                case "CustomTask":
+                    return GetTaskItem(sName);
+                case "QLevel":
+                    return GetQlevelItem(sName);
+                case "TaskType":
+                    return GetTypeItem(sName);
+                case "Procedure":
+                    return GetProcedureItem(sName);
+                case "ProcedureStep":
+                    return GetStepItem(sName);
+                case "UserGroup":
+                    return GetGroupItem(sName);
+                default:
+                    break;
+            }
+            return null;
+        }
+
         public TaskType GetTypeItem(string sName)
         {
             foreach (TaskType curItem in taskTypeList)

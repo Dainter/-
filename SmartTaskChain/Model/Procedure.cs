@@ -64,10 +64,11 @@ namespace SmartTaskChain.Model
             Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Binding");
             this.taskType = dataset.GetTypeItem(record.Name);
             //ProcedureSteps
+            this.procedureSteps.Clear();
             List<string> steps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Include");
             foreach(string stepname in steps)
             {
-                procedureSteps.Add(dataset.GetStepItem(stepname));
+                this.procedureSteps.Add(dataset.GetStepItem(stepname));
             }
             procedureSteps.Sort();
         }
@@ -94,5 +95,9 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -68,6 +68,7 @@ namespace SmartTaskChain.Model
         public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             //UserRoles[1:n]
+            this.usrGroups.Clear();
             List < string> groups = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "BelongTo");
             foreach (string group in groups)
             {
@@ -75,12 +76,14 @@ namespace SmartTaskChain.Model
             }
             List<string> tasks;
             //SubmitTasks[1:n]
+            this.taskSubmit.Clear();
             tasks = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Submit");
             foreach (string taskname in tasks)
             {
                 this.taskSubmit.Add(dataset.GetTaskItem(taskname));
             }
             //HandleTasks[1:n]
+            this.taskHandle.Clear();
             tasks = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Handle");
             foreach (string taskname in tasks)
             {
@@ -115,5 +118,9 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

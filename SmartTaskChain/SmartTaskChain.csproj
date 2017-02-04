@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Config\images\SmartTaskChain.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -118,7 +121,6 @@
     <Compile Include="Model\Procedure.cs" />
     <Compile Include="Model\ProcedureStep.cs" />
     <Compile Include="Model\QLevel.cs" />
-    <Compile Include="Model\ModelFactory.cs" />
     <Compile Include="Model\Task\Task.cs" />
     <Compile Include="Model\TaskStatus.cs" />
     <Compile Include="Model\TaskType.cs" />
@@ -219,7 +221,9 @@
     <Resource Include="Config\images\Tick_16x16.png" />
     <Resource Include="Config\images\Tick_32x32.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Config\images\SmartTaskChain.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
