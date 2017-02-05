@@ -554,6 +554,7 @@ namespace SmartTaskChain.Config
                 NodeInfoGrid.Children.Add(curTitle);
                 curTitle.SetValue(Grid.RowProperty, intRow);
                 curTitle.SetValue(Grid.ColumnProperty, 0);
+                curTitle.HorizontalContentAlignment = HorizontalAlignment.Right;
                 //Content
                 curContent = GetWidget(pInfo, curNode);
                 if(curContent == null)
@@ -868,6 +869,41 @@ namespace SmartTaskChain.Config
             TextBrush = bFore;
             radius = Convert.ToInt32(dubHeight / 2);
         }
+        //新建任务按钮命令执行
+        private void NewTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //编辑任务按钮命令执行
+        private void EditTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //编辑用户按钮命令执行
+        private void EditUserCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+        //编辑用户组按钮命令执行
+        private void EditGroupCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //编辑重要性程度按钮命令执行
+        private void EditQlevelCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //编辑任务类型按钮命令执行
+        private void EditTypeCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //编辑流程按钮命令执行
+        private void EditProcedureCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
 
         #endregion
 
@@ -895,10 +931,7 @@ namespace SmartTaskChain.Config
         {
             ModifyPropertyComboBox.Items.Clear();
             ModifyPropertyTextBox.Text = "";
-            //foreach (NodeProperty np in curSelectNode.Properties)
-            //{
-            //    ModifyPropertyComboBox.Items.Add(np.Key);
-            //}
+            
         }
         //更新属性值
         private void ModifyPropertyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1495,7 +1528,9 @@ namespace SmartTaskChain.Config
             e.CanExecute = isDbAvailable;
         }
 
+
         #endregion
 
+        
     }
 }

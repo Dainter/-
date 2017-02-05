@@ -39,6 +39,15 @@
         <CommandBinding x:Name="ModifyEdgeCommand" Command="{StaticResource ModifyEdgeCommand}" Executed="ModifyEdgeCommand_Executed" CanExecute="ModifyEdgeCommand_CanExecute"></CommandBinding>
         <CommandBinding x:Name="RemoveNodeCommand" Command="{StaticResource RemoveNodeCommand}" Executed="RemoveNodeCommand_Executed" CanExecute="RemoveNodeCommand_CanExecute"></CommandBinding>
         <CommandBinding x:Name="RemoveEdgeCommand" Command="{StaticResource RemoveEdgeCommand}" Executed="RemoveEdgeCommand_Executed" CanExecute="RemoveEdgeCommand_CanExecute"></CommandBinding>
+
+        <CommandBinding x:Name="NewTaskCommand" Command="{StaticResource NewTaskCommand}" Executed="NewTaskCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditTaskCommand" Command="{StaticResource EditTaskCommand}" Executed="EditTaskCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditUserCommand" Command="{StaticResource EditUserCommand}" Executed="EditUserCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditGroupCommand" Command="{StaticResource EditGroupCommand}" Executed="EditGroupCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditQlevelCommand" Command="{StaticResource EditQlevelCommand}" Executed="EditQlevelCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditTypeCommand" Command="{StaticResource EditTypeCommand}" Executed="EditTypeCommand_Executed"></CommandBinding>
+        <CommandBinding x:Name="EditProcedureCommand" Command="{StaticResource EditProcedureCommand}" Executed="EditProcedureCommand_Executed"></CommandBinding>
+
     </r:RibbonWindow.CommandBindings>
     <Grid Name="MainLayout" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window, AncestorLevel=1}}">
         <Grid.RowDefinitions>
@@ -124,6 +133,21 @@
                     <r:RibbonButton Label="Save" Command="{StaticResource SaveCommand}" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png"></r:RibbonButton>
                 </r:RibbonQuickAccessToolBar>
             </r:Ribbon.QuickAccessToolBar>
+            <r:RibbonTab Name="ribConfigTab" Header="Configure">
+                <r:RibbonGroup Header="Task" GroupSizeDefinitions="{StaticResource RibbonLayout}">
+                    <r:RibbonButton Label="New" Command="{DynamicResource NewTaskCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="{DynamicResource NewTaskTip}"></r:RibbonButton>
+                    <r:RibbonButton Label="Edit" Command="{DynamicResource EditTaskCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit Tasks" ToolTipDescription="{DynamicResource EditTaskTip}"></r:RibbonButton>
+                </r:RibbonGroup>
+                <r:RibbonGroup Header="User" GroupSizeDefinitions="{StaticResource RibbonLayout}">
+                    <r:RibbonButton Label="User" Command="{DynamicResource EditUserCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit User" ToolTipDescription="{DynamicResource EditUserTip}"></r:RibbonButton>
+                    <r:RibbonButton Label="User Group" Command="{DynamicResource EditGroupCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit User Group" ToolTipDescription="{DynamicResource EditGroupTip}"></r:RibbonButton>
+                </r:RibbonGroup>
+                <r:RibbonGroup Header="Parameter" GroupSizeDefinitions="{StaticResource RibbonLayout}">
+                    <r:RibbonButton Label="Importance Urgency" Command="{DynamicResource EditQlevelCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit Importance and Urgency" ToolTipDescription="{DynamicResource EditQlevelTip}"></r:RibbonButton>
+                    <r:RibbonButton Label="Task Type" Command="{DynamicResource EditTypeCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit Task Type" ToolTipDescription="{DynamicResource EditTypeTip}"></r:RibbonButton>
+                    <r:RibbonButton Label="Task Procedure" Command="{DynamicResource EditProcedureCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="Edit Task Procedure" ToolTipDescription="{DynamicResource EditProcedureTip}"></r:RibbonButton>
+                </r:RibbonGroup>
+            </r:RibbonTab>
             <r:RibbonTab Name = "ribHomeTab" Header="Home" >
                 <r:RibbonGroup Header="File" GroupSizeDefinitions="{StaticResource RibbonLayout}">
                     <r:RibbonButton Label="New" Command="{StaticResource NewCommand}" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="New" ToolTipDescription="{StaticResource NewTip}"></r:RibbonButton>
@@ -411,10 +435,9 @@
                     <ColumnDefinition Width="Auto" MinWidth="100"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                
+
             </Grid>
         </Border>
-        
     </Grid>
     <!--<r:RibbonWindow.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="RibbonTaskBar" ThumbnailClipMargin="30,30,30,30" ProgressValue="0.5" ProgressState="Indeterminate" Overlay="/SmartTaskChain;component/config/images/CustomActionsMenu.png">

@@ -15,6 +15,14 @@
     <sys:String x:Key="ClearCommandTip">Clear the content of the Command Box.</sys:String>
     <sys:String x:Key="ClearResultTip">Clear the content of the Result Box</sys:String>
 
+    <sys:String x:Key="NewTaskTip">Create a new task.</sys:String>
+    <sys:String x:Key="EditTaskTip">Edit current tasks.</sys:String>
+    <sys:String x:Key="EditUserTip">Edit current users</sys:String>
+    <sys:String x:Key="EditGroupTip">Edit current user groups.</sys:String>
+    <sys:String x:Key="EditQlevelTip">Edit the priority of Q levels.</sys:String>
+    <sys:String x:Key="EditTypeTip">Edit current task types.</sys:String>
+    <sys:String x:Key="EditProcedureTip">Edit current task procedures and steps.</sys:String>
+
     <sys:String x:Key="DefaultStyleTip">默认节点样式.</sys:String>
     <sys:String x:Key="PurpleStyleTip" xml:space="preserve">“奇迹的不是那片星域如此辽阔，而是人类竟然成功测量了它。”&#x0a;-阿纳托尔·法郎士（法国小说家）</sys:String>
     <sys:String x:Key="BlueStyleTip" xml:space="preserve">“如果我的心像底比斯有一百座城门，我一定让快乐成打进来。”&#x0a;-苏格拉底</sys:String>

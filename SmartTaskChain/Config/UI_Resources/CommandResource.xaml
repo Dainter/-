@@ -21,4 +21,14 @@
     <RoutedUICommand x:Key="RemoveNodeCommand" Text="RemoveNode" />
     <RoutedUICommand x:Key="RemoveEdgeCommand" Text="RemoveEdge" />
 
+    <RoutedUICommand x:Key="NewTaskCommand" Text="NewTaskCommand" />
+    <RoutedUICommand x:Key="EditTaskCommand" Text="EditTaskCommand" />
+
+    <RoutedUICommand x:Key="EditUserCommand" Text="EditUserCommand" />
+    <RoutedUICommand x:Key="EditGroupCommand" Text="EditGroupCommand" />
+
+    <RoutedUICommand x:Key="EditQlevelCommand" Text="QlevelCommand" />
+    <RoutedUICommand x:Key="EditTypeCommand" Text="TypeCommand" />
+    <RoutedUICommand x:Key="EditProcedureCommand" Text="ProcedureCommand" />
+
 </ResourceDictionary>

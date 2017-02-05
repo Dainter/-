@@ -18,6 +18,36 @@ namespace SmartTaskChain.Model
 
         IfDataStrategy DataReader;
 
+        public List<QLevel>QLevels
+        {
+            get { return qlevelList; }
+        }
+        public List<TaskType> TaskTypes
+        {
+            get { return taskTypeList; }
+        }
+        public List<Procedure> Procedures
+        {
+            get { return procedureList; }
+        }
+        public List<ProcedureStep> ProcedureSteps
+        {
+            get { return stepList; }
+        }
+        public List<UserGroup> UserGroups
+        {
+            get { return userGroupList; }
+        }
+        public List<IfUser> Users
+        {
+            get { return userList; }
+        }
+        public List<IfTask> Tasks
+        {
+            get { return taskList; }
+        }
+
+
         public MainDataSet()
         {
             string strDBpath = Properties.Settings.Default.DataBasePath;
