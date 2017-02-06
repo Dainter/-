@@ -12,6 +12,7 @@ using GraphDB;
 using GraphDB.Core;
 using GraphDB.Layout;
 using SmartTaskChain.Model;
+using SmartTaskChain.Config.Dialogs;
 using SmartTaskChain.Config.Drawing;
 using Microsoft.Win32;
 using Microsoft.Windows.Controls.Ribbon;
@@ -872,6 +873,9 @@ namespace SmartTaskChain.Config
         //新建任务按钮命令执行
         private void NewTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            WinCreateTask createWindow = new WinCreateTask();
+            createWindow.Owner = this;
+            createWindow.ShowDialog();
 
         }
         //编辑任务按钮命令执行

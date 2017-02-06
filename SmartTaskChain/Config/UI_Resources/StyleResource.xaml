@@ -250,4 +250,30 @@
         <Setter Property="Shape.Width" Value="54"/>
         <Setter Property="Control.Foreground" Value="#FF800040"/>
     </Style>
+    <ControlTemplate x:Key="CloseButtonTemplate">
+        <Image Stretch="Fill" Source="/SmartTaskChain;component/config/images/Close.png"/>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsPressed" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <ControlTemplate x:Key="AcceptButtonTemplate">
+        <Image Stretch="Fill" Source="/SmartTaskChain;component/config/images/Accept.png"/>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsPressed" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>

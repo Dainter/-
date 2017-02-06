@@ -42,4 +42,8 @@ Remove Property - Select a exist key and empty its value, then click the button.
     <sys:String x:Key="ModifyEdgeTip" xml:space="preserve">Modify the key or value of current edge.
 Modify Edge - Change the value of Key or Value field, then click the button.    
     </sys:String>
+
+    <sys:String x:Key="CloseTip">Close the window.</sys:String>
+    <sys:String x:Key="AcceptTip">Submit.</sys:String>
+    <sys:String x:Key="WarnTip">Please enter a non-empty value.</sys:String>
 </ResourceDictionary>

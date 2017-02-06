@@ -31,5 +31,14 @@ namespace SmartTaskChain.Properties {
                 return ((string)(this["DataBasePath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF00")]
+        public global::System.Windows.Media.SolidColorBrush ForeColor {
+            get {
+                return ((global::System.Windows.Media.SolidColorBrush)(this["ForeColor"]));
+            }
+        }
     }
 }

@@ -63,9 +63,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Config\Dialogs\WinCreateTask.xaml.cs">
+      <DependentUpon>WinCreateTask.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\UI_Resources\SystemConverter.cs" />
     <Compile Include="Model\MainDataSet.cs" />
     <Compile Include="Utility\Utility.cs" />
     <Page Include="Config\ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinCreateTask.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,8 +233,11 @@
     <Resource Include="Config\images\SmartTaskChain.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Config\Dialogs\" />
+    <Resource Include="Config\images\Accept.png" />
+    <Resource Include="Config\images\Close.png" />
+    <Resource Include="Config\images\EditTaskStep.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
