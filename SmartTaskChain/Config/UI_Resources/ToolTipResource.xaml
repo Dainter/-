@@ -17,6 +17,7 @@
 
     <sys:String x:Key="NewTaskTip">Create a new task.</sys:String>
     <sys:String x:Key="EditTaskTip">Edit current tasks.</sys:String>
+    <sys:String x:Key="ShowTaskDetailsTip">Show detail information of tasks.</sys:String>
     <sys:String x:Key="EditUserTip">Edit current users</sys:String>
     <sys:String x:Key="EditGroupTip">Edit current user groups.</sys:String>
     <sys:String x:Key="EditQlevelTip">Edit the priority of Q levels.</sys:String>

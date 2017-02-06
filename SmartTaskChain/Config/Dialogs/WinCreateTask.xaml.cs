@@ -34,21 +34,29 @@ namespace SmartTaskChain.Config.Dialogs
             IntPtr hwnd,
             ref MARGINS pMarInset);
         //Global Elements
-        string strName, strCategory, strQlevel;
+        MainDataSet mainDataSet;
+        string strName,strSubmitter, strHandler, strType, strQlevel;
         DateTime sDate, dDate;
         //Database
 
 
-        public WinCreateTask()
+        public WinCreateTask(MainDataSet DataSet)
         {
             InitializeComponent();
+            mainDataSet = DataSet;
         }
 
         private void WinCreateTask_Loaded(object sender, RoutedEventArgs e)
         {
+            StyleInit();
+            DataInit();
+        }
+
+        private void StyleInit()
+        {
+            this.Resources["TransparentForeColor"] = Properties.Settings.Default.ForeColor;
             this.Background = Brushes.Transparent;
             ExtendAeroGlass(this);
-            DataInit();
         }
 
         private void ExtendAeroGlass(Window window)
@@ -83,7 +91,11 @@ namespace SmartTaskChain.Config.Dialogs
 
         private void DataInit()
         {
-
+            SubmitterComboBox.ItemsSource = mainDataSet.Users;
+            HandlerComboBox.ItemsSource = mainDataSet.Users;
+            typeProcedureComboBox.ItemsSource = mainDataSet.ProcedureTypes;
+            typeCustomComboBox.ItemsSource = mainDataSet.CustomTypes;
+            qlevelComboBox.ItemsSource = mainDataSet.QLevels;
         }
 
         private void WinCreateTask_MouseMove(object sender, MouseEventArgs e)
@@ -159,11 +171,29 @@ namespace SmartTaskChain.Config.Dialogs
                 return false;
             }
             //任务类别
-            strCategory = categoryComboBox.Text;
-            if (strCategory == "")
+            strSubmitter = SubmitterComboBox.Text;
+            if (strType == "")
             {
-                InputWarning.PlacementTarget = categoryComboBox;
+                InputWarning.PlacementTarget = SubmitterComboBox;
                 WarningInfo.Text = "Please select a category for the task.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            //任务类别
+            strHandler = HandlerComboBox.Text;
+            if (strType == "")
+            {
+                InputWarning.PlacementTarget = HandlerComboBox;
+                WarningInfo.Text = "Please select the handler for the task.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            //任务类别
+            strType = typeProcedureComboBox.Text;
+            if (strType == "")
+            {
+                InputWarning.PlacementTarget = typeProcedureComboBox;
+                WarningInfo.Text = "Please select a type for the task or input a custom type.";
                 InputWarning.IsOpen = true;
                 return false;
             }

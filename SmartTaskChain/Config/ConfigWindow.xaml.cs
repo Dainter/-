@@ -873,13 +873,21 @@ namespace SmartTaskChain.Config
         //新建任务按钮命令执行
         private void NewTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            WinCreateTask createWindow = new WinCreateTask();
+            WinCreateTask createWindow = new WinCreateTask(this.DataSet);
             createWindow.Owner = this;
-            createWindow.ShowDialog();
+            if (createWindow.ShowDialog() == false)
+            {
+                return;
+            }
 
         }
         //编辑任务按钮命令执行
         private void EditTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        //查看任务详细信息按钮命令执行
+        private void ShowTaskDetailCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
 
         }
@@ -1533,8 +1541,9 @@ namespace SmartTaskChain.Config
         }
 
 
+
         #endregion
 
-        
+
     }
 }

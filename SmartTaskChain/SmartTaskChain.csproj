@@ -237,7 +237,36 @@
     <Resource Include="Config\images\Close.png" />
     <Resource Include="Config\images\EditTaskStep.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Config\images\User.ico" />
+    <Resource Include="Config\images\UserGroup.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\AddOrRemoveUser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\Important.png" />
+    <Resource Include="Config\images\Important_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\Procedure.png" />
+    <Resource Include="Config\images\Procedure_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\TaskAccept.png" />
+    <Resource Include="Config\images\TaskAssign.png" />
+    <Resource Include="Config\images\TaskAssign_16x16.png" />
+    <Resource Include="Config\images\TaskDecline.png" />
+    <Resource Include="Config\images\TaskEdit.png" />
+    <Resource Include="Config\images\TaskEdit_16x16.png" />
+    <Resource Include="Config\images\TaskNew.png" />
+    <Resource Include="Config\images\TaskNew_16x16.png" />
+    <Resource Include="Config\images\TaskShowDetails.png" />
+    <Resource Include="Config\images\TaskShowDetails_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\TaskType.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

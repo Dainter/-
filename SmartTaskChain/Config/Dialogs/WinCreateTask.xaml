@@ -15,6 +15,8 @@
                 <ResourceDictionary Source="../UI_Resources/ToolTipResource.xaml"/>
                 <ResourceDictionary Source="../UI_Resources/StyleResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ui:BoolVisiableReverseConverter x:Key="BoolVisiableReverseConverter"/>
+            <ui:BoolVisiableConverter x:Key="BoolVisiableConverter"/>
             <ui:BoolReverseConverter x:Key="BoolReverseConverter"/>
             <SolidColorBrush x:Key="TransparentForeColor" Color="Yellow"/>
         </ResourceDictionary>
@@ -28,9 +30,9 @@
             <ColumnDefinition />
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20" Foreground="{DynamicResource TransparentForeColor}" VerticalAlignment="Center"><Run Text="创建任务"/></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="20" Foreground="{DynamicResource TransparentForeColor}" VerticalAlignment="Center"><Run Text="Create Task"/></TextBlock>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="3">
-            <Button x:Name="CloseButton" Template="{StaticResource CloseButtonTemplate}" ToolTip="{DynamicResource CloseTip}" Click="CloseButton_Click" />
+            <Button x:Name="CloseButton" Template="{StaticResource CloseButtonTemplate}" ToolTip="{DynamicResource CloseTip}" Click="CloseButton_Click" IsCancel="True" />
         </StackPanel>
         <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
@@ -45,35 +47,63 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Task Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" />
+            <Label Content="Task Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
             <TextBox x:Name="taskNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" Width="120" />
-            <Label Content="Start Date:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
-            <DatePicker x:Name="startDateDatePicker" Grid.Column="1" Margin="3" Grid.Row="1" VerticalAlignment="Center" SelectedDateFormat="Short" IsEnabled="{Binding IsChecked, Converter={StaticResource BoolReverseConverter}, ElementName=IsNowCheckBox}" />
-            <CheckBox x:Name="IsNowCheckBox" Grid.Column="1" Grid.Row="2" IsChecked="True">Now</CheckBox>
-            <Label Content="Dead Date:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
-            <DatePicker x:Name="deadDateDatePicker" Grid.Column="1" Margin="3" Grid.Row="3" VerticalAlignment="Center" SelectedDateFormat="Short"/>
-            <Label Content="Category:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="4" VerticalAlignment="Center"/>
-            <ComboBox x:Name="categoryComboBox" Grid.Column="1" DisplayMemberPath="Category" HorizontalAlignment="Left" Height="Auto"  ItemsSource="{Binding}" Margin="3" Grid.Row="4" VerticalAlignment="Center" Width="120" >
+            <Label Content="Start Date:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <StackPanel Grid.Column="1" Grid.Row="1" >
+                <DatePicker x:Name="startDateDatePicker" Margin="3" VerticalAlignment="Center" SelectedDateFormat="Short" IsEnabled="{Binding IsChecked, Converter={StaticResource BoolReverseConverter}, ElementName=IsNowCheckBox}" />
+                <CheckBox x:Name="IsNowCheckBox" IsChecked="True" Foreground="{DynamicResource TransparentForeColor}">Now</CheckBox>
+            </StackPanel>
+            <Label Content="Dead Date:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <DatePicker x:Name="deadDateDatePicker" Grid.Column="1" Margin="3" Grid.Row="2" VerticalAlignment="Center" SelectedDateFormat="Short"/>
+            <Label Content="Submitter:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <ComboBox x:Name="SubmitterComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="3" VerticalAlignment="Center" Width="120" >
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel/>
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
             </ComboBox>
-            <Label Content="Qlevel:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="5" VerticalAlignment="Center"/>
-            <ComboBox x:Name="qlevelComboBox" Grid.Column="1" DisplayMemberPath="Q level" HorizontalAlignment="Left" Height="Auto" ItemsSource="{Binding}" Margin="3" Grid.Row="5" VerticalAlignment="Center" Width="120" >
+            <CheckBox x:Name="IsCustomCheckBox" Grid.Column="1" Grid.Row="4" IsChecked="False" Foreground="{DynamicResource TransparentForeColor}">Custome Task</CheckBox>
+            <Label Content="Handler:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="5" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" />
+            <ComboBox x:Name="HandlerComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="5" VerticalAlignment="Center" Width="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" >
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel/>
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
             </ComboBox>
-            <Label Content="Task Steps:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="6" VerticalAlignment="Top"/>
-            <StackPanel Grid.Column="1" Grid.Row="6" >
-                <ListBox x:Name="stepItemListBox" MinHeight="50" SelectionMode="Multiple"/>
+            <Label Content="TaskType:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="6" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <ComboBox x:Name="typeProcedureComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="6" VerticalAlignment="Center" Width="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableReverseConverter}, ElementName=IsCustomCheckBox}" >
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <ComboBox x:Name="typeCustomComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="6" VerticalAlignment="Center" Width="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" IsEditable="True">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Label Content="Qlevel:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="7" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <ComboBox x:Name="qlevelComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="7" VerticalAlignment="Center" Width="120" DisplayMemberPath="Name">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="8" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>
+            <StackPanel Grid.Column="1" Grid.Row="8" >
+                <RichTextBox x:Name="DescriptionBox" MinHeight="50" />
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Right" >
-                    <Button x:Name="AcceptButton" Template="{DynamicResource AcceptButtonTemplate}" ToolTip="{DynamicResource AcceptTip}" Click="AcceptButton_Click" />
+                    <Button x:Name="AcceptButton" Template="{DynamicResource AcceptButtonTemplate}" ToolTip="{DynamicResource AcceptTip}" Click="AcceptButton_Click" IsDefault="True" />
                 </StackPanel>
             </StackPanel>
             <Popup x:Name="InputWarning" StaysOpen="False">

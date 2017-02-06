@@ -26,6 +26,14 @@ namespace SmartTaskChain.Model
         {
             get { return taskTypeList; }
         }
+        public List<TaskType> ProcedureTypes
+        {
+            get { return taskTypeList.FindAll(MatchProcedureType); }
+        }
+        public List<TaskType> CustomTypes
+        {
+            get { return taskTypeList.FindAll(MatchCustomType); }
+        }
         public List<Procedure> Procedures
         {
             get { return procedureList; }
@@ -263,6 +271,16 @@ namespace SmartTaskChain.Model
                 }
             }
             return null;
+        }
+
+        public bool MatchCustomType(TaskType obj)
+        {
+            return !obj.IsUseProcedure;
+        }
+
+        public bool MatchProcedureType(TaskType obj)
+        {
+            return obj.IsUseProcedure;
         }
 
         #region UpdateList
