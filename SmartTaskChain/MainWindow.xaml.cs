@@ -27,7 +27,8 @@ namespace SmartTaskChain
 
         private void DemoItem_Click(object sender, EventArgs e)
         {
-
+            WinDemo winDemo = new WinDemo(SmartChainDataSet);
+            winDemo.ShowDialog();
         }
 
         private void ConfigItem_Click(object sender, EventArgs e)

@@ -8,7 +8,7 @@
         xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d" ShowInTaskbar="False"
         AreaIcon="Config/images/NoteTaskbar.ico" AreaVisibility="True" AreaText="SmartTaskChain" Visibility="Hidden"
-        Title="MainWindow" Height="350" Width="525" Icon="Config/images/SmartTaskChain.ico" >
+        Title="MainWindow" Icon="Config/images/SmartTaskChain.ico" >
     <ui:GWindow.AreaMenuItems>
         <forms:MenuItem x:Name="DemoItem" Text="Demo" Click="DemoItem_Click" />
         <forms:MenuItem x:Name="ConfigItem" Text="Configure Tool" Click="ConfigItem_Click" />
