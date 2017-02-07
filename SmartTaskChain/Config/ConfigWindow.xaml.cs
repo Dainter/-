@@ -894,27 +894,52 @@ namespace SmartTaskChain.Config
         //编辑用户按钮命令执行
         private void EditUserCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            WinEditUser winEditUser = new WinEditUser(DataSet);
+            winEditUser.Owner = this;
+            if (winEditUser.ShowDialog() == false)
+            {
+                return;
+            }
         }
         //编辑用户组按钮命令执行
         private void EditGroupCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            WinEditUserGroup winEditUserGroup = new WinEditUserGroup(DataSet);
+            winEditUserGroup.Owner = this;
+            if (winEditUserGroup.ShowDialog() == false)
+            {
+                return;
+            }
         }
         //编辑重要性程度按钮命令执行
         private void EditQlevelCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            WinEditQlevel winEditQlevel = new WinEditQlevel(DataSet);
+            winEditQlevel.Owner = this;
+            if (winEditQlevel.ShowDialog() == false)
+            {
+                return;
+            }
         }
         //编辑任务类型按钮命令执行
         private void EditTypeCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            WinEditType winEditType = new WinEditType(DataSet);
+            winEditType.Owner = this;
+            if (winEditType.ShowDialog() == false)
+            {
+                return;
+            }
         }
         //编辑流程按钮命令执行
         private void EditProcedureCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            WinEditProcedure winEditProcedure = new WinEditProcedure(DataSet);
+            winEditProcedure.Owner = this;
+            if (winEditProcedure.ShowDialog() == false)
+            {
+                return;
+            }
         }
 
         #endregion

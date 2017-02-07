@@ -15,7 +15,7 @@ namespace SmartTaskChain.Model
         //Users[1:n]
         List<IfUser> users;
         //ProcedureStep[1:1]
-        List<ProcedureStep> procedureSteps;
+        ProcedureStep procedureStep;
 
         public string Name
         {
@@ -35,10 +35,21 @@ namespace SmartTaskChain.Model
         {
             get { return users; }
         }
-        public List<ProcedureStep> BindingSteps
+        public bool IsBindingStep
         {
-            get { return procedureSteps; }
-            set { procedureSteps = value; }
+            get
+            {
+                if (procedureStep == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+        public ProcedureStep BindingStep
+        {
+            get { return procedureStep; }
+            set { procedureStep = value; }
         }
 
         public UserGroup(string sName, string sDescription = "")
@@ -46,7 +57,7 @@ namespace SmartTaskChain.Model
             this.strName = sName;
             this.strDescription = sDescription;
             this.users = new List<IfUser>();
-            this.procedureSteps = new List<ProcedureStep>();
+            this.procedureStep = null;
         }
 
         public UserGroup(XmlElement ModelPayload)
@@ -54,7 +65,7 @@ namespace SmartTaskChain.Model
             this.strName = Utility.GetText(ModelPayload, "Name");
             this.strDescription = Utility.GetText(ModelPayload, "Description");
             this.users = new List<IfUser>();
-            this.procedureSteps = new List<ProcedureStep>();
+            this.procedureStep = null;
         }
 
         public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
@@ -66,13 +77,9 @@ namespace SmartTaskChain.Model
             {
                 this.users.Add(dataset.GetUserItem(username));
             }
-            //ProcedureStep[1:n]
-            this.procedureSteps.Clear();
-            List<string> steps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "InCharge");
-            foreach (string step in steps)
-            {
-                this.procedureSteps.Add(dataset.GetStepItem(step));
-            }
+            //ProcedureStep[1:1]
+            Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "InCharge");
+            this.procedureStep = dataset.GetStepItem(record.Name);
         }
 
         public XmlElement XMLSerialize()

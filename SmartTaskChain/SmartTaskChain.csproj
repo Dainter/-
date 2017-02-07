@@ -66,6 +66,21 @@
     <Compile Include="Config\Dialogs\WinCreateTask.xaml.cs">
       <DependentUpon>WinCreateTask.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Dialogs\WinEditProcedure.xaml.cs">
+      <DependentUpon>WinEditProcedure.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Dialogs\WinEditQlevel.xaml.cs">
+      <DependentUpon>WinEditQlevel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Dialogs\WinEditType.xaml.cs">
+      <DependentUpon>WinEditType.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Dialogs\WinEditUser.xaml.cs">
+      <DependentUpon>WinEditUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Dialogs\WinEditUserGroup.xaml.cs">
+      <DependentUpon>WinEditUserGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\UI_Resources\SystemConverter.cs" />
     <Compile Include="Model\MainDataSet.cs" />
     <Compile Include="Utility\Utility.cs" />
@@ -74,6 +89,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Dialogs\WinCreateTask.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditProcedure.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditQlevel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditType.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditUserGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

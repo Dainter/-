@@ -6,7 +6,7 @@
       <Value Profile="(Default)">Database.xml</Value>
     </Setting>
     <Setting Name="ForeColor" Type="System.Windows.Media.SolidColorBrush" Scope="Application">
-      <Value Profile="(Default)">#FFFFFF00</Value>
+      <Value Profile="(Default)">#FF003153</Value>
     </Setting>
   </Settings>
 </SettingsFile>

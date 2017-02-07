@@ -38,6 +38,10 @@ namespace SmartTaskChain.Model
         {
             get { return procedureList; }
         }
+        public List<Procedure> NoTypeProcedures
+        {
+            get { return procedureList.FindAll(MatchNoTypeProcedure); }
+        }
         public List<ProcedureStep> ProcedureSteps
         {
             get { return stepList; }
@@ -46,6 +50,17 @@ namespace SmartTaskChain.Model
         {
             get { return userGroupList; }
         }
+        public List<UserGroup> NoProdureGroups
+        {
+            get
+            {
+                List<UserGroup> newlist = new List<UserGroup>();
+                newlist.Add(new UserGroup("Test", "Test"));
+                return newlist;
+            }
+            //get { return userGroupList.FindAll(MatchNoProcedureGroup); }
+        }
+
         public List<IfUser> Users
         {
             get { return userList; }
@@ -54,7 +69,6 @@ namespace SmartTaskChain.Model
         {
             get { return taskList; }
         }
-
 
         public MainDataSet()
         {
@@ -281,6 +295,16 @@ namespace SmartTaskChain.Model
         public bool MatchProcedureType(TaskType obj)
         {
             return obj.IsUseProcedure;
+        }
+
+        public bool MatchNoTypeProcedure(Procedure obj)
+        {
+            return !obj.IsBindingType;
+        }
+
+        public bool MatchNoProcedureGroup(UserGroup obj)
+        {
+            return !obj.IsBindingStep;
         }
 
         #region UpdateList

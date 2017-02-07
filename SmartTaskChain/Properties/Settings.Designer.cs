@@ -34,7 +34,7 @@ namespace SmartTaskChain.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF003153")]
         public global::System.Windows.Media.SolidColorBrush ForeColor {
             get {
                 return ((global::System.Windows.Media.SolidColorBrush)(this["ForeColor"]));

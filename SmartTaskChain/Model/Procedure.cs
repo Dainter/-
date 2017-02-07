@@ -32,6 +32,18 @@ namespace SmartTaskChain.Model
             { return strDescription; }
         }
 
+        public bool IsBindingType
+        {
+            get
+            {
+                if (taskType == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public TaskType BindingType
         {
             get { return taskType; }
