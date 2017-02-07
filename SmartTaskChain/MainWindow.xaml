@@ -1,12 +1,22 @@
-﻿<Window x:Name="WindowMain" x:Class="SmartTaskChain.MainWindow"
+﻿<ui:GWindow x:Name="WindowMain" x:Class="SmartTaskChain.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartTaskChain"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Loaded="WindowMain_Loaded" Icon="Config/images/SmartTaskChain.ico" >
+        xmlns:ui="clr-namespace:SmartTaskChain.UI_Resources"
+        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        mc:Ignorable="d" ShowInTaskbar="False"
+        AreaIcon="Config/images/NoteTaskbar.ico" AreaVisibility="True" AreaText="SmartTaskChain" Visibility="Hidden"
+        Title="MainWindow" Height="350" Width="525" Icon="Config/images/SmartTaskChain.ico" >
+    <ui:GWindow.AreaMenuItems>
+        <forms:MenuItem x:Name="DemoItem" Text="Demo" Click="DemoItem_Click" />
+        <forms:MenuItem x:Name="ConfigItem" Text="Configure Tool" Click="ConfigItem_Click" />
+        <forms:MenuItem x:Name="ShowHistoryItem" Text="History" Click="ShowHistoryItem_Click" />
+        <forms:MenuItem x:Name="ShowOptionItem" Text="Option" Click="ShowOptionItem_Click" />
+        <forms:MenuItem x:Name="ExitItem" Text="Exit" Click="ExitItem_Click" />
+    </ui:GWindow.AreaMenuItems>
     <Grid>
         
     </Grid>
-</Window>
+</ui:GWindow>

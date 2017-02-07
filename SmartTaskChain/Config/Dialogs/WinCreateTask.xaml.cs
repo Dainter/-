@@ -248,7 +248,7 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 newTask.CurrentStep = newTask.BusinessType.BindingProcedure.GetFirstStep();
             }
-            //任务进入等待区
+            //流程任务进入等待区，等待后台调度器调度
             newTask.Status = "Wait";
             mainDataSet.InsertProcedureTask(newTask);
         }
@@ -265,8 +265,7 @@ namespace SmartTaskChain.Config.Dialogs
             newTask.Submitter = mainDataSet.GetUserItem(strSubmitter);
             newTask.Handler = mainDataSet.GetUserItem(strHandler);
             newTask.QLevel = mainDataSet.GetQlevelItem(strQlevel);
-            //任务进入等待区
-            newTask.Status = "Wait";
+
             mainDataSet.InsertCustomTask(newTask, curType);
         }
 
