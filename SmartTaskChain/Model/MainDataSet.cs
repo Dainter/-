@@ -52,13 +52,13 @@ namespace SmartTaskChain.Model
         }
         public List<UserGroup> NoProdureGroups
         {
-            get
-            {
-                List<UserGroup> newlist = new List<UserGroup>();
-                newlist.Add(new UserGroup("Test", "Test"));
-                return newlist;
-            }
-            //get { return userGroupList.FindAll(MatchNoProcedureGroup); }
+            //get
+            //{
+            //    List<UserGroup> newlist = new List<UserGroup>();
+            //    newlist.Add(new UserGroup("Test", "Test"));
+            //    return newlist;
+            //}
+            get { return userGroupList.FindAll(MatchNoProcedureGroup); }
         }
 
         public List<IfUser> Users
@@ -92,88 +92,7 @@ namespace SmartTaskChain.Model
             return _dataset;
         }
 
-        public void UpdateAllList()
-        {
-            userList = new List<IfUser>();
-            taskList = new List<IfTask>();
-            qlevelList = new List<QLevel>();
-            taskTypeList = new List<TaskType>();
-            procedureList = new List<Procedure>();
-            stepList = new List<ProcedureStep>();
-            userGroupList = new List<UserGroup>();
-
-            List<Record> recordlist;
-            recordlist = DataReader.GetRecordList();
-            foreach (Record curRec in recordlist)
-            {
-                switch(curRec.Type)
-                {
-                    case "Customer":
-                        userList.Add(new Customer(curRec.Payload));
-                        break;
-                    case "ServiceUser":
-                        userList.Add(new ServiceUser(curRec.Payload));
-                        break;
-                    case "Engineer":
-                        userList.Add(new Engineer(curRec.Payload));
-                        break;
-                    case "Manager":
-                        userList.Add(new Manager(curRec.Payload));
-                        break;
-                    case "ProcedureTask":
-                        taskList.Add(new ProcedureTask(curRec.Payload));
-                        break;
-                    case "CustomTask":
-                        taskList.Add(new CustomTask(curRec.Payload));
-                        break;
-                    case "QLevel":
-                        qlevelList.Add(new QLevel(curRec.Payload));
-                        break;
-                    case "TaskType":
-                        taskTypeList.Add(new TaskType(curRec.Payload));
-                        break;
-                    case "Procedure":
-                        procedureList.Add(new Procedure(curRec.Payload));
-                        break;
-                    case "ProcedureStep":
-                        stepList.Add(new ProcedureStep(curRec.Payload));
-                        break;
-                    case "UserGroup":
-                        userGroupList.Add(new UserGroup(curRec.Payload));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        public void UpdateRelation()
-        {
-            foreach (TaskType curItem in taskTypeList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-            foreach (Procedure curItem in procedureList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-            foreach (ProcedureStep curItem in stepList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-            foreach (UserGroup curItem in userGroupList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-            foreach (IfUser curItem in userList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-            foreach (IfTask curItem in taskList)
-            {
-                curItem.UpdateRelation(DataReader, this);
-            }
-        }
+        #region Query
 
         public object GetItem(string sName, string sType)
         {
@@ -286,7 +205,9 @@ namespace SmartTaskChain.Model
             }
             return null;
         }
+        #endregion
 
+        #region Filter
         public bool MatchCustomType(TaskType obj)
         {
             return !obj.IsUseProcedure;
@@ -306,8 +227,162 @@ namespace SmartTaskChain.Model
         {
             return !obj.IsBindingStep;
         }
+        #endregion
+
+        #region InsertRecord
+        public void InsertProcedureTask(ProcedureTask newTask)
+        {
+            taskList.Add(newTask);
+            //保存节点
+            DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
+            //保存连边
+            RelationShip newRelation;
+            //Submitter&Submit
+            IfUser submitter = newTask.Submitter;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, submitter.Name, submitter.Type, "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip(submitter.Name, submitter.Type, newTask.Name, newTask.Type, "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            QLevel qlevel = newTask.QLevel;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, qlevel.Name, qlevel.Type, "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            TaskType type = newTask.BusinessType;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, type.Name, type.Type, "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //CurrentStep
+            ProcedureStep curStep = newTask.CurrentStep;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, curStep.Name, curStep.Type, "CurrentStep", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //保存到数据库文件
+            DataReader.AcceptModification();
+        }
+
+        public void InsertCustomTask(CustomTask newTask, TaskType newType = null)
+        {
+            if(newType != null)
+            {
+                taskTypeList.Add(newType);
+            }
+            taskList.Add(newTask);
+            //保存节点
+            DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
+            DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
+            //保存连边
+            RelationShip newRelation;
+            //Submitter&Submit
+            IfUser submitter = newTask.Submitter;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, submitter.Name, submitter.Type, "Submitter", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip(submitter.Name, submitter.Type, newTask.Name, newTask.Type, "Submit", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetPriority
+            QLevel qlevel = newTask.QLevel;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, qlevel.Name, qlevel.Type, "SetPriority", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //SetType
+            TaskType type = newTask.BusinessType;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, type.Name, type.Type, "SetType", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //Handler&Handle
+            IfUser handler = newTask.Handler;
+            newRelation = new RelationShip(newTask.Name, newTask.Type, handler.Name, handler.Type, "Handler", "1");
+            DataReader.InsertRelationShip(newRelation);
+            newRelation = new RelationShip(handler.Name, handler.Type, newTask.Name, newTask.Type, "Handle", "1");
+            DataReader.InsertRelationShip(newRelation);
+            //保存到数据库文件
+            DataReader.AcceptModification();
+        }
+
+
+        #endregion
 
         #region UpdateList
+
+        public void UpdateAllList()
+        {
+            userList = new List<IfUser>();
+            taskList = new List<IfTask>();
+            qlevelList = new List<QLevel>();
+            taskTypeList = new List<TaskType>();
+            procedureList = new List<Procedure>();
+            stepList = new List<ProcedureStep>();
+            userGroupList = new List<UserGroup>();
+
+            List<Record> recordlist;
+            recordlist = DataReader.GetRecordList();
+            foreach (Record curRec in recordlist)
+            {
+                switch (curRec.Type)
+                {
+                    case "Customer":
+                        userList.Add(new Customer(curRec.Payload));
+                        break;
+                    case "ServiceUser":
+                        userList.Add(new ServiceUser(curRec.Payload));
+                        break;
+                    case "Engineer":
+                        userList.Add(new Engineer(curRec.Payload));
+                        break;
+                    case "Manager":
+                        userList.Add(new Manager(curRec.Payload));
+                        break;
+                    case "ProcedureTask":
+                        taskList.Add(new ProcedureTask(curRec.Payload));
+                        break;
+                    case "CustomTask":
+                        taskList.Add(new CustomTask(curRec.Payload));
+                        break;
+                    case "QLevel":
+                        qlevelList.Add(new QLevel(curRec.Payload));
+                        break;
+                    case "TaskType":
+                        taskTypeList.Add(new TaskType(curRec.Payload));
+                        break;
+                    case "Procedure":
+                        procedureList.Add(new Procedure(curRec.Payload));
+                        break;
+                    case "ProcedureStep":
+                        stepList.Add(new ProcedureStep(curRec.Payload));
+                        break;
+                    case "UserGroup":
+                        userGroupList.Add(new UserGroup(curRec.Payload));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void UpdateRelation()
+        {
+            foreach (TaskType curItem in taskTypeList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+            foreach (Procedure curItem in procedureList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+            foreach (ProcedureStep curItem in stepList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+            foreach (UserGroup curItem in userGroupList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+            foreach (IfUser curItem in userList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+            foreach (IfTask curItem in taskList)
+            {
+                curItem.UpdateRelation(DataReader, this);
+            }
+        }
+
         public void UpdateUserList()
         {
             List<Record> recordlist;

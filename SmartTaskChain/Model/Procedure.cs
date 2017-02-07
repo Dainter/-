@@ -111,5 +111,15 @@ namespace SmartTaskChain.Model
         {
             return Name;
         }
+
+        public ProcedureStep GetFirstStep()
+        {
+            if(procedureSteps.Count == 0)
+            {
+                return null;
+            }
+            return procedureSteps[0];
+        }
+
     }
 }

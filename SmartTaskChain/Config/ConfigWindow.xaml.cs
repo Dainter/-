@@ -52,6 +52,11 @@ namespace SmartTaskChain.Config
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            WindowReset();
+        }
+
+        private void WindowReset()
+        {
             ErrorCode err = ErrorCode.NoError;
             string strDBpath = Properties.Settings.Default.DataBasePath;
             AllReset();
@@ -879,7 +884,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
-
+            WindowReset();
         }
         //编辑任务按钮命令执行
         private void EditTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)

@@ -56,7 +56,7 @@ namespace SmartTaskChain.Model
             set { procedure = value; }
         }
 
-        public TaskType(string sName, int iPriority, string sDescription = "")
+        public TaskType(string sName, int iPriority = 50, string sDescription = "")
         {
             this.strName = sName;
             

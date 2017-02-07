@@ -35,7 +35,7 @@ namespace SmartTaskChain.Config.Dialogs
             ref MARGINS pMarInset);
         //Global Elements
         MainDataSet mainDataSet;
-        string strName,strSubmitter, strHandler, strType, strQlevel;
+        string strName,strSubmitter, strHandler, strType, strQlevel, strDescription;
         DateTime sDate, dDate;
         //Database
 
@@ -113,10 +113,15 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 return;
             }
-            //数据组织
-            
             //数据插入数据表
-            SaveTask();
+            if(IsCustomCheckBox.IsChecked == true)
+            {
+                SaveCustomTask();
+            }
+            else
+            {
+                SaveProcedureTask();
+            }
             this.Close();
         }
 
@@ -170,32 +175,47 @@ namespace SmartTaskChain.Config.Dialogs
                 InputWarning.IsOpen = true;
                 return false;
             }
-            //任务类别
+            //提交人
             strSubmitter = SubmitterComboBox.Text;
-            if (strType == "")
+            if (strSubmitter == "")
             {
                 InputWarning.PlacementTarget = SubmitterComboBox;
-                WarningInfo.Text = "Please select a category for the task.";
+                WarningInfo.Text = "Please select a submitter for the task.";
                 InputWarning.IsOpen = true;
                 return false;
             }
-            //任务类别
-            strHandler = HandlerComboBox.Text;
-            if (strType == "")
+            if(IsCustomCheckBox.IsChecked == true)
             {
-                InputWarning.PlacementTarget = HandlerComboBox;
-                WarningInfo.Text = "Please select the handler for the task.";
-                InputWarning.IsOpen = true;
-                return false;
+                //处理人
+                strHandler = HandlerComboBox.Text;
+                if (strHandler == "")
+                {
+                    InputWarning.PlacementTarget = HandlerComboBox;
+                    WarningInfo.Text = "Please select a handler for the task.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
+                //自定义任务类别
+                strType = typeCustomComboBox.Text;
+                if (strType == "")
+                {
+                    InputWarning.PlacementTarget = typeCustomComboBox;
+                    WarningInfo.Text = "Please input a custom type.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
             }
-            //任务类别
-            strType = typeProcedureComboBox.Text;
-            if (strType == "")
+            else
             {
-                InputWarning.PlacementTarget = typeProcedureComboBox;
-                WarningInfo.Text = "Please select a type for the task or input a custom type.";
-                InputWarning.IsOpen = true;
-                return false;
+                //流程性任务类别
+                strType = typeProcedureComboBox.Text;
+                if (strType == "")
+                {
+                    InputWarning.PlacementTarget = typeProcedureComboBox;
+                    WarningInfo.Text = "Please select a type for the task.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
             }
             //任务级别
             strQlevel = qlevelComboBox.Text;
@@ -206,25 +226,48 @@ namespace SmartTaskChain.Config.Dialogs
                 InputWarning.IsOpen = true;
                 return false;
             }
-            //步骤
-
+            //描述
+            strDescription = DescriptionBox.Text;
+            if (strDescription == "")
+            {
+                InputWarning.PlacementTarget = DescriptionBox;
+                WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
             return true;
         }
 
-
-        private void SaveTask()
+        private void SaveProcedureTask()
         {
-
+            ProcedureTask newTask = new ProcedureTask(strName, sDate, dDate, strDescription);
+            newTask.BusinessType = mainDataSet.GetTypeItem(strType);
+            newTask.Submitter = mainDataSet.GetUserItem(strSubmitter);
+            newTask.QLevel = mainDataSet.GetQlevelItem(strQlevel);
+            if(newTask.BusinessType.IsUseProcedure == true)
+            {
+                newTask.CurrentStep = newTask.BusinessType.BindingProcedure.GetFirstStep();
+            }
+            //任务进入等待区
+            newTask.Status = "Wait";
+            mainDataSet.InsertProcedureTask(newTask);
         }
 
-        private void InsertTaskItem(string sName, string ssDate, string sdDate, string sCategory, string sQlevel)
+        private void SaveCustomTask()
         {
-
-        }
-
-        private void InsertTaskStep(string sStepName, string strKey)
-        {
-
+            CustomTask newTask = new CustomTask(strName, sDate, dDate, strDescription);
+            TaskType curType = mainDataSet.GetTypeItem(strType);
+            if(curType == null)
+            {
+                curType = new TaskType(strType);
+            }
+            newTask.BusinessType = curType;
+            newTask.Submitter = mainDataSet.GetUserItem(strSubmitter);
+            newTask.Handler = mainDataSet.GetUserItem(strHandler);
+            newTask.QLevel = mainDataSet.GetQlevelItem(strQlevel);
+            //任务进入等待区
+            newTask.Status = "Wait";
+            mainDataSet.InsertCustomTask(newTask, curType);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

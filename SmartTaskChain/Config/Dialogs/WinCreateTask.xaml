@@ -71,7 +71,7 @@
             <ComboBox x:Name="qlevelComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="7" VerticalAlignment="Center" MinWidth="120"  DisplayMemberPath="Name"/>
             <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="8" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>
             <StackPanel Grid.Column="1" Grid.Row="8" >
-                <RichTextBox x:Name="DescriptionBox" MinHeight="50" MinWidth="120" Margin="3"/>
+                <TextBox x:Name="DescriptionBox" MinHeight="50" MinWidth="120" Margin="3"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
                     <Button x:Name="AcceptButton" Template="{DynamicResource AcceptButtonTemplate}" ToolTip="{DynamicResource AcceptTip}" Click="AcceptButton_Click" IsDefault="True" />
                 </StackPanel>
