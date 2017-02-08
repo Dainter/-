@@ -32,4 +32,6 @@
     <RoutedUICommand x:Key="EditTypeCommand" Text="TypeCommand" />
     <RoutedUICommand x:Key="EditProcedureCommand" Text="ProcedureCommand" />
 
+    <RoutedUICommand x:Key="RunDispatcherCommand" Text="RunDispatcherCommand" />
+    <RoutedUICommand x:Key="PauseDispatcherCommand" Text="PauseDispatcherCommand" />
 </ResourceDictionary>

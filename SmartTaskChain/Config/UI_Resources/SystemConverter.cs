@@ -93,4 +93,29 @@ namespace SmartTaskChain.Config.UI_Resources
             return true;
         }
     }
+
+
+    public class BoolSelectedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+        {
+            if ((int)value >= 0)
+            {
+                return true;
+            }
+            return false;
+            
+        }
+
+        public object ConvertBack(object value, Type targetType,
+        object parameter, System.Globalization.CultureInfo culture)
+        {
+            if ((bool)value == true)
+            {
+                return 0;
+            }
+            return -1;
+        }
+    }
 }

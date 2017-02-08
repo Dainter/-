@@ -314,6 +314,18 @@
   <ItemGroup>
     <Resource Include="Config\images\NoteTaskbar.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\UserCustomer.ico" />
+    <Resource Include="Config\images\UserManager.ico" />
+    <Resource Include="Config\images\UserService.png" />
+    <Resource Include="Config\images\UserService_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\DispatchPause.png" />
+    <Resource Include="Config\images\DispatchPause_16x16.png" />
+    <Resource Include="Config\images\DispatchRun.png" />
+    <Resource Include="Config\images\DispatchRun_16x16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

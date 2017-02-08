@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.ComponentModel;
 using Microsoft.Windows.Controls.Ribbon;
 using SmartTaskChain.Model;
 using SmartTaskChain.Business;
@@ -21,7 +22,7 @@ namespace SmartTaskChain.UI_Resources
     public partial class WinDemo
     {
         MainDataSet mainDataSet;
-
+        BackgroundWorker backGroundWorker;
         List<IfTask> ClareTasks;
         List<IfTask> DouglasTasks;
         List<IfTask> EulerTasks;
@@ -32,13 +33,14 @@ namespace SmartTaskChain.UI_Resources
         {
             InitializeComponent();
             mainDataSet = dataset;
+            backGroundWorker = (BackgroundWorker)this.FindResource("backGroundWorker");
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ClareTasks = new List<IfTask>();
             ControlInit();
-            ClareListBox.ItemsSource = ClareTasks;
+            ClareTasks.Add(new ProcedureTask("a",DateTime.Now,DateTime.Now,"a"));
         }
 
         private void ControlInit()
@@ -50,5 +52,47 @@ namespace SmartTaskChain.UI_Resources
             GloriaListBox.ItemsSource = GloriaTasks;
         }
 
+        private void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            //通过按钮触发
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        #region UI Commands
+        //DispatchRun执行使能
+        private void RunCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if(backGroundWorker == null)
+            {
+                e.CanExecute = false;
+                return;
+            }
+            e.CanExecute = !backGroundWorker.IsBusy;
+        }
+        //DispatchRun执行
+        private void RunCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+        //DispatchPause执行使能
+        private void PauseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (backGroundWorker == null)
+            {
+                e.CanExecute = false;
+                return;
+            }
+            e.CanExecute = backGroundWorker.IsBusy;
+        }
+        //DispatchPause执行
+        private void PauseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+        #endregion
     }
 }

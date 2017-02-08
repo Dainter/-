@@ -1,4 +1,4 @@
-﻿<r:RibbonWindow x:Class="SmartTaskChain.UI_Resources.WinDemo"
+﻿<r:RibbonWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,13 +6,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartTaskChain.UI_Resources"
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
+        xmlns:UI_Resources="clr-namespace:SmartTaskChain.Config.UI_Resources" x:Class="SmartTaskChain.UI_Resources.WinDemo"
         mc:Ignorable="d"
         Title="Graph Database" Height="550" Width="850"
         Icon="../Config/images/SmartTaskChain.ico" Loaded="RibbonWindow_Loaded" >
     <r:RibbonWindow.Resources>
-        <cm:BackgroundWorker x:Key="backGroundWorker"></cm:BackgroundWorker>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Config/UI_Resources/ToolTipResource.xaml"/>
+                <ResourceDictionary Source="../Config/UI_Resources/CommandResource.xaml"/>
+                <ResourceDictionary Source="../Config/UI_Resources/StyleResource.xaml"/>
+                <ResourceDictionary Source="../Config/UI_Resources/ConverterResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <UI_Resources:BoolSelectedConverter x:Key="BoolSelectedConverter"/>
+            <cm:BackgroundWorker x:Key="backGroundWorker" DoWork="BackgroundWorker_DoWork" RunWorkerCompleted="BackgroundWorker_RunWorkerCompleted"/>
+        </ResourceDictionary>
     </r:RibbonWindow.Resources>
-    <Grid Name="MainLayout">
+    <r:RibbonWindow.CommandBindings>
+        <CommandBinding x:Name="RunCommand" Command="{StaticResource RunDispatcherCommand}" Executed="RunCommand_Executed" CanExecute="RunCommand_CanExecute" />
+        <CommandBinding x:Name="PauseCommand" Command="{StaticResource PauseDispatcherCommand}" Executed="PauseCommand_Executed" CanExecute="PauseCommand_CanExecute"/>
+    </r:RibbonWindow.CommandBindings>
+    <Grid x:Name="MainLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="200*"/>
@@ -23,96 +37,86 @@
             <ColumnDefinition Width="200*"/>
             <ColumnDefinition Width="200*"/>
             <ColumnDefinition Width="200*"/>
+            <ColumnDefinition Width="200*"/>
         </Grid.ColumnDefinitions>
-        <r:Ribbon Name="MainRibbon" Grid.ColumnSpan="5">
+        <r:Ribbon x:Name="MainRibbon" Grid.ColumnSpan="5">
             <r:Ribbon.ApplicationMenu>
-                <r:RibbonApplicationMenu SmallImageSource="/SmartTaskChain;component/config/images/siemens_logo_16.png">
-                </r:RibbonApplicationMenu>
+                <r:RibbonApplicationMenu SmallImageSource="/SmartTaskChain;component/config/images/siemens_logo_16.png"/>
             </r:Ribbon.ApplicationMenu>
-            <r:RibbonTab Name = "ribHomeTab" Header="Home" >
+            <r:RibbonTab x:Name = "ribHomeTab" Header="Home" >
                 <r:RibbonGroup Header="Dispatcher" >
-                    <r:RibbonButton Label="New" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileNew.png" SmallImageSource="/SmartTaskChain;component/config/images/FileNew_16x16.png" ToolTipTitle="New" ToolTipDescription=""></r:RibbonButton>
-                    <r:RibbonButton Label="Open" Command ="" LargeImageSource="/SmartTaskChain;component/config/images/FileOpen.png" SmallImageSource="/SmartTaskChain;component/config/images/FileOpen_small.png" ToolTipTitle="Open" ToolTipDescription=""></r:RibbonButton>
-                    <r:RibbonButton Label="Close" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileClose.png" SmallImageSource="/SmartTaskChain;component/config/images/File_close_small.png" ToolTipTitle="Close Database" ToolTipDescription=""></r:RibbonButton>
-                    <r:RibbonSplitButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Save As" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAs.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save As" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
-                    </r:RibbonSplitButton>
+                    <r:RibbonButton Label="Run" Command="{DynamicResource RunDispatcherCommand}" LargeImageSource="/SmartTaskChain;component/config/images/DispatchRun.png" SmallImageSource="/SmartTaskChain;component/config/images/DispatchRun_16x16.png" ToolTipTitle="Run the dispatcher" ToolTipDescription="" />
+                    <r:RibbonButton Label="Pause" Command ="{DynamicResource PauseDispatcherCommand}" LargeImageSource="/SmartTaskChain;component/config/images/DispatchPause.png" SmallImageSource="/SmartTaskChain;component/config/images/DispatchPause_16x16.png" ToolTipTitle="Pause the dispatcher" ToolTipDescription=""/>
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Customer" >
-                    <r:RibbonSplitButton Label="Alice" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Save As" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAs.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save As" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                    <r:RibbonSplitButton Label="Alice" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=AliceListBox}"/>
                     </r:RibbonSplitButton>
-                    <r:RibbonSplitButton Label="Bob" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Save As" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAs.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save As" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                    <r:RibbonSplitButton Label="Bob" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription=""/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header="SerivceMan" LargeImageSource="/SmartTaskChain;component/config/images/FilePrint.png">
-                    <r:RibbonSplitButton Label="Clare" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Save As" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAs.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save As" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                <r:RibbonGroup Header="SerivceMan" >
+                    <r:RibbonSplitButton Label="Clare" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserService.png" SmallImageSource="/SmartTaskChain;component/config/images/UserService_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=ClareListBox}"/>
                     </r:RibbonSplitButton>
-                    <r:RibbonSplitButton Label="Douglas" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Save" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSave.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Save As" Command="" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAs.png" SmallImageSource="/SmartTaskChain;component/config/images/FileSave_16x16.png" ToolTipTitle="Save As" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                    <r:RibbonSplitButton Label="Douglas" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserService.png" SmallImageSource="/SmartTaskChain;component/config/images/UserService_16x16.png" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription=""/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header="Engineer" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png">
-                    <r:RibbonSplitButton Label="Euler" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Clear Command" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" ToolTipTitle="Clear Command" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Clear Result" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" ToolTipTitle="Clear Result" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                <r:RibbonGroup Header="Engineer">
+                    <r:RibbonSplitButton Label="Euler" Command="" LargeImageSource="/SmartTaskChain;component/config/images/User.ico" SmallImageSource="/SmartTaskChain;component/config/images/User.ico" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription=""/>
                     </r:RibbonSplitButton>
-                    <r:RibbonSplitButton Label="Frank" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonSplitButton.Items>
-                            <r:RibbonButton Label="Clear Command" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" ToolTipTitle="Clear Command" ToolTipDescription=""></r:RibbonButton>
-                            <r:RibbonButton Label="Clear Result" Command="" LargeImageSource="/SmartTaskChain;component/config/images/ClearText.png" SmallImageSource="/SmartTaskChain;component/config/images/ClearText_16x16.png" ToolTipTitle="Clear Result" ToolTipDescription=""></r:RibbonButton>
-                        </r:RibbonSplitButton.Items>
+                    <r:RibbonSplitButton Label="Frank" Command="" LargeImageSource="/SmartTaskChain;component/config/images/User.ico" SmallImageSource="/SmartTaskChain;component/config/images/User.ico" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription=""/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header="Manager" LargeImageSource="/SmartTaskChain;component/config/images/NodeStyles.png">
-                    <r:RibbonSplitButton Label="Gloria" LargeImageSource="/SmartTaskChain;component/config/images/NodeStyles.png" SmallImageSource="/SmartTaskChain;component/config/images/NodeStyles_16x16.png" CanAddToQuickAccessToolBarDirectly="False">
-
+                <r:RibbonGroup Header="Manager" >
+                    <r:RibbonSplitButton Label="Gloria" LargeImageSource="/SmartTaskChain;component/config/images/UserManager.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserManager.ico" CanAddToQuickAccessToolBarDirectly="False">
+                        <r:RibbonButton Label="Submit Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton Label="Complete Task" Command="" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription=""/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
-        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Dispatcher Task List:</Label>
-            <ListBox Name="DispatcherListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Dispatcher Task List:"/>
+            <ListBox x:Name="DispatcherListBox" Margin="3,3,3,3" />
         </DockPanel>
-        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="1" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Task List of Clare:</Label>
-            <ListBox Name="ClareListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="1" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Alice:"/>
+            <ListBox x:Name="AliceListBox" Margin="3,3,3,3" />
         </DockPanel>
-        <DockPanel MinWidth="150" Grid.Row="2" Grid.Column="1" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Task List of Douglas</Label>
-            <ListBox Name="DouglasListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="2" Grid.Column="1" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Bob"/>
+            <ListBox x:Name="BobListBox" Margin="3,3,3,3" />
         </DockPanel>
-        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="2" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Task List of Euler:</Label>
-            <ListBox Name="EulerListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="2" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Clare:"/>
+            <ListBox x:Name="ClareListBox" Margin="3,3,3,3" />
         </DockPanel>
-        <DockPanel MinWidth="150" Grid.Row="2" Grid.Column="2" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Task List of Frank:</Label>
-            <ListBox Name="FrankListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="2" Grid.Column="2" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Douglas"/>
+            <ListBox x:Name="DouglasListBox" Margin="3,3,3,3" />
         </DockPanel>
-        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Background="{Binding ElementName=MainRibbon, Path=Background}" >
-            <Label DockPanel.Dock="Top">Task List of Gloria:</Label>
-            <ListBox Name="GloriaListBox" Margin="3,3,3,3" ></ListBox>
+        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="3" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Euler:"/>
+            <ListBox x:Name="EulerListBox" Margin="3,3,3,3" />
+        </DockPanel>
+        <DockPanel MinWidth="150" Grid.Row="2" Grid.Column="3" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Frank:"/>
+            <ListBox x:Name="FrankListBox" Margin="3,3,3,3" />
+        </DockPanel>
+        <DockPanel MinWidth="150" Grid.Row="1" Grid.Column="4" Grid.RowSpan="2" Background="{Binding Background, ElementName=MainRibbon}" >
+            <Label DockPanel.Dock="Top" Content="Task List of Gloria:"/>
+            <ListBox x:Name="GloriaListBox" Margin="3,3,3,3" />
         </DockPanel>
     </Grid>
 </r:RibbonWindow>
