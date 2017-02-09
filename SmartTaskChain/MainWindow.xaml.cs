@@ -21,8 +21,7 @@ namespace SmartTaskChain
             InitializeComponent();
             SmartChainDataSet = MainDataSet.GetDataSet();
             //SmartChainDataSet.InsertAllData();
-            ConfigWindow WinConfig = new ConfigWindow(SmartChainDataSet);
-            WinConfig.ShowDialog();
+            
         }
 
         private void DemoItem_Click(object sender, EventArgs e)
@@ -33,7 +32,8 @@ namespace SmartTaskChain
 
         private void ConfigItem_Click(object sender, EventArgs e)
         {
-            
+            ConfigWindow WinConfig = new ConfigWindow(SmartChainDataSet);
+            WinConfig.ShowDialog();
         }
 
         private void ShowHistoryItem_Click(object sender, EventArgs e)

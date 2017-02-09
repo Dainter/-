@@ -23,6 +23,8 @@ namespace SmartTaskChain.UI_Resources
     {
         MainDataSet mainDataSet;
         BackgroundWorker backGroundWorker;
+        List<IfTask> AliceTasks;
+        List<IfTask> BobTasks;
         List<IfTask> ClareTasks;
         List<IfTask> DouglasTasks;
         List<IfTask> EulerTasks;
@@ -34,17 +36,30 @@ namespace SmartTaskChain.UI_Resources
             InitializeComponent();
             mainDataSet = dataset;
             backGroundWorker = (BackgroundWorker)this.FindResource("backGroundWorker");
+            mainDataSet.DataUpdated += OnDataUpdate;
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ClareTasks = new List<IfTask>();
+            
+        }
+
+        private void OnDataUpdate(object sender, MainDataSet.DataUpdateEvenArgs e)
+        {
+            AliceTasks = mainDataSet.GetTaskList("Alice");
+            BobTasks = mainDataSet.GetTaskList("Bob");
+            ClareTasks = mainDataSet.GetTaskList("Clare");
+            DouglasTasks = mainDataSet.GetTaskList("Douglas");
+            EulerTasks = mainDataSet.GetTaskList("Euler");
+            FrankTasks = mainDataSet.GetTaskList("Frank");
+            GloriaTasks = mainDataSet.GetTaskList("Gloria");
             ControlInit();
-            ClareTasks.Add(new ProcedureTask("a",DateTime.Now,DateTime.Now,"a"));
         }
 
         private void ControlInit()
         {
+            AliceListBox.ItemsSource = AliceTasks;
+            BobListBox.ItemsSource = BobTasks;
             ClareListBox.ItemsSource = ClareTasks;
             DouglasListBox.ItemsSource = DouglasTasks;
             EulerListBox.ItemsSource = EulerTasks;
@@ -52,9 +67,10 @@ namespace SmartTaskChain.UI_Resources
             GloriaListBox.ItemsSource = GloriaTasks;
         }
 
-        private void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //通过按钮触发
+            
+            
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -76,7 +92,7 @@ namespace SmartTaskChain.UI_Resources
         //DispatchRun执行
         private void RunCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            mainDataSet.DataUpdateProcedure();
         }
         //DispatchPause执行使能
         private void PauseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -93,6 +109,26 @@ namespace SmartTaskChain.UI_Resources
         {
 
         }
+        //提交Procedure任务
+        private void SubmitPTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string strSubmitter = (string)e.Parameter;
+            return;
+        }
+        //提交Custom任务
+        private void SubmitCTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string strSubmitter = (string)e.Parameter;
+            return;
+        }
+
+        private void CompleteTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string strName = (string)e.Parameter;
+            return;
+        }
         #endregion
+
+
     }
 }

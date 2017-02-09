@@ -205,6 +205,24 @@ namespace SmartTaskChain.Model
             }
             return null;
         }
+
+        public List<IfTask> GetTaskList(string sName)
+        {
+            List<IfTask> newList = new List<IfTask>();
+            foreach (IfTask curItem in taskList)
+            {
+                if(curItem.Handler == null)
+                {
+                    continue;
+                }
+                if (curItem.Handler.Name == sName)
+                {
+                    newList.Add(curItem);
+                }
+            }
+            return newList;
+        }
+
         #endregion
 
         #region Filter
@@ -227,6 +245,35 @@ namespace SmartTaskChain.Model
         {
             return !obj.IsBindingStep;
         }
+
+
+        #endregion
+
+        #region Event
+        public delegate void DataUpdateEventHandler(object sender, DataUpdateEvenArgs e);
+        public event DataUpdateEventHandler DataUpdated;
+
+
+        public class DataUpdateEvenArgs : EventArgs
+        {
+
+        }
+
+        private void OnDataUpdate(DataUpdateEvenArgs e)
+        {
+            if(DataUpdated != null)
+            {
+                DataUpdated(this, e);
+            }
+        }
+
+        public void DataUpdateProcedure()
+        {
+            DataUpdateEvenArgs e = new DataUpdateEvenArgs();
+            OnDataUpdate(e);
+        }
+
+
         #endregion
 
         #region InsertRecord
@@ -875,4 +922,5 @@ namespace SmartTaskChain.Model
 
         #endregion
     }
+
 }
