@@ -100,6 +100,8 @@ namespace SmartTaskChain.Model
                                         dStart, 
                                         dDead);
             this.curStep = null;
+            //流程任务进入等待区，等待后台调度器调度
+            this.Status = "Wait";
             this.strDescription = sDescription;
         }
 

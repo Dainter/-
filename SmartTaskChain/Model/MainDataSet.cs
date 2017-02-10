@@ -206,7 +206,7 @@ namespace SmartTaskChain.Model
             return null;
         }
 
-        public List<IfTask> GetTaskList(string sName)
+        public List<IfTask> GetTaskListByHandler(string sName)
         {
             List<IfTask> newList = new List<IfTask>();
             foreach (IfTask curItem in taskList)
@@ -223,6 +223,18 @@ namespace SmartTaskChain.Model
             return newList;
         }
 
+        public List<IfTask> GetTaskListByStatus(string status)
+        {
+            List<IfTask> newList = new List<IfTask>();
+            foreach (IfTask curItem in taskList)
+            {
+                if (curItem.Status == status)
+                {
+                    newList.Add(curItem);
+                }
+            }
+            return newList;
+        }
         #endregion
 
         #region Filter
@@ -246,13 +258,11 @@ namespace SmartTaskChain.Model
             return !obj.IsBindingStep;
         }
 
-
         #endregion
 
         #region Event
         public delegate void DataUpdateEventHandler(object sender, DataUpdateEvenArgs e);
         public event DataUpdateEventHandler DataUpdated;
-
 
         public class DataUpdateEvenArgs : EventArgs
         {
@@ -273,7 +283,11 @@ namespace SmartTaskChain.Model
             OnDataUpdate(e);
         }
 
-
+        private void AcceptModification()
+        {
+            DataReader.AcceptModification();
+            DataUpdateProcedure();
+        }
         #endregion
 
         #region InsertRecord
@@ -303,19 +317,22 @@ namespace SmartTaskChain.Model
             newRelation = new RelationShip(newTask.Name, newTask.Type, curStep.Name, curStep.Type, "CurrentStep", "1");
             DataReader.InsertRelationShip(newRelation);
             //保存到数据库文件
-            DataReader.AcceptModification();
+            AcceptModification();
         }
 
         public void InsertCustomTask(CustomTask newTask, TaskType newType = null)
         {
             if(newType != null)
             {
-                taskTypeList.Add(newType);
+                if(this.GetTypeItem(newType.Name) == null)
+                {
+                    taskTypeList.Add(newType);
+                    DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
+                }
             }
-            taskList.Add(newTask);
             //保存节点
+            taskList.Add(newTask);
             DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
-            DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
             //保存连边
             RelationShip newRelation;
             //Submitter&Submit
@@ -339,9 +356,8 @@ namespace SmartTaskChain.Model
             newRelation = new RelationShip(handler.Name, handler.Type, newTask.Name, newTask.Type, "Handle", "1");
             DataReader.InsertRelationShip(newRelation);
             //保存到数据库文件
-            DataReader.AcceptModification();
+            AcceptModification();
         }
-
 
         #endregion
 

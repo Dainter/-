@@ -21,7 +21,8 @@ namespace SmartTaskChain
             InitializeComponent();
             SmartChainDataSet = MainDataSet.GetDataSet();
             //SmartChainDataSet.InsertAllData();
-            
+            WinDemo winDemo = new WinDemo(SmartChainDataSet);
+            winDemo.ShowDialog();
         }
 
         private void DemoItem_Click(object sender, EventArgs e)

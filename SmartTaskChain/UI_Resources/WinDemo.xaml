@@ -8,7 +8,7 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:UI_Resources="clr-namespace:SmartTaskChain.Config.UI_Resources" x:Class="SmartTaskChain.UI_Resources.WinDemo"
         mc:Ignorable="d"
-        Title="Graph Database" Height="550" Width="850"
+        Title="Demo Window" Height="550" Width="850"
         Icon="../Config/images/SmartTaskChain.ico" Loaded="RibbonWindow_Loaded" >
     <r:RibbonWindow.Resources>
         <ResourceDictionary>
@@ -34,6 +34,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="200*"/>
             <RowDefinition Height="200*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200*"/>
@@ -53,11 +54,11 @@
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Customer" >
                     <r:RibbonSplitButton x:Name="AliceOperation" Label="Alice" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonButton Label="Submit Task" Command="{DynamicResource SubmitPTaskCommand}" CommandParameter="{Binding Label, ElementName=AliceOperation}" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton x:Name="AlicSubmitButton" Label="Submit Task" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="" Click="AlicSubmitButton_Click" />
                         <r:RibbonButton Label="Complete Task" Command="{DynamicResource CompleteTaskCommand}" CommandParameter="{Binding Label, ElementName=AliceOperation}" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=AliceListBox}"/>
                     </r:RibbonSplitButton>
                     <r:RibbonSplitButton x:Name="BobOperation" Label="Bob" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonButton Label="Submit Task" Command="{DynamicResource SubmitPTaskCommand}" CommandParameter="{Binding Label, ElementName=BobOperation}" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                        <r:RibbonButton x:Name="BobSubmitButton" Label="Submit Task" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="" Click="BobSubmitButton_Click" />
                         <r:RibbonButton Label="Complete Task" Command="{DynamicResource CompleteTaskCommand}" CommandParameter="{Binding Label, ElementName=BobOperation}" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=BobListBox}"/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
@@ -117,5 +118,10 @@
             <Label DockPanel.Dock="Top" Content="Task List of Gloria:"/>
             <ListBox x:Name="GloriaListBox" Margin="3,3,3,3" />
         </DockPanel>
+        <StatusBar Name="MainStatus" Grid.ColumnSpan="5" Grid.Row="3">
+            <StatusBarItem>
+                <Label Name="StatusLabel">Ready</Label>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </r:RibbonWindow>

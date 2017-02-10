@@ -122,6 +122,7 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 SaveProcedureTask();
             }
+            this.DialogResult = true;
             this.Close();
         }
 
@@ -248,8 +249,6 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 newTask.CurrentStep = newTask.BusinessType.BindingProcedure.GetFirstStep();
             }
-            //流程任务进入等待区，等待后台调度器调度
-            newTask.Status = "Wait";
             mainDataSet.InsertProcedureTask(newTask);
         }
 
@@ -271,6 +270,7 @@ namespace SmartTaskChain.Config.Dialogs
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
     }

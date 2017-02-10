@@ -324,28 +324,28 @@ namespace SmartTaskChain.Config
         //关闭数据库执行函数
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBoxResult choice;
-            ErrorCode err = ErrorCode.NoError;
+            //MessageBoxResult choice;
+            //ErrorCode err = ErrorCode.NoError;
             if (isDbAvailable == true)
             {
-                choice = MessageBox.Show("Save current graph database to file？", "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
-                if (choice == MessageBoxResult.Yes)
-                {
-                    //保存网络
-                    SaveFile(ref err);
-                    if (err != ErrorCode.NoError)
-                    {
-                        ShowStatus("Save Failed.");
-                        return;
-                    }
-                }
-                else if (choice == MessageBoxResult.No)
-                {
-                }
-                else if (choice == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
+                //choice = MessageBox.Show("Save current graph database to file？", "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
+                //if (choice == MessageBoxResult.Yes)
+                //{
+                //    //保存网络
+                //    SaveFile(ref err);
+                //    if (err != ErrorCode.NoError)
+                //    {
+                //        ShowStatus("Save Failed.");
+                //        return;
+                //    }
+                //}
+                //else if (choice == MessageBoxResult.No)
+                //{
+                //}
+                //else if (choice == MessageBoxResult.Cancel)
+                //{
+                //    return;
+                //}
                 ShowStatus("Database Closed.");
                 AllReset();
             }
