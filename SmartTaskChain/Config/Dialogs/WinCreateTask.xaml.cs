@@ -152,6 +152,7 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 SaveProcedureTask();
             }
+            mainDataSet.UpdateDataSet();
             this.DialogResult = true;
             this.Close();
         }

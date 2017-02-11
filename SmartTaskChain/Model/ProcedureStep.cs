@@ -84,7 +84,7 @@ namespace SmartTaskChain.Model
             this.handleRole = null;
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             Record record;
             //Procedure
@@ -99,6 +99,35 @@ namespace SmartTaskChain.Model
             //HandleRole
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "HandleBy");
             this.handleRole = dataset.GetGroupItem(record.Name);
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if (this.procedure != null)
+            {
+                //Procedure
+                newRelation = new RelationShip(this.Name, this.Type, this.procedure.Name, this.procedure.Type, "BelongTo", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.nextStep != null)
+            {
+                //NextStep
+                newRelation = new RelationShip(this.Name, this.Type, this.nextStep.Name, this.nextStep.Type, "Next", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.preStep != null)
+            {
+                //PreviousStep
+                newRelation = new RelationShip(this.Name, this.Type, this.preStep.Name, this.preStep.Type, "Previous", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.handleRole != null)
+            {
+                //HandleRole
+                newRelation = new RelationShip(this.Name, this.Type, this.handleRole.Name, this.handleRole.Type, "HandleBy", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
         }
 
         public XmlElement XMLSerialize()

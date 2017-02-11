@@ -99,6 +99,11 @@ namespace SmartTaskChain.DataAbstract
             return intCount;
         }
 
+        public void ClearAll()
+        {
+            gdb.ClearAll();
+        }
+
         public List<Record> GetRecordList(string sType = null)
         {
             List<Record> result = new List<Record>();

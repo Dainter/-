@@ -19,8 +19,10 @@ namespace SmartTaskChain.Model
         string DelayReason { get; set; }
         double Priority { get; set; }
 
-        void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset);
+
         void UpdatePriority();
-        //XmlElement XMLSerialize(XmlElement BusinessPayload);
+        XmlElement XMLSerialize(XmlElement BusinessPayload = null);
     }
 }

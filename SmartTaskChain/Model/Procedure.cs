@@ -70,7 +70,7 @@ namespace SmartTaskChain.Model
             this.procedureSteps = new List<ProcedureStep>();
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             //TaskType
             Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Binding");
@@ -83,6 +83,26 @@ namespace SmartTaskChain.Model
                 this.procedureSteps.Add(dataset.GetStepItem(stepname));
             }
             procedureSteps.Sort();
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if (this.taskType != null)
+            {
+                //TaskType
+                newRelation = new RelationShip(this.Name, this.Type, this.taskType.Name, this.taskType.Type, "Binding", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if(this.procedureSteps.Count > 0 )
+            {
+                //ProcedureSteps
+                foreach (ProcedureStep step in procedureSteps)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, step.Name, step.Type, "Include", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
+            }
         }
 
         public XmlElement XMLSerialize()

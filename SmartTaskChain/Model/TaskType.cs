@@ -75,11 +75,23 @@ namespace SmartTaskChain.Model
             this.strDescription = Utility.GetText(ModelPayload, "Description");
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             //Procedure
             Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Assign");
             this.procedure = dataset.GetProcedureItem(record.Name);
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if(this.IsUseProcedure == false)
+            {
+                return;
+            }
+            //Procedure
+            newRelation = new RelationShip(this.Name, this.Type, this.procedure.Name, this.procedure.Type, "Assign", "1");
+            DataReader.InsertRelationShip(newRelation);
         }
 
         public XmlElement XMLSerialize()

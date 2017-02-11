@@ -67,14 +67,29 @@ namespace SmartTaskChain.Business
             this.strNumber = Utility.GetText(Utility.GetNode(modelPayload, "BussinessPayload"), "EmployeeNumber");
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
-            this.user.UpdateRelation(DataReader, dataset);
-            //UserRoles[1:n]
+            this.user.ExtractRelation(DataReader, dataset);
+            //InferiorUsers[1:n]
             List<string> inferiors = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "Inferior");
             foreach (string username in inferiors)
             {
                 this.uInferiors.Add(dataset.GetUserItem(username));
+            }
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            this.user.StoreRelation(DataReader, dataset);
+            RelationShip newRelation;
+            if (this.uInferiors.Count > 0)
+            {
+                //InferiorUsers[1:n]
+                foreach (IfUser curUser in this.uInferiors)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curUser.Name, curUser.Type, "Inferior", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
             }
         }
 
@@ -95,6 +110,11 @@ namespace SmartTaskChain.Business
             businessPayload.AppendChild(num_xml);
 
             return this.user.XMLSerialize(businessPayload);
+        }
+
+        public int GetTotalWork()
+        {
+            return this.user.GetTotalWork();
         }
 
         public override string ToString()

@@ -40,7 +40,7 @@ namespace SmartTaskChain.UI_Resources
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
             StatusUpdateTimer_Init();
-            mainDataSet.DataUpdateProcedure();
+            OnDataUpdate(null, null);
         }
 
         private void OnDataUpdate(object sender, MainDataSet.DataUpdateEvenArgs e)
@@ -105,14 +105,19 @@ namespace SmartTaskChain.UI_Resources
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            
+        }
+
+        private void TaskDispatch()
+        {
             ProcedureStep nextStep;
             UserGroup curGroup;
 
-            foreach(ProcedureTask curTask in DispatchTasks)
+            foreach (ProcedureTask curTask in DispatchTasks)
             {
                 //获取下一步Handler
                 nextStep = curTask.CurrentStep.NextStep;
-                if(nextStep == null)
+                if (nextStep == null)
                 {
                     //完成，存入归档数据库
                 }
@@ -121,14 +126,36 @@ namespace SmartTaskChain.UI_Resources
                 curGroup = nextStep.HandleRole;
                 //智能分配负责人
                 curTask.Handler = GetHandler(curGroup);
+                curTask.Handler.HandleTasks.Add(curTask);
                 curTask.Status = "Process";
             }
-            
+            mainDataSet.UpdateDataSet();
         }
+
 
         private IfUser GetHandler(UserGroup curGroup)
         {
-            return null;
+            if(curGroup.Users.Count == 0)
+            {
+                return null;
+            }
+            if(curGroup.Users.Count == 1)
+            {
+                return curGroup.Users[0];
+            }
+            int intMin = 10000000, intIndex = 0,intCount, intWork;
+            intCount = 0;
+            foreach(IfUser curUser in curGroup.Users)
+            {
+                intWork = curUser.GetTotalWork();
+                if(intWork < intMin)
+                {
+                    intMin = intWork;
+                    intIndex = intCount;
+                }
+                intCount++;
+            }
+            return curGroup.Users[intIndex];
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -150,8 +177,9 @@ namespace SmartTaskChain.UI_Resources
         //DispatchRun执行
         private void RunCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            backGroundWorker.RunWorkerAsync();
-            
+            TaskDispatch();
+
+
         }
         //DispatchPause执行使能
         private void PauseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -191,11 +219,12 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
-            newTask.UpdateRealtion(curType, 
-                                                    mainDataSet.GetUserItem("Alice"), 
-                                                    curType.BindingProcedure.GetFirstStep(), 
+            newTask.UpdateRealtion(curType,
+                                                    mainDataSet.GetUserItem("Alice"),
+                                                    curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q1"));
             mainDataSet.InsertProcedureTask(newTask);
+            mainDataSet.UpdateDataSet();
         }
 
         private void BobSubmitButton_Click(object sender, RoutedEventArgs e)
@@ -219,6 +248,7 @@ namespace SmartTaskChain.UI_Resources
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q2"));
             mainDataSet.InsertProcedureTask(newTask);
+            mainDataSet.UpdateDataSet();
         }
 
         //提交Custom任务
@@ -253,6 +283,7 @@ namespace SmartTaskChain.UI_Resources
                                                     Handler,
                                                     mainDataSet.GetQlevelItem("Q3"));
             mainDataSet.InsertCustomTask(newTask, workTime);
+            mainDataSet.UpdateDataSet();
         }
 
         private void CompleteTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)

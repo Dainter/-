@@ -115,7 +115,7 @@ namespace SmartTaskChain.Model
             UpdatePriority();
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             Record record;
             //TaskType[1:1]
@@ -131,6 +131,35 @@ namespace SmartTaskChain.Model
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "SetPriority");
             this.task.QLevel = dataset.GetQlevelItem(record.Name);
             UpdatePriority();
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if (this.task.BusinessType != null)
+            {
+                //TaskType[1:1]
+                newRelation = new RelationShip(this.Name, this.Type, this.task.BusinessType.Name, this.task.BusinessType.Type, "SetType", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.task.Submitter != null)
+            {
+                //Sumitter[1:1]
+                newRelation = new RelationShip(this.Name, this.Type, this.task.Submitter.Name, this.task.Submitter.Type, "Submitter", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.task.Handler != null)
+            {
+                //Handler[1:1]
+                newRelation = new RelationShip(this.Name, this.Type, this.task.Handler.Name, this.task.Handler.Type, "Handler", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
+            if (this.task.QLevel != null)
+            {
+                //Priority[1:1]
+                newRelation = new RelationShip(this.Name, this.Type, this.task.QLevel.Name, this.task.QLevel.Type, "SetPriority", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
         }
 
         public void UpdatePriority()

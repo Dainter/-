@@ -65,11 +65,11 @@ namespace SmartTaskChain.Model
             this.taskHandle = new List<IfTask>();
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
             //UserRoles[1:n]
             this.usrGroups.Clear();
-            List < string> groups = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "BelongTo");
+            List <string> groups = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "BelongTo");
             foreach (string group in groups)
             {
                 this.usrGroups.Add(dataset.GetGroupItem(group));
@@ -88,6 +88,38 @@ namespace SmartTaskChain.Model
             foreach (string taskname in tasks)
             {
                 this.taskHandle.Add(dataset.GetTaskItem(taskname));
+            }
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if (this.usrGroups.Count > 0)
+            {
+                //UserRoles[1:n]
+                foreach (UserGroup curGroup in this.usrGroups)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curGroup.Name, curGroup.Type, "BelongTo", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
+            }
+            if (this.taskSubmit.Count > 0)
+            {
+                //SubmitTasks[1:n]
+                foreach (IfTask curTask in this.taskSubmit)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curTask.Name, curTask.Type, "Submit", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
+            }
+            if (this.taskHandle.Count > 0)
+            {
+                //HandleTasks[1:n]
+                foreach (IfTask curTask in this.taskHandle)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curTask.Name, curTask.Type, "Handle", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
             }
         }
 
@@ -116,6 +148,17 @@ namespace SmartTaskChain.Model
             modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
 
             return modelPayload;
+        }
+
+        public int GetTotalWork()
+        {
+            int intTotal = 0;
+
+            foreach(IfTask curTask in taskHandle)
+            {
+                intTotal += curTask.BusinessType.Priority * 10 + curTask.QLevel.Priority;
+            }
+            return intTotal;
         }
 
         public override string ToString()

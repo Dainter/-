@@ -63,9 +63,14 @@ namespace SmartTaskChain.Business
 
         }
 
-        public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        public void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset)
         {
-            this.user.UpdateRelation(DataReader, dataset);
+            this.user.ExtractRelation(DataReader, dataset);
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            this.user.StoreRelation(DataReader, dataset);
         }
 
         public XmlElement XMLSerialize()
@@ -88,6 +93,11 @@ namespace SmartTaskChain.Business
             businessPayload.AppendChild(company_xml);
 
             return this.user.XMLSerialize(businessPayload);
+        }
+
+        public int GetTotalWork()
+        {
+            return this.user.GetTotalWork();
         }
 
         public override string ToString()

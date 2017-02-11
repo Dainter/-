@@ -14,7 +14,9 @@ namespace SmartTaskChain.Model
         List<IfTask> SubmitTasks { get; }
         List<IfTask> HandleTasks { get; }
 
-        void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset);
+        int GetTotalWork();
         XmlElement XMLSerialize();
     }
 }

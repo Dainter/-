@@ -248,7 +248,15 @@ namespace GraphDB.Core
             EdgeList.Remove(curEdge);
             return true;
         }
-        
+
+        //删除所有节点和连边
+        public void ClearAll()
+        {
+            EdgeList.Clear();
+            NodeList.Clear();
+            return;
+        }
+
         //删除所有被解除绑定的连边
         bool ClearUnusedEdge(List<Edge> UnusedList)
         {
@@ -260,6 +268,13 @@ namespace GraphDB.Core
             //清空入参列表本身内容
             UnusedList.Clear();
             return true;
+        }
+
+        //删除所有连边
+        public void ClearAllEdge()
+        {
+            EdgeList.Clear();
+            return;
         }
 
         //查询函数，返回指定索引处的节点

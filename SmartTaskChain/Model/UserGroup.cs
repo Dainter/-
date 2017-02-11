@@ -14,8 +14,8 @@ namespace SmartTaskChain.Model
         string strDescription;
         //Users[1:n]
         List<IfUser> users;
-        //ProcedureStep[1:1]
-        ProcedureStep procedureStep;
+        //ProcedureStep[1:n]
+        List<ProcedureStep> procedureSteps;
 
         public string Name
         {
@@ -39,17 +39,17 @@ namespace SmartTaskChain.Model
         {
             get
             {
-                if (procedureStep == null)
+                if (procedureSteps.Count <= 0)
                 {
                     return false;
                 }
                 return true;
             }
         }
-        public ProcedureStep BindingStep
+        public List<ProcedureStep> BindingStep
         {
-            get { return procedureStep; }
-            set { procedureStep = value; }
+            get { return procedureSteps; }
+            set { procedureSteps = value; }
         }
 
         public UserGroup(string sName, string sDescription = "")
@@ -57,7 +57,7 @@ namespace SmartTaskChain.Model
             this.strName = sName;
             this.strDescription = sDescription;
             this.users = new List<IfUser>();
-            this.procedureStep = null;
+            this.procedureSteps = new List<ProcedureStep>();
         }
 
         public UserGroup(XmlElement ModelPayload)
@@ -65,7 +65,7 @@ namespace SmartTaskChain.Model
             this.strName = Utility.GetText(ModelPayload, "Name");
             this.strDescription = Utility.GetText(ModelPayload, "Description");
             this.users = new List<IfUser>();
-            this.procedureStep = null;
+            this.procedureSteps = new List<ProcedureStep>();
         }
 
         public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
@@ -77,9 +77,36 @@ namespace SmartTaskChain.Model
             {
                 this.users.Add(dataset.GetUserItem(username));
             }
-            //ProcedureStep[1:1]
-            Record record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "InCharge");
-            this.procedureStep = dataset.GetStepItem(record.Name);
+            //ProcedureStep[1:n]
+            this.procedureSteps.Clear();
+            List<string> sSteps = DataReader.GetDNodesBySNodeandEdgeType(this.Name, this.Type, "InCharge");
+            foreach (string stepname in sSteps)
+            {
+                this.procedureSteps.Add(dataset.GetStepItem(stepname));
+            }
+        }
+
+        public void StoreRelation(IfDataStrategy DataReader, MainDataSet dataset)
+        {
+            RelationShip newRelation;
+            if (this.users.Count > 0)
+            {
+                //Users[1:n]
+                foreach (IfUser curUser in this.users)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curUser.Name, curUser.Type, "Include", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
+            }
+            if (this.procedureSteps != null)
+            {
+                //ProcedureSteps[1:n]
+                foreach (ProcedureStep curstep in this.procedureSteps)
+                {
+                    newRelation = new RelationShip(this.Name, this.Type, curstep.Name, curstep.Type, "InCharge", "1");
+                    DataReader.InsertRelationShip(newRelation);
+                }
+            }
         }
 
         public XmlElement XMLSerialize()

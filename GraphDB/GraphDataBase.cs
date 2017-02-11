@@ -188,6 +188,16 @@ namespace GraphDB
             graph.RemoveEdge(sStartName, sStartType, sEndName, sEndType, sType, ref err);
         }
         
+        public void ClearAll()
+        {
+            graph.ClearAll();
+        }
+
+        public void ClearAllEdge()
+        {
+            graph.ClearAllEdge();
+        }
+
         //查询函数，返回指定索引处的节点
         public Node GetNodeByIndex(int index)
         {

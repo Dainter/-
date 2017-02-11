@@ -11,7 +11,7 @@ namespace SmartTaskChain.DataAbstract
         int InsertRecords(List<Record> newRecords);
         int InsertRelationShip(RelationShip newRelation);
         int InsertRelationShips(List<RelationShip> newRelations);
-
+        void ClearAll();
         //删
 
         //改
