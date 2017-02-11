@@ -31,27 +31,24 @@ namespace SmartTaskChain.DataAbstract
                 return _DBreader;
             }
             //查表
-            if(_DBreader == null)
+            switch(GetExtension(sPath))
             {
-                switch(GetExtension(sPath))
-                {
-                    case ".xml":
-                        _DBreader = new GraphDBStrategy(sPath, ref err);
-                        if(err != ErrorCode.NoError)
-                        {
-                            _DBreader = null;
-                        }
-                        break;
-                    case ".mdb":
-                        break;
-                    case ".mdf":
-                        break;
-                    case ".xslx":
-                        break;
-                    default:
+                case ".xml":
+                    _DBreader = new GraphDBStrategy(sPath, ref err);
+                    if(err != ErrorCode.NoError)
+                    {
                         _DBreader = null;
-                        break;
-                }
+                    }
+                    break;
+                case ".mdb":
+                    break;
+                case ".mdf":
+                    break;
+                case ".xslx":
+                    break;
+                default:
+                    _DBreader = null;
+                    break;
             }
             return _DBreader;
         }

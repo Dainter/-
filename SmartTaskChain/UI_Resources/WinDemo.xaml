@@ -25,8 +25,8 @@
     <r:RibbonWindow.CommandBindings>
         <CommandBinding x:Name="RunCommand" Command="{StaticResource RunDispatcherCommand}" Executed="RunCommand_Executed" CanExecute="RunCommand_CanExecute" />
         <CommandBinding x:Name="PauseCommand" Command="{StaticResource PauseDispatcherCommand}" Executed="PauseCommand_Executed" CanExecute="PauseCommand_CanExecute"/>
-        <CommandBinding x:Name="SubmitPTaskCommand" Command="{StaticResource SubmitPTaskCommand}" Executed="SubmitPTaskCommand_Executed" />
-        <CommandBinding x:Name="SubmitCTaskCommand" Command="{StaticResource SubmitCTaskCommand}" Executed="SubmitCTaskCommand_Executed" />
+        <CommandBinding x:Name="SubmitPTaskCommand" Command="{StaticResource SubmitPTaskCommand}"  />
+        <CommandBinding x:Name="SubmitCTaskCommand" Command="{StaticResource SubmitCTaskCommand}"  />
         <CommandBinding x:Name="CompleteTaskCommand" Command="{StaticResource CompleteTaskCommand}" Executed="CompleteTaskCommand_Executed" />
     </r:RibbonWindow.CommandBindings>
     <Grid x:Name="MainLayout">
@@ -53,11 +53,11 @@
                     <r:RibbonButton Label="Pause" Command ="{DynamicResource PauseDispatcherCommand}" LargeImageSource="/SmartTaskChain;component/config/images/DispatchPause.png" SmallImageSource="/SmartTaskChain;component/config/images/DispatchPause_16x16.png" ToolTipTitle="Pause the dispatcher" ToolTipDescription=""/>
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Customer" >
-                    <r:RibbonSplitButton x:Name="AliceOperation" Label="Alice" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                    <r:RibbonSplitButton x:Name="AliceOperation" Label="Alice" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False" Click="AliceOperation_Click" >
                         <r:RibbonButton x:Name="AlicSubmitButton" Label="Submit Task" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="" Click="AlicSubmitButton_Click" />
                         <r:RibbonButton Label="Complete Task" Command="{DynamicResource CompleteTaskCommand}" CommandParameter="{Binding Label, ElementName=AliceOperation}" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=AliceListBox}"/>
                     </r:RibbonSplitButton>
-                    <r:RibbonSplitButton x:Name="BobOperation" Label="Bob" Command="" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False">
+                    <r:RibbonSplitButton x:Name="BobOperation" Label="Bob" LargeImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserCustomer.ico" IsDropDownOpen="False" CanAddToQuickAccessToolBarDirectly="False" Click="BobOperation_Click" >
                         <r:RibbonButton x:Name="BobSubmitButton" Label="Submit Task" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="" Click="BobSubmitButton_Click" />
                         <r:RibbonButton Label="Complete Task" Command="{DynamicResource CompleteTaskCommand}" CommandParameter="{Binding Label, ElementName=BobOperation}" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=BobListBox}"/>
                     </r:RibbonSplitButton>
@@ -79,8 +79,8 @@
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Manager" >
-                    <r:RibbonSplitButton x:Name="GloriaOperation" Label="Gloria" LargeImageSource="/SmartTaskChain;component/config/images/UserManager.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserManager.ico" CanAddToQuickAccessToolBarDirectly="False">
-                        <r:RibbonButton Label="Submit Task" Command="{DynamicResource SubmitCTaskCommand}" CommandParameter="{Binding Label, ElementName=GloriaOperation}" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription=""/>
+                    <r:RibbonSplitButton x:Name="GloriaOperation" Label="Gloria" LargeImageSource="/SmartTaskChain;component/config/images/UserManager.ico" SmallImageSource="/SmartTaskChain;component/config/images/UserManager.ico" CanAddToQuickAccessToolBarDirectly="False" Click="GloriaOperation_Click" >
+                        <r:RibbonButton x:Name="GloriaSubmitButton" Label="Submit Task" LargeImageSource="/SmartTaskChain;component/config/images/TaskNew.png" SmallImageSource="/SmartTaskChain;component/config/images/TaskNew_16x16.png" ToolTipTitle="Create New Task" ToolTipDescription="" Click="GloriaSubmitButton_Click" />
                         <r:RibbonButton Label="Complete Task" Command="{DynamicResource CompleteTaskCommand}" CommandParameter="{Binding Label, ElementName=GloriaOperation}" LargeImageSource="/SmartTaskChain;component/config/images/Tick_32x32.png" SmallImageSource="/SmartTaskChain;component/config/images/Tick_16x16.png" ToolTipTitle="Complete Select Task" ToolTipDescription="" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=GloriaListBox}"/>
                     </r:RibbonSplitButton>
                 </r:RibbonGroup>

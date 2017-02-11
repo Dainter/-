@@ -16,25 +16,40 @@ namespace SmartTaskChain
     public partial class MainWindow : GWindow
     {
         MainDataSet SmartChainDataSet;
+        bool IsShow;
         public MainWindow()
         {
             InitializeComponent();
             SmartChainDataSet = MainDataSet.GetDataSet();
-            //SmartChainDataSet.InsertAllData();
+            IsShow = false;
+            SmartChainDataSet.InsertAllData();
             WinDemo winDemo = new WinDemo(SmartChainDataSet);
             winDemo.ShowDialog();
         }
 
         private void DemoItem_Click(object sender, EventArgs e)
         {
+            if (IsShow == true)
+            {
+                return;
+            }
+            IsShow = true;
             WinDemo winDemo = new WinDemo(SmartChainDataSet);
             winDemo.ShowDialog();
+            IsShow = false;
         }
 
         private void ConfigItem_Click(object sender, EventArgs e)
         {
-            ConfigWindow WinConfig = new ConfigWindow(SmartChainDataSet);
-            WinConfig.ShowDialog();
+            if(IsShow == true)
+            {
+                return;
+            }
+            IsShow = true;
+            ConfigWindow winConfig = new ConfigWindow(SmartChainDataSet);
+            winConfig.ShowDialog();
+            SmartChainDataSet.RefreshDataSet();
+            IsShow = false;
         }
 
         private void ShowHistoryItem_Click(object sender, EventArgs e)

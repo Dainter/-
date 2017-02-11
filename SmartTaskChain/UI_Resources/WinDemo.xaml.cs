@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Microsoft.Windows.Controls.Ribbon;
 using SmartTaskChain.Model;
 using SmartTaskChain.Business;
+using SmartTaskChain.Config.Dialogs;
 
 namespace SmartTaskChain.UI_Resources
 {
@@ -52,7 +53,20 @@ namespace SmartTaskChain.UI_Resources
             EulerTasks = mainDataSet.GetTaskListByHandler("Euler");
             FrankTasks = mainDataSet.GetTaskListByHandler("Frank");
             GloriaTasks = mainDataSet.GetTaskListByHandler("Gloria");
+            TaskListSort();
             ControlInit();
+        }
+
+        private void TaskListSort()
+        {
+            DispatchTasks.Sort();
+            AliceTasks.Sort();
+            BobTasks.Sort();
+            ClareTasks.Sort();
+            DouglasTasks.Sort();
+            EulerTasks.Sort();
+            FrankTasks.Sort();
+            GloriaTasks.Sort();
         }
 
         private void ControlInit()
@@ -91,13 +105,35 @@ namespace SmartTaskChain.UI_Resources
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            ProcedureStep nextStep;
+            UserGroup curGroup;
+
+            foreach(ProcedureTask curTask in DispatchTasks)
+            {
+                //获取下一步Handler
+                nextStep = curTask.CurrentStep.NextStep;
+                if(nextStep == null)
+                {
+                    //完成，存入归档数据库
+                }
+                curTask.CurrentStep = nextStep;
+                //获取负责人组
+                curGroup = nextStep.HandleRole;
+                //智能分配负责人
+                curTask.Handler = GetHandler(curGroup);
+                curTask.Status = "Process";
+            }
             
-            
+        }
+
+        private IfUser GetHandler(UserGroup curGroup)
+        {
+            return null;
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            
         }
 
         #region UI Commands
@@ -114,7 +150,7 @@ namespace SmartTaskChain.UI_Resources
         //DispatchRun执行
         private void RunCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            backGroundWorker.RunWorkerAsync();
             
         }
         //DispatchPause执行使能
@@ -155,11 +191,10 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
-            newTask.BusinessType = curType;
-            newTask.Submitter = mainDataSet.GetUserItem("Alice");
-            newTask.CurrentStep = curType.BindingProcedure.GetFirstStep();
-            newTask.QLevel = mainDataSet.GetQlevelItem("Q1");
-
+            newTask.UpdateRealtion(curType, 
+                                                    mainDataSet.GetUserItem("Alice"), 
+                                                    curType.BindingProcedure.GetFirstStep(), 
+                                                    mainDataSet.GetQlevelItem("Q1"));
             mainDataSet.InsertProcedureTask(newTask);
         }
 
@@ -179,24 +214,19 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
-            newTask.BusinessType = curType;
-            newTask.Submitter = mainDataSet.GetUserItem("Bob");
-            newTask.CurrentStep = curType.BindingProcedure.GetFirstStep();
-            newTask.QLevel = mainDataSet.GetQlevelItem("Q2");
-
+            newTask.UpdateRealtion(curType,
+                                                    mainDataSet.GetUserItem("Bob"),
+                                                    curType.BindingProcedure.GetFirstStep(),
+                                                    mainDataSet.GetQlevelItem("Q2"));
             mainDataSet.InsertProcedureTask(newTask);
         }
 
         //提交Custom任务
-        private void SubmitCTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void GloriaSubmitButton_Click(object sender, RoutedEventArgs e)
         {
-            string strSubmitter = (string)e.Parameter;
-            if(strSubmitter != "Gloria")
-            {
-                return;
-            }
+            string strSubmitter = "Gloria";
             Manager mg = (Manager)mainDataSet.GetUserItem(strSubmitter);
-            foreach(IfUser staff in mg.Inferiors)
+            foreach (IfUser staff in mg.Inferiors)
             {
                 SubmitWorkTimeTask(mg, staff);
             }
@@ -218,11 +248,10 @@ namespace SmartTaskChain.UI_Resources
             {
                 workTime = new TaskType("填报工时", 70);
             }
-            newTask.BusinessType = workTime;
-            newTask.Submitter = Submitter;
-            newTask.Handler = Handler;
-            newTask.QLevel = mainDataSet.GetQlevelItem("Q3");
-
+            newTask.UpdateRealtion(workTime,
+                                                    Submitter,
+                                                    Handler,
+                                                    mainDataSet.GetQlevelItem("Q3"));
             mainDataSet.InsertCustomTask(newTask, workTime);
         }
 
@@ -230,6 +259,36 @@ namespace SmartTaskChain.UI_Resources
         {
             string strName = (string)e.Parameter;
             return;
+        }
+
+        private void AliceOperation_Click(object sender, RoutedEventArgs e)
+        {
+            WinCreateTask createWindow = new WinCreateTask(this.mainDataSet,"Alice");
+            createWindow.Owner = this;
+            if (createWindow.ShowDialog() == false)
+            {
+                return;
+            }
+        }
+
+        private void BobOperation_Click(object sender, RoutedEventArgs e)
+        {
+            WinCreateTask createWindow = new WinCreateTask(this.mainDataSet, "Bob");
+            createWindow.Owner = this;
+            if (createWindow.ShowDialog() == false)
+            {
+                return;
+            }
+        }
+
+        private void GloriaOperation_Click(object sender, RoutedEventArgs e)
+        {
+            WinCreateTask createWindow = new WinCreateTask(this.mainDataSet, "Gloria");
+            createWindow.Owner = this;
+            if (createWindow.ShowDialog() == false)
+            {
+                return;
+            }
         }
 
         #endregion

@@ -27,6 +27,7 @@ namespace SmartTaskChain.Model
         TaskStatus.EnumTaskStatus taskStatus;
         //DelayReason(if TaskStatus == Delay then not null)
         string strDelayReason;
+        double dubPriority;
 
         public string Name
         {
@@ -82,6 +83,11 @@ namespace SmartTaskChain.Model
             get { return strDelayReason; }
             set { strDelayReason = value; }
         }
+        public double Priority
+        {
+            get { return dubPriority; }
+            set { dubPriority = value; }
+        }
 
         public Task(string sName, DateTime dStart, DateTime dDead)
         {
@@ -95,6 +101,7 @@ namespace SmartTaskChain.Model
             this.eQlevel = null;
             this.taskStatus = TaskStatus.EnumTaskStatus.Process;
             this.strDelayReason = "";
+            this.dubPriority = 0.0;
         }
 
         public Task(XmlElement ModelPayload)
@@ -108,7 +115,26 @@ namespace SmartTaskChain.Model
             this.datCompletedTime = Convert.ToDateTime(Utility.GetText(ModelPayload, "CompletedTime"));
             this.eQlevel = null;
             this.taskStatus = TaskStatus.ToEnum(Utility.GetText(ModelPayload, "Status"));
-            this.strDelayReason = Utility.GetText(ModelPayload, "DelayReason"); 
+            this.strDelayReason = Utility.GetText(ModelPayload, "DelayReason");
+            this.dubPriority = 0.0;
+        }
+
+        public void UpdatePriority()
+        {
+            if (BusinessType == null || QLevel == null)
+            {
+                return;
+            }
+            dubPriority = CalPriority(DeadLine - StartTime, DeadLine - DateTime.Now, BusinessType.Priority, QLevel.Priority);
+        }
+
+        double CalPriority(TimeSpan total, TimeSpan remain, int iCategory, int iQlevel)
+        {
+            if(remain.TotalHours == 0)
+            {
+                return (iCategory * 10 + iQlevel) * 1.0 * (total.TotalHours / 1);
+            }
+            return (iCategory * 10 + iQlevel) * 1.0 * (total.TotalHours / remain.TotalHours);
         }
 
         public XmlElement XMLSerialize(XmlElement BusinessPayload)

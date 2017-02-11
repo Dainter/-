@@ -93,6 +93,12 @@ namespace SmartTaskChain.Model
         {
             get { return strDescription; }
         }
+        public double Priority
+        {
+            get { return this.task.Priority; }
+            set { this.task.Priority = value; }
+        }
+
 
         public ProcedureTask(string sName, DateTime dStart, DateTime dDead, string sDescription)
         {
@@ -110,6 +116,14 @@ namespace SmartTaskChain.Model
             this.task = new Task(modelPayload);
             this.curStep = null;
             this.strDescription = Utility.GetText(modelPayload, "Description");
+        }
+        public void UpdateRealtion(TaskType objType, IfUser objSub, ProcedureStep objStep, QLevel objLevel)
+        {
+            this.task.BusinessType = objType;
+            this.task.Submitter = objSub;
+            this.curStep = objStep;
+            this.task.QLevel = objLevel;
+            UpdatePriority();
         }
 
         public void UpdateRelation(IfDataStrategy DataReader, MainDataSet dataset)
@@ -130,6 +144,16 @@ namespace SmartTaskChain.Model
             //CurrentStep[1:1]
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "CurrentStep");
             this.curStep = dataset.GetStepItem(record.Name);
+            UpdatePriority();
+        }
+
+        public void UpdatePriority()
+        {
+            if (BusinessType == null || QLevel == null)
+            {
+                return;
+            }
+            task.UpdatePriority();
         }
 
         public XmlElement XMLSerialize(XmlElement BusinessPayload = null)
@@ -183,6 +207,37 @@ namespace SmartTaskChain.Model
         public override string ToString()
         {
             return Name;
+        }
+
+        public int CompareTo(IfTask other)
+        {
+            // A null value means that this object is greater.
+            if (other == null)
+            {
+                return 1;
+            }
+            if(this.Priority >= 0)
+            {
+                if(other.Priority >= 0)
+                {
+                    return 0-this.Priority.CompareTo(other.Priority);
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                if (other.Priority >= 0)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 0-this.Priority.CompareTo(other.Priority);
+                }
+            }
         }
     }
 

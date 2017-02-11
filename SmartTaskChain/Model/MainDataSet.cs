@@ -72,15 +72,7 @@ namespace SmartTaskChain.Model
 
         public MainDataSet()
         {
-            string strDBpath = Properties.Settings.Default.DataBasePath;
-            DataReader = DataStrategyFactory.GetFactory().GetDataReader(strDBpath);
-            if (DataReader == null)
-            {
-                return;
-            }
-            UpdateAllList();
-            UpdateRelation();
-            return;
+            DataInit();
         }     
 
         private static MainDataSet _dataset; //(2)
@@ -90,6 +82,24 @@ namespace SmartTaskChain.Model
             if (_dataset == null)
                 _dataset = new MainDataSet();
             return _dataset;
+        }
+
+        private void DataInit()
+        {
+            string strDBpath = Properties.Settings.Default.DataBasePath;
+            DataReader = DataStrategyFactory.GetFactory().GetDataReader(strDBpath);
+            if (DataReader == null)
+            {
+                return;
+            }
+            UpdateAllList();
+            UpdateRelation();
+            return;
+        }
+
+        public void RefreshDataSet()
+        {
+            DataInit();
         }
 
         #region Query

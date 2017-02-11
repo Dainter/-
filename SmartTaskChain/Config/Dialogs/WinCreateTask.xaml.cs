@@ -40,16 +40,46 @@ namespace SmartTaskChain.Config.Dialogs
         //Database
 
 
-        public WinCreateTask(MainDataSet DataSet)
+        public WinCreateTask(MainDataSet DataSet, string sSubmitter = null)
         {
             InitializeComponent();
             mainDataSet = DataSet;
+            if (sSubmitter == null)
+            {
+                return;
+            }
+            strSubmitter = sSubmitter;
         }
 
         private void WinCreateTask_Loaded(object sender, RoutedEventArgs e)
         {
             StyleInit();
             DataInit();
+            if (strSubmitter == null)
+            {
+                return;
+            }
+            SubmitterComboBox.IsEditable = true;
+            SubmitterComboBox.Text = strSubmitter;
+            SubmitterComboBox.IsEditable = false;
+            if(strSubmitter == "Gloria")
+            {
+                IsCustomCheckBox.IsChecked = true;
+            }
+            else if(strSubmitter == "Alice")
+            {
+                taskNameTextBox.Text = "维修任务_" + DateTime.Now.ToShortTimeString();
+                typeProcedureComboBox.IsEditable = true;
+                typeProcedureComboBox.Text = "维修任务";
+                typeProcedureComboBox.IsEditable = false;
+            }
+            else if (strSubmitter == "Bob")
+            {
+                taskNameTextBox.Text = "咨询任务_" + DateTime.Now.ToShortTimeString();
+                typeProcedureComboBox.IsEditable = true;
+                typeProcedureComboBox.Text = "咨询任务";
+                typeProcedureComboBox.IsEditable = false;
+            }
         }
 
         private void StyleInit()
@@ -242,13 +272,11 @@ namespace SmartTaskChain.Config.Dialogs
         private void SaveProcedureTask()
         {
             ProcedureTask newTask = new ProcedureTask(strName, sDate, dDate, strDescription);
-            newTask.BusinessType = mainDataSet.GetTypeItem(strType);
-            newTask.Submitter = mainDataSet.GetUserItem(strSubmitter);
-            newTask.QLevel = mainDataSet.GetQlevelItem(strQlevel);
-            if(newTask.BusinessType.IsUseProcedure == true)
-            {
-                newTask.CurrentStep = newTask.BusinessType.BindingProcedure.GetFirstStep();
-            }
+            TaskType curType = mainDataSet.GetTypeItem(strType);
+            newTask.UpdateRealtion(curType,
+                                                    mainDataSet.GetUserItem(strSubmitter),
+                                                    curType.BindingProcedure.GetFirstStep(),
+                                                    mainDataSet.GetQlevelItem(strQlevel));
             mainDataSet.InsertProcedureTask(newTask);
         }
 
@@ -256,15 +284,14 @@ namespace SmartTaskChain.Config.Dialogs
         {
             CustomTask newTask = new CustomTask(strName, sDate, dDate, strDescription);
             TaskType curType = mainDataSet.GetTypeItem(strType);
-            if(curType == null)
+            if (curType == null)
             {
-                curType = new TaskType(strType);
+                curType = new TaskType(strType, 50);
             }
-            newTask.BusinessType = curType;
-            newTask.Submitter = mainDataSet.GetUserItem(strSubmitter);
-            newTask.Handler = mainDataSet.GetUserItem(strHandler);
-            newTask.QLevel = mainDataSet.GetQlevelItem(strQlevel);
-
+            newTask.UpdateRealtion(curType,
+                                                    mainDataSet.GetUserItem(strSubmitter),
+                                                    mainDataSet.GetUserItem(strHandler),
+                                                    mainDataSet.GetQlevelItem(strQlevel));
             mainDataSet.InsertCustomTask(newTask, curType);
         }
 
