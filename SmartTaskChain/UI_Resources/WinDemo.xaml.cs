@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Threading;
+using System.Windows.Controls;
 using Microsoft.Windows.Controls.Ribbon;
 using SmartTaskChain.Model;
 using SmartTaskChain.Business;
@@ -34,7 +35,7 @@ namespace SmartTaskChain.UI_Resources
             mainDataSet = dataset;
             backGroundWorker = (BackgroundWorker)this.FindResource("backGroundWorker");
             //订阅mainDataSet的数据更新消息
-            mainDataSet.DataUpdated += OnDataUpdate;
+            mainDataSet.RuntimeDataUpdated += OnDataUpdate;
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +44,7 @@ namespace SmartTaskChain.UI_Resources
             OnDataUpdate(null, null);
         }
 
-        private void OnDataUpdate(object sender, MainDataSet.DataUpdateEvenArgs e)
+        private void OnDataUpdate(object sender, MainDataSet.RuntimeDataUpdateEvenArgs e)
         {
             DispatchTasks = mainDataSet.GetTaskListByStatus("Wait");
             AliceTasks = mainDataSet.GetTaskListByHandler("Alice");
@@ -103,6 +104,7 @@ namespace SmartTaskChain.UI_Resources
         }
         #endregion
 
+        #region Dispatcher
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             
@@ -115,21 +117,37 @@ namespace SmartTaskChain.UI_Resources
 
             foreach (ProcedureTask curTask in DispatchTasks)
             {
+                //物勒工名
+                string strLog;
+                if (curTask.Handler == null)
+                {
+                    strLog = "\nStep: " + curTask.CurrentStep.Name + " Handler: null";
+                }
+                else
+                {
+                    strLog = "\nStep: " + curTask.CurrentStep.Name + " Handler: " + curTask.Handler.Name;
+                    //从原handler任务列表中删除
+                    curTask.Handler.HandleTasks.Remove(curTask);
+                }
+                curTask.Description += strLog;
                 //获取下一步Handler
                 nextStep = curTask.CurrentStep.NextStep;
                 if (nextStep == null)
                 {
                     //完成，存入归档数据库
+                    mainDataSet.ArchiveTask(curTask);
+                    mainDataSet.UpdateRuntimeDataSet();
+                    mainDataSet.UpdateArchiveDataSet();
                 }
                 curTask.CurrentStep = nextStep;
-                //获取负责人组
+                //获取负责人组（单向）
                 curGroup = nextStep.HandleRole;
-                //智能分配负责人
+                //智能分配负责人(双向)
                 curTask.Handler = GetHandler(curGroup);
                 curTask.Handler.HandleTasks.Add(curTask);
                 curTask.Status = "Process";
             }
-            mainDataSet.UpdateDataSet();
+            mainDataSet.UpdateRuntimeDataSet();
         }
 
 
@@ -162,6 +180,7 @@ namespace SmartTaskChain.UI_Resources
         {
             
         }
+        #endregion
 
         #region UI Commands
         //DispatchRun执行使能
@@ -196,14 +215,8 @@ namespace SmartTaskChain.UI_Resources
         {
 
         }
-        //提交Procedure任务
-        private void SubmitPTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            string strSubmitter = (string)e.Parameter;
-            return;
-        }
 
-        private void AlicSubmitButton_Click(object sender, RoutedEventArgs e)
+        private void AliceSubmitButton_Click(object sender, RoutedEventArgs e)
         {
             string strName = "维修任务_" +DateTime.Now.ToShortTimeString();
             if (mainDataSet.GetTaskItem(strName) != null)
@@ -219,12 +232,15 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
+            IfUser Submitter = mainDataSet.GetUserItem("Alice");
+            Submitter.SubmitTasks.Add(newTask);
+            Submitter.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    mainDataSet.GetUserItem("Alice"),
+                                                    Submitter,
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q1"));
             mainDataSet.InsertProcedureTask(newTask);
-            mainDataSet.UpdateDataSet();
+            mainDataSet.UpdateRuntimeDataSet();
         }
 
         private void BobSubmitButton_Click(object sender, RoutedEventArgs e)
@@ -243,14 +259,16 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
+            IfUser Submitter = mainDataSet.GetUserItem("Bob");
+            Submitter.SubmitTasks.Add(newTask);
+            Submitter.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    mainDataSet.GetUserItem("Bob"),
+                                                    Submitter,
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q2"));
             mainDataSet.InsertProcedureTask(newTask);
-            mainDataSet.UpdateDataSet();
+            mainDataSet.UpdateRuntimeDataSet();
         }
-
         //提交Custom任务
         private void GloriaSubmitButton_Click(object sender, RoutedEventArgs e)
         {
@@ -278,18 +296,14 @@ namespace SmartTaskChain.UI_Resources
             {
                 workTime = new TaskType("填报工时", 70);
             }
+            Submitter.SubmitTasks.Add(newTask);
+            Handler.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(workTime,
                                                     Submitter,
                                                     Handler,
                                                     mainDataSet.GetQlevelItem("Q3"));
             mainDataSet.InsertCustomTask(newTask, workTime);
-            mainDataSet.UpdateDataSet();
-        }
-
-        private void CompleteTaskCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            string strName = (string)e.Parameter;
-            return;
+            mainDataSet.UpdateRuntimeDataSet();
         }
 
         private void AliceOperation_Click(object sender, RoutedEventArgs e)
@@ -322,8 +336,93 @@ namespace SmartTaskChain.UI_Resources
             }
         }
 
+        private void AliceCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(AliceListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = AliceTasks[AliceListBox.SelectedIndex];
+            CompleteTask(curTask);
+            
+        }
+
+        private void BobCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (BobListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = BobTasks[BobListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void ClareCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ClareListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = ClareTasks[ClareListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void DouglasCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DouglasListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = DouglasTasks[DouglasListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void EulerCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (EulerListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = EulerTasks[EulerListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void FrankCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (FrankListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = FrankTasks[FrankListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void GloriaCompleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GloriaListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            IfTask curTask = GloriaTasks[GloriaListBox.SelectedIndex];
+            CompleteTask(curTask);
+        }
+
+        private void CompleteTask(IfTask curTask)
+        {
+            if(curTask.IsBindingProcedure == true)
+            {
+                //Procedure任务设置状态为Wait，等待调度器处理
+                curTask.Status = "Wait";
+                mainDataSet.UpdateRuntimeDataSet();
+                return;
+            }
+            //Custom任务直接存入归档数据库
+            mainDataSet.ArchiveTask(curTask);
+            mainDataSet.UpdateRuntimeDataSet();
+            mainDataSet.UpdateArchiveDataSet();
+        }
         #endregion
 
-        
+
     }
 }

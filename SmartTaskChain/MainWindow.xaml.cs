@@ -48,7 +48,7 @@ namespace SmartTaskChain
             IsShow = true;
             ConfigWindow winConfig = new ConfigWindow(SmartChainDataSet);
             winConfig.ShowDialog();
-            SmartChainDataSet.RefreshDataSet();
+            SmartChainDataSet.RefreshRuntimeDataSet();
             IsShow = false;
         }
 

@@ -16,7 +16,7 @@ namespace SmartTaskChain.Model
         DateTime DeadLine { get; }
         QLevel QLevel { get; set; }
         string Status { get; set; }
-        string DelayReason { get; set; }
+        string Description { get; set; }
         double Priority { get; set; }
 
         void ExtractRelation(IfDataStrategy DataReader, MainDataSet dataset);

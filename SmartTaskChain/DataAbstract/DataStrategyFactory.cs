@@ -16,6 +16,7 @@ namespace SmartTaskChain.DataAbstract
 
         private static DataStrategyFactory _factory; //(2)
         private static IfDataStrategy _DBreader;
+        private static IfDataStrategy _ArchiveReader;
         public static DataStrategyFactory GetFactory() //(3)
         {
             if (_factory == null)
@@ -51,6 +52,36 @@ namespace SmartTaskChain.DataAbstract
                     break;
             }
             return _DBreader;
+        }
+
+        public IfDataStrategy GetArchiveReader(string sPath = "")
+        {
+            ErrorCode err = ErrorCode.NoError;
+            if (sPath == "")
+            {
+                return _ArchiveReader;
+            }
+            //查表
+            switch (GetExtension(sPath))
+            {
+                case ".xml":
+                    _ArchiveReader = new GraphDBStrategy(sPath, ref err);
+                    if (err != ErrorCode.NoError)
+                    {
+                        _ArchiveReader = null;
+                    }
+                    break;
+                case ".mdb":
+                    break;
+                case ".mdf":
+                    break;
+                case ".xslx":
+                    break;
+                default:
+                    _ArchiveReader = null;
+                    break;
+            }
+            return _ArchiveReader;
         }
 
         private string GetExtension(string sPath)

@@ -19,14 +19,10 @@ namespace SmartTaskChain.Model
         DateTime datStartTime;
         //DeadLine
         DateTime datDeadLine;
-        //CompleteTime(if TaskStatus == Completed then not null)
-        DateTime datCompletedTime;
         //Priority[1:1]
         QLevel eQlevel;
         //TaskStatus
         TaskStatus.EnumTaskStatus taskStatus;
-        //DelayReason(if TaskStatus == Delay then not null)
-        string strDelayReason;
         double dubPriority;
 
         public string Name
@@ -64,10 +60,6 @@ namespace SmartTaskChain.Model
         {
             get { return datDeadLine; }
         }
-        public DateTime CompletedTime
-        {
-            get { return datCompletedTime; }
-        }
         public QLevel QLevel
         {
             get { return eQlevel; }
@@ -77,11 +69,6 @@ namespace SmartTaskChain.Model
         {
             get { return TaskStatus.ToString(taskStatus); }
             set { taskStatus = TaskStatus.ToEnum(value); }
-        }
-        public string DelayReason
-        {
-            get { return strDelayReason; }
-            set { strDelayReason = value; }
         }
         public double Priority
         {
@@ -97,10 +84,8 @@ namespace SmartTaskChain.Model
             this.usrHandler = null;
             this.datStartTime = dStart;
             this.datDeadLine = dDead;
-            this.datCompletedTime = new DateTime(0);
             this.eQlevel = null;
             this.taskStatus = TaskStatus.EnumTaskStatus.Process;
-            this.strDelayReason = "";
             this.dubPriority = 0.0;
         }
 
@@ -112,10 +97,8 @@ namespace SmartTaskChain.Model
             this.usrHandler = null;
             this.datStartTime = Convert.ToDateTime(Utility.GetText(ModelPayload, "StartTime"));
             this.datDeadLine = Convert.ToDateTime(Utility.GetText(ModelPayload, "DeadLine"));
-            this.datCompletedTime = Convert.ToDateTime(Utility.GetText(ModelPayload, "CompletedTime"));
             this.eQlevel = null;
             this.taskStatus = TaskStatus.ToEnum(Utility.GetText(ModelPayload, "Status"));
-            this.strDelayReason = Utility.GetText(ModelPayload, "DelayReason");
             this.dubPriority = 0.0;
         }
 
@@ -140,37 +123,29 @@ namespace SmartTaskChain.Model
         public XmlElement XMLSerialize(XmlElement BusinessPayload)
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt, start_txt, dead_txt, comp_txt, status_txt, reason_txt;
-            XmlElement name_xml, start_xml, dead_xml, comp_xml, status_xml, reason_xml, modelPayload;
+            XmlText name_txt, start_txt, dead_txt, status_txt;
+            XmlElement name_xml, start_xml, dead_xml, status_xml, modelPayload;
 
             modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
             start_xml = doc.CreateElement("StartTime");
             dead_xml = doc.CreateElement("DeadLine");
-            comp_xml = doc.CreateElement("CompletedTime");
             status_xml = doc.CreateElement("Status");
-            reason_xml = doc.CreateElement("DelayReason");
 
             name_txt = doc.CreateTextNode(this.Name);
             start_txt = doc.CreateTextNode(this.StartTime.ToString());
             dead_txt = doc.CreateTextNode(this.DeadLine.ToString());
-            comp_txt = doc.CreateTextNode(this.CompletedTime.ToString());
             status_txt = doc.CreateTextNode(this.Status);
-            reason_txt = doc.CreateTextNode(this.DelayReason);
 
             name_xml.AppendChild(name_txt);
             start_xml.AppendChild(start_txt);
             dead_xml.AppendChild(dead_txt);
-            comp_xml.AppendChild(comp_txt);
             status_xml.AppendChild(status_txt);
-            reason_xml.AppendChild(reason_txt);
 
             modelPayload.AppendChild(name_xml);
             modelPayload.AppendChild(start_xml);
             modelPayload.AppendChild(dead_xml); 
-            modelPayload.AppendChild(comp_xml);
             modelPayload.AppendChild(status_xml);
-            modelPayload.AppendChild(reason_xml);
             modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
 
             return modelPayload;

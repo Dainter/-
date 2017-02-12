@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Config\UI_Resources\SystemConverter.cs" />
     <Compile Include="Model\MainDataSet.cs" />
+    <Compile Include="Model\Tasks\CompletedTask.cs" />
     <Compile Include="UI_Resources\GWindow.cs" />
     <Compile Include="UI_Resources\WinDemo.xaml.cs">
       <DependentUpon>WinDemo.xaml</DependentUpon>
@@ -141,9 +142,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\Task\CustomTask.cs" />
+    <Compile Include="Model\Tasks\CustomTask.cs" />
     <Compile Include="Business\Customer.cs" />
-    <Compile Include="Model\Task\ProcedureTask.cs" />
+    <Compile Include="Model\Tasks\ProcedureTask.cs" />
     <Compile Include="Business\Engineer.cs" />
     <Compile Include="Business\Manager.cs" />
     <Compile Include="Business\ServiceUser.cs" />
@@ -168,12 +169,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Task\IfTask.cs" />
+    <Compile Include="Model\Tasks\IfTask.cs" />
     <Compile Include="Model\User\IfUser.cs" />
     <Compile Include="Model\Procedure.cs" />
     <Compile Include="Model\ProcedureStep.cs" />
     <Compile Include="Model\QLevel.cs" />
-    <Compile Include="Model\Task\Task.cs" />
+    <Compile Include="Model\Tasks\Task.cs" />
     <Compile Include="Model\TaskStatus.cs" />
     <Compile Include="Model\TaskType.cs" />
     <Compile Include="Model\User\User.cs" />

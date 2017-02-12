@@ -34,7 +34,4 @@
 
     <RoutedUICommand x:Key="RunDispatcherCommand" Text="RunDispatcherCommand" />
     <RoutedUICommand x:Key="PauseDispatcherCommand" Text="PauseDispatcherCommand" />
-    <RoutedUICommand x:Key="SubmitPTaskCommand" Text="SubmitProcedureTaskCommand" />
-    <RoutedUICommand x:Key="SubmitCTaskCommand" Text="SubmitCustomTaskCommand" />
-    <RoutedUICommand x:Key="CompleteTaskCommand" Text="CompleteTaskCommand" />
 </ResourceDictionary>

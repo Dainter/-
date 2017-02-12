@@ -40,5 +40,14 @@ namespace SmartTaskChain.Properties {
                 return ((global::System.Windows.Media.SolidColorBrush)(this["ForeColor"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ArchiveDB.xml")]
+        public string ArchiveDBPath {
+            get {
+                return ((string)(this["ArchiveDBPath"]));
+            }
+        }
     }
 }

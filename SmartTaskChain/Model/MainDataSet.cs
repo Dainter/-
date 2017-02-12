@@ -15,8 +15,10 @@ namespace SmartTaskChain.Model
         List<UserGroup> userGroupList;
         List<IfUser> userList;
         List<IfTask> taskList;
+        List<CompletedTask> completedTasks;
 
         IfDataStrategy DataReader;
+        IfDataStrategy ArchiveDbReader;
 
         public List<QLevel>QLevels
         {
@@ -60,7 +62,6 @@ namespace SmartTaskChain.Model
             //}
             get { return userGroupList.FindAll(MatchNoProcedureGroup); }
         }
-
         public List<IfUser> Users
         {
             get { return userList; }
@@ -69,10 +70,15 @@ namespace SmartTaskChain.Model
         {
             get { return taskList; }
         }
+        public List<CompletedTask> CompletedTask
+        {
+            get { return completedTasks; }
+        }
 
         public MainDataSet()
         {
-            DataInit();
+            RuntimeDataInit();
+            ArchiveDataInit();
         }     
 
         private static MainDataSet _dataset; //(2)
@@ -84,7 +90,7 @@ namespace SmartTaskChain.Model
             return _dataset;
         }
 
-        private void DataInit()
+        private void RuntimeDataInit()
         {
             string strDBpath = Properties.Settings.Default.DataBasePath;
             DataReader = DataStrategyFactory.GetFactory().GetDataReader(strDBpath);
@@ -97,9 +103,26 @@ namespace SmartTaskChain.Model
             return;
         }
 
-        public void RefreshDataSet()
+        private void ArchiveDataInit()
         {
-            DataInit();
+            string strDBpath = Properties.Settings.Default.ArchiveDBPath;
+            ArchiveDbReader = DataStrategyFactory.GetFactory().GetArchiveReader(strDBpath);
+            if (ArchiveDbReader == null)
+            {
+                return;
+            }
+            ExtractArchiveList();
+            return;
+        }
+
+        public void RefreshRuntimeDataSet()
+        {
+            RuntimeDataInit();
+        }
+
+        public void ArchiveRuntimeDataSet()
+        {
+            ArchiveDataInit();
         }
 
         #region Query
@@ -225,7 +248,7 @@ namespace SmartTaskChain.Model
                 {
                     continue;
                 }
-                if (curItem.Handler.Name == sName)
+                if (curItem.Handler.Name == sName && curItem.Status == "Process")
                 {
                     newList.Add(curItem);
                 }
@@ -271,42 +294,77 @@ namespace SmartTaskChain.Model
         #endregion
 
         #region Event
-        public delegate void DataUpdateEventHandler(object sender, DataUpdateEvenArgs e);
-        public event DataUpdateEventHandler DataUpdated;
-
-        public class DataUpdateEvenArgs : EventArgs
+        #region Runtime
+        public delegate void RuntimeDataUpdateEventHandler(object sender, RuntimeDataUpdateEvenArgs e);
+        public event RuntimeDataUpdateEventHandler RuntimeDataUpdated;
+        public class RuntimeDataUpdateEvenArgs : EventArgs
         {
 
         }
 
-        private void OnDataUpdate(DataUpdateEvenArgs e)
+        private void OnRuntimeDataUpdate(RuntimeDataUpdateEvenArgs e)
         {
-            if(DataUpdated != null)
+            if(RuntimeDataUpdated != null)
             {
-                DataUpdated(this, e);
+                RuntimeDataUpdated(this, e);
             }
         }
 
-        private void DataUpdateProcedure()
+        private void RuntimeDataUpdateProcedure()
         {
-            DataUpdateEvenArgs e = new DataUpdateEvenArgs();
-            OnDataUpdate(e);
+            RuntimeDataUpdateEvenArgs e = new RuntimeDataUpdateEvenArgs();
+            OnRuntimeDataUpdate(e);
         }
 
-        public void UpdateDataSet()
+        public void UpdateRuntimeDataSet()
         {
             //Clear All Node and Edge
             DataReader.ClearAll();
             StoreAllList();
             StoreRelation();
             DataReader.AcceptModification();
-            DataUpdateProcedure();
+            RuntimeDataUpdateProcedure();
         }
         #endregion
 
-        #region InsertRecord
+        #region Archive
+        public delegate void ArchiveDataUpdateEventHandler(object sender, ArchiveDataUpdateEvenArgs e);
+        public event ArchiveDataUpdateEventHandler ArchiveDataUpdated;
+        public class ArchiveDataUpdateEvenArgs : EventArgs
+        {
+
+        }
+
+        private void OnArchiveDataUpdate(ArchiveDataUpdateEvenArgs e)
+        {
+            if (ArchiveDataUpdated != null)
+            {
+                ArchiveDataUpdated(this, e);
+            }
+        }
+
+        private void ArchiveDataUpdateProcedure()
+        {
+            ArchiveDataUpdateEvenArgs e = new ArchiveDataUpdateEvenArgs();
+            OnArchiveDataUpdate(e);
+        }
+
+        public void UpdateArchiveDataSet()
+        {
+            ArchiveDbReader.ClearAll();
+            StoreArchiveList();
+            ArchiveDbReader.AcceptModification();
+        }
+        #endregion
+        #endregion
+
+        #region EditRecord
         public void InsertProcedureTask(ProcedureTask newTask)
         {
+            if(newTask == null)
+            {
+                return;
+            }
             taskList.Add(newTask);
             //保存节点
             DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
@@ -314,7 +372,11 @@ namespace SmartTaskChain.Model
 
         public void InsertCustomTask(CustomTask newTask, TaskType newType = null)
         {
-            if(newType != null)
+            if (newTask == null)
+            {
+                return;
+            }
+            if (newType != null)
             {
                 if(this.GetTypeItem(newType.Name) == null)
                 {
@@ -325,6 +387,21 @@ namespace SmartTaskChain.Model
             //保存节点
             taskList.Add(newTask);
             DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
+        }
+
+        public void ArchiveTask(IfTask curTask)
+        {
+            if (curTask == null)
+            {
+                return;
+            }
+            //Submitter解绑定
+            curTask.Submitter.SubmitTasks.Remove(curTask);
+            //Handler解绑定
+            curTask.Handler.HandleTasks.Remove(curTask);
+            //移出列表
+            taskList.Remove(curTask);
+            completedTasks.Add(new CompletedTask(curTask));
         }
 
         #endregion
@@ -414,6 +491,17 @@ namespace SmartTaskChain.Model
             }
         }
 
+        private void ExtractArchiveList()
+        {
+            List<Record> recordlist = ArchiveDbReader.GetRecordList();
+            completedTasks = new List<CompletedTask>();
+            foreach (Record curRec in recordlist)
+            {
+                completedTasks.Add(new CompletedTask(curRec.Payload));
+            }
+
+        }
+
         private void StoreAllList()
         {
             foreach(QLevel curItem in qlevelList)
@@ -471,6 +559,14 @@ namespace SmartTaskChain.Model
             foreach (IfTask curItem in taskList)
             {
                 curItem.StoreRelation(DataReader, this);
+            }
+        }
+
+        private void StoreArchiveList()
+        {
+            foreach (CompletedTask curItem in completedTasks)
+            {
+                ArchiveDbReader.InsertRecord(new Record(curItem.Name, curItem.Type, curItem.XMLSerialize()));
             }
         }
 

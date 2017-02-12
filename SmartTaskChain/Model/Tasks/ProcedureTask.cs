@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
 using System.Text;
+using System.Xml;
 using SmartTaskChain.DataAbstract;
 
 namespace SmartTaskChain.Model
 {
-    public class CustomTask : IfTask
+    public class ProcedureTask:IfTask
     {
         Task task;
         string strDescription;
-        
+        //CurrentStep[1:1]
+        ProcedureStep curStep;
+
         public string Name
         {
             get
@@ -20,7 +23,7 @@ namespace SmartTaskChain.Model
         }
         public string Type
         {
-            get { return this.GetType().Name; }
+            get { return this.GetType().Name ; }
         }
         public TaskType BusinessType
         {
@@ -31,12 +34,17 @@ namespace SmartTaskChain.Model
         {
             get
             {
-                if (task.BusinessType == null)
+                if(task.BusinessType == null)
                 {
                     return false;
                 }
                 return this.task.IsBindingProcedure;
             }
+        }
+        public ProcedureStep CurrentStep
+        {
+            get { return this.curStep; }
+            set { this.curStep = value; }
         }
         public IfUser Submitter
         {
@@ -62,10 +70,6 @@ namespace SmartTaskChain.Model
                 return task.DeadLine;
             }
         }
-        public DateTime CompletedTime
-        {
-            get { return this.task.CompletedTime; }
-        }
         public QLevel QLevel
         {
             get { return this.task.QLevel; }
@@ -75,11 +79,6 @@ namespace SmartTaskChain.Model
         {
             get { return this.task.Status; }
             set { this.task.Status = value; }
-        }
-        public string DelayReason
-        {
-            get { return this.task.DelayReason; }
-            set { this.task.DelayReason = value; }
         }
         public string Description
         {
@@ -92,25 +91,30 @@ namespace SmartTaskChain.Model
             set { this.task.Priority = value; }
         }
 
-        public CustomTask(string sName, DateTime dStart, DateTime dDead, string sDescription)
+
+        public ProcedureTask(string sName, DateTime dStart, DateTime dDead, string sDescription)
         {
             this.task = new Task(sName,
-                                        dStart,
+                                        dStart, 
                                         dDead);
+            this.curStep = null;
+            //流程任务进入等待区，等待后台调度器调度
+            this.Status = "Wait";
             this.strDescription = sDescription;
         }
 
-        public CustomTask(XmlElement modelPayload)
+        public ProcedureTask(XmlElement modelPayload)
         {
             this.task = new Task(modelPayload);
-            this.strDescription = Utility.GetText(Utility.GetNode(modelPayload, "BussinessPayload"), "Description");
+            this.curStep = null;
+            this.strDescription = Utility.GetText(modelPayload, "Description");
         }
-
-        public void UpdateRealtion(TaskType objType, IfUser objSub, IfUser objHand, QLevel objLevel)
+        public void UpdateRealtion(TaskType objType, IfUser objSub, ProcedureStep objStep, QLevel objLevel)
         {
             this.task.BusinessType = objType;
             this.task.Submitter = objSub;
-            this.task.Handler = objHand;
+            this.task.Handler = objSub;
+            this.curStep = objStep;
             this.task.QLevel = objLevel;
             UpdatePriority();
         }
@@ -120,7 +124,7 @@ namespace SmartTaskChain.Model
             Record record;
             //TaskType[1:1]
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "SetType");
-            this.task.BusinessType = dataset.GetTypeItem(record.Name);
+            this.task.BusinessType  = dataset.GetTypeItem(record.Name);
             //Sumitter[1:1]
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "Submitter");
             this.task.Submitter = dataset.GetUserItem(record.Name);
@@ -130,6 +134,9 @@ namespace SmartTaskChain.Model
             //Priority[1:1]
             record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "SetPriority");
             this.task.QLevel = dataset.GetQlevelItem(record.Name);
+            //CurrentStep[1:1]
+            record = DataReader.GetDNodeBySNodeandEdgeType(this.Name, this.Type, "CurrentStep");
+            this.curStep = dataset.GetStepItem(record.Name);
             UpdatePriority();
         }
 
@@ -160,11 +167,17 @@ namespace SmartTaskChain.Model
                 newRelation = new RelationShip(this.Name, this.Type, this.task.QLevel.Name, this.task.QLevel.Type, "SetPriority", "1");
                 DataReader.InsertRelationShip(newRelation);
             }
+            if (this.curStep != null)
+            {
+                //CurrentStep[1:1]
+                newRelation = new RelationShip(this.Name, this.Type, this.curStep.Name, this.curStep.Type, "CurrentStep", "1");
+                DataReader.InsertRelationShip(newRelation);
+            }
         }
 
         public void UpdatePriority()
         {
-            if(BusinessType == null || QLevel == null)
+            if (BusinessType == null || QLevel == null)
             {
                 return;
             }
@@ -174,48 +187,41 @@ namespace SmartTaskChain.Model
         public XmlElement XMLSerialize(XmlElement BusinessPayload = null)
         {
             XmlDocument doc = new XmlDocument();
-            XmlText name_txt, start_txt, dead_txt, comp_txt, status_txt, reason_txt, desc_txt;
-            XmlElement name_xml, start_xml, dead_xml, comp_xml, status_xml, reason_xml, desc_xml, modelPayload;
+            XmlText name_txt, start_txt, dead_txt, status_txt, desc_txt;
+            XmlElement name_xml, start_xml, dead_xml, status_xml, desc_xml, modelPayload;
 
             modelPayload = doc.CreateElement("Payload");
             name_xml = doc.CreateElement("Name");
             start_xml = doc.CreateElement("StartTime");
             dead_xml = doc.CreateElement("DeadLine");
-            comp_xml = doc.CreateElement("CompletedTime");
             status_xml = doc.CreateElement("Status");
-            reason_xml = doc.CreateElement("DelayReason");
             //private
             desc_xml = doc.CreateElement("Description");
 
             name_txt = doc.CreateTextNode(this.Name);
             start_txt = doc.CreateTextNode(this.StartTime.ToString());
             dead_txt = doc.CreateTextNode(this.DeadLine.ToString());
-            comp_txt = doc.CreateTextNode(this.CompletedTime.ToString());
             status_txt = doc.CreateTextNode(this.Status);
-            reason_txt = doc.CreateTextNode(this.DelayReason);
             desc_txt = doc.CreateTextNode(this.Description);
 
             name_xml.AppendChild(name_txt);
             start_xml.AppendChild(start_txt);
             dead_xml.AppendChild(dead_txt);
-            comp_xml.AppendChild(comp_txt);
             status_xml.AppendChild(status_txt);
-            reason_xml.AppendChild(reason_txt);
             desc_xml.AppendChild(desc_txt);
 
             modelPayload.AppendChild(name_xml);
             modelPayload.AppendChild(start_xml);
             modelPayload.AppendChild(dead_xml);
-            modelPayload.AppendChild(comp_xml);
             modelPayload.AppendChild(status_xml);
-            modelPayload.AppendChild(reason_xml);
             modelPayload.AppendChild(desc_xml);
-            if (BusinessPayload != null)
+            if(BusinessPayload != null)
             {
                 modelPayload.AppendChild(doc.ImportNode(BusinessPayload, true));
             }
 
             return modelPayload;
+
         }
 
         public override string ToString()
@@ -230,9 +236,9 @@ namespace SmartTaskChain.Model
             {
                 return 1;
             }
-            if (this.Priority >= 0)
+            if(this.Priority >= 0)
             {
-                if (other.Priority >= 0)
+                if(other.Priority >= 0)
                 {
                     return 0-this.Priority.CompareTo(other.Priority);
                 }
@@ -254,4 +260,5 @@ namespace SmartTaskChain.Model
             }
         }
     }
+
 }
