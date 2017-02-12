@@ -232,11 +232,8 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
-            IfUser Submitter = mainDataSet.GetUserItem("Alice");
-            Submitter.SubmitTasks.Add(newTask);
-            Submitter.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    Submitter,
+                                                    mainDataSet.GetUserItem("Alice"),
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q1"));
             mainDataSet.InsertProcedureTask(newTask);
@@ -259,11 +256,8 @@ namespace SmartTaskChain.UI_Resources
                 ShowStatus("Task Type: " + curType.Name + " isn't exists.");
                 return;
             }
-            IfUser Submitter = mainDataSet.GetUserItem("Bob");
-            Submitter.SubmitTasks.Add(newTask);
-            Submitter.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    Submitter,
+                                                    mainDataSet.GetUserItem("Bob"),
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem("Q2"));
             mainDataSet.InsertProcedureTask(newTask);
@@ -296,8 +290,6 @@ namespace SmartTaskChain.UI_Resources
             {
                 workTime = new TaskType("填报工时", 70);
             }
-            Submitter.SubmitTasks.Add(newTask);
-            Handler.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(workTime,
                                                     Submitter,
                                                     Handler,

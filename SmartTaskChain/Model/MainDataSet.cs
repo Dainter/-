@@ -365,6 +365,10 @@ namespace SmartTaskChain.Model
             {
                 return;
             }
+            //Submitter绑定
+            newTask.Submitter.SubmitTasks.Add(newTask);
+            //Handler绑定
+            newTask.Handler.HandleTasks.Add(newTask);
             taskList.Add(newTask);
             //保存节点
             DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
@@ -384,6 +388,10 @@ namespace SmartTaskChain.Model
                     DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
                 }
             }
+            //Submitter绑定
+            newTask.Submitter.SubmitTasks.Add(newTask);
+            //Handler绑定
+            newTask.Handler.HandleTasks.Add(newTask);
             //保存节点
             taskList.Add(newTask);
             DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));

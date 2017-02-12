@@ -274,11 +274,8 @@ namespace SmartTaskChain.Config.Dialogs
         {
             ProcedureTask newTask = new ProcedureTask(strName, sDate, dDate, strDescription);
             TaskType curType = mainDataSet.GetTypeItem(strType);
-            IfUser Submitter = mainDataSet.GetUserItem(strSubmitter);
-            Submitter.SubmitTasks.Add(newTask);
-            Submitter.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    Submitter,
+                                                    mainDataSet.GetUserItem(strSubmitter),
                                                     curType.BindingProcedure.GetFirstStep(),
                                                     mainDataSet.GetQlevelItem(strQlevel));
             mainDataSet.InsertProcedureTask(newTask);
@@ -292,13 +289,9 @@ namespace SmartTaskChain.Config.Dialogs
             {
                 curType = new TaskType(strType, 50);
             }
-            IfUser Submitter = mainDataSet.GetUserItem(strSubmitter);
-            Submitter.SubmitTasks.Add(newTask);
-            IfUser Handler = mainDataSet.GetUserItem(strHandler);
-            Handler.HandleTasks.Add(newTask);
             newTask.UpdateRealtion(curType,
-                                                    Submitter,
-                                                    Handler,
+                                                    mainDataSet.GetUserItem(strSubmitter),
+                                                    mainDataSet.GetUserItem(strHandler),
                                                     mainDataSet.GetQlevelItem(strQlevel));
             mainDataSet.InsertCustomTask(newTask, curType);
         }
