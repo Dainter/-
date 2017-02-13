@@ -11,6 +11,7 @@
     <RoutedUICommand x:Key="ExitCommand" Text="Exit" />
     <RoutedUICommand x:Key="ClearComCommand" Text="ClearCommand" />
     <RoutedUICommand x:Key="ClearResultCommand" Text="ClearResult" />
+    <RoutedUICommand x:Key="RefreshCommand" Text="RefreshCommand" />
 
     <RoutedUICommand x:Key="AddNodeCommand" Text="AddNode" />
     <RoutedUICommand x:Key="AddPropertyCommand" Text="AddProperty" />

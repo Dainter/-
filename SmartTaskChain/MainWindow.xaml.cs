@@ -23,8 +23,14 @@ namespace SmartTaskChain
             SmartChainDataSet = MainDataSet.GetDataSet();
             IsShow = false;
             //SmartChainDataSet.InsertAllData();
-            WinDemo winDemo = new WinDemo(SmartChainDataSet);
-            winDemo.ShowDialog();
+            if (IsShow == true)
+            {
+                return;
+            }
+            IsShow = true;
+            WinHistory winHistory = new WinHistory(SmartChainDataSet);
+            winHistory.ShowDialog();
+            IsShow = false;
         }
 
         private void DemoItem_Click(object sender, EventArgs e)
@@ -54,7 +60,14 @@ namespace SmartTaskChain
 
         private void ShowHistoryItem_Click(object sender, EventArgs e)
         {
-
+            if (IsShow == true)
+            {
+                return;
+            }
+            IsShow = true;
+            WinHistory winHistory = new WinHistory(SmartChainDataSet);
+            winHistory.ShowDialog();
+            IsShow = false;
         }
 
         private void ShowOptionItem_Click(object sender, EventArgs e)

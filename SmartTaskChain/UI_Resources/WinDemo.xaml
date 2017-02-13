@@ -8,7 +8,7 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:UI_Resources="clr-namespace:SmartTaskChain.Config.UI_Resources" x:Class="SmartTaskChain.UI_Resources.WinDemo"
         mc:Ignorable="d"
-        Title="Demo Window" Height="550" Width="850"
+        Title="Demo" Height="550" Width="850"
         Icon="../Config/images/SmartTaskChain.ico" Loaded="RibbonWindow_Loaded" >
     <r:RibbonWindow.Resources>
         <ResourceDictionary>

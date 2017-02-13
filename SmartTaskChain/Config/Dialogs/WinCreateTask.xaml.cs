@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Interop;
+using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using SmartTaskChain.Model;
 
@@ -159,12 +160,25 @@ namespace SmartTaskChain.Config.Dialogs
 
         private bool InputVarification()
         {
+            const string strExtractPattern = @"Step:[\u4E00-\u9FA5A-Za-z0-9_ ]*Handler:[\u4E00-\u9FA5A-Za-z0-9_ ]*";  //匹配目标"Step:+Handler:"组合
+            MatchCollection matches;
+            Regex regObj;
+
             //任务名
             strName = taskNameTextBox.Text;
             if (strName == "")
             {
                 InputWarning.PlacementTarget = taskNameTextBox;
                 WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            regObj = new Regex(strExtractPattern);//正则表达式初始化，载入匹配模式
+            matches = regObj.Matches(strName);//正则表达式对分词结果进行匹配
+            if(matches.Count == 0)
+            {
+                InputWarning.PlacementTarget = taskNameTextBox;
+                WarningInfo.Text = "Name field only include Chinese, English, Underline and Space characters.";
                 InputWarning.IsOpen = true;
                 return false;
             }

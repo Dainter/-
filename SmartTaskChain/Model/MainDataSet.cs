@@ -70,7 +70,7 @@ namespace SmartTaskChain.Model
         {
             get { return taskList; }
         }
-        public List<CompletedTask> CompletedTask
+        public List<CompletedTask> CompletedTasks
         {
             get { return completedTasks; }
         }
@@ -726,15 +726,15 @@ namespace SmartTaskChain.Model
             Procedure newProce = new Procedure("报修处理流程", "客户报修处理流程");
             DataReader.InsertRecord(new Record(newProce.Name, newProce.Type, newProce.XMLSerialize()));
             ProcedureStep newStep;
-            newStep = new ProcedureStep("报修_问题提交", 1, "客户提交问题");
+            newStep = new ProcedureStep("报修_问题提交", 1, false, "客户提交问题");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("报修_问题审核", 2, "客服人员审核问题");
+            newStep = new ProcedureStep("报修_问题审核", 2, false, "客服人员审核问题");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("报修_维修单分配", 3, "客服经理收集维修单");
+            newStep = new ProcedureStep("报修_维修单分配", 3, false, "客服经理收集维修单");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("报修_维修单处理", 4, "工程师处理维修单");
+            newStep = new ProcedureStep("报修_维修单处理", 4, false, "工程师处理维修单");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("报修_维修结果反馈", 5, "客户反馈维修结果");
+            newStep = new ProcedureStep("报修_维修结果反馈", 5, true, "客户反馈维修结果");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
 
             //newRelation = new RelationShip("", "Procedure", "", "ProcedureStep", "Include", "1");
@@ -785,11 +785,11 @@ namespace SmartTaskChain.Model
             Procedure newProce = new Procedure("咨询处理流程", "客户咨询处理流程");
             DataReader.InsertRecord(new Record(newProce.Name, newProce.Type, newProce.XMLSerialize()));
             ProcedureStep newStep;
-            newStep = new ProcedureStep("咨询_问题提交", 1, "客户提交问题");
+            newStep = new ProcedureStep("咨询_问题提交", 1, false, "客户提交问题");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("咨询_问题回复", 2, "客服人员回复问题解决方案");
+            newStep = new ProcedureStep("咨询_问题回复", 2, false, "客服人员回复问题解决方案");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
-            newStep = new ProcedureStep("咨询_咨询结果反馈", 3, "客户反馈咨询结果");
+            newStep = new ProcedureStep("咨询_咨询结果反馈", 3, true, "客户反馈咨询结果");
             DataReader.InsertRecord(new Record(newStep.Name, newStep.Type, newStep.XMLSerialize()));
 
             //newRelation = new RelationShip("", "Procedure", "", "ProcedureStep", "Include", "1");

@@ -89,6 +89,9 @@
     <Compile Include="UI_Resources\WinDemo.xaml.cs">
       <DependentUpon>WinDemo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_Resources\WinHistory.xaml.cs">
+      <DependentUpon>WinHistory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\Utility.cs" />
     <Page Include="Config\ConfigWindow.xaml">
       <SubType>Designer</SubType>
@@ -164,6 +167,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UI_Resources\WinDemo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_Resources\WinHistory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -326,6 +333,10 @@
     <Resource Include="Config\images\DispatchPause_16x16.png" />
     <Resource Include="Config\images\DispatchRun.png" />
     <Resource Include="Config\images\DispatchRun_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\Refresh.png" />
+    <Resource Include="Config\images\Refresh_16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

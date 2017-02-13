@@ -15,7 +15,7 @@ namespace SmartTaskChain.UI_Resources
     /// <summary>
     /// WinDemo.xaml 的交互逻辑
     /// </summary>
-    public partial class WinDemo
+    public partial class WinDemo : RibbonWindow
     {
         MainDataSet mainDataSet;
         DispatcherTimer StatusUpadteTimer;
@@ -35,16 +35,16 @@ namespace SmartTaskChain.UI_Resources
             mainDataSet = dataset;
             backGroundWorker = (BackgroundWorker)this.FindResource("backGroundWorker");
             //订阅mainDataSet的数据更新消息
-            mainDataSet.RuntimeDataUpdated += OnDataUpdate;
+            mainDataSet.RuntimeDataUpdated += OnRuntimeDataUpdate;
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
         {
             StatusUpdateTimer_Init();
-            OnDataUpdate(null, null);
+            OnRuntimeDataUpdate(null, null);
         }
 
-        private void OnDataUpdate(object sender, MainDataSet.RuntimeDataUpdateEvenArgs e)
+        private void OnRuntimeDataUpdate(object sender, MainDataSet.RuntimeDataUpdateEvenArgs e)
         {
             DispatchTasks = mainDataSet.GetTaskListByStatus("Wait");
             AliceTasks = mainDataSet.GetTaskListByHandler("Alice");
@@ -114,21 +114,15 @@ namespace SmartTaskChain.UI_Resources
         {
             ProcedureStep nextStep;
             UserGroup curGroup;
+            bool bolIsArchived = false;
 
             foreach (ProcedureTask curTask in DispatchTasks)
             {
                 //物勒工名
                 string strLog;
-                if (curTask.Handler == null)
-                {
-                    strLog = "\nStep: " + curTask.CurrentStep.Name + " Handler: null";
-                }
-                else
-                {
-                    strLog = "\nStep: " + curTask.CurrentStep.Name + " Handler: " + curTask.Handler.Name;
-                    //从原handler任务列表中删除
-                    curTask.Handler.HandleTasks.Remove(curTask);
-                }
+                strLog = "\nStep: " + curTask.CurrentStep.Name + " Handler: " + curTask.Handler.Name + ";";
+                //从原handler任务列表中删除
+                curTask.Handler.HandleTasks.Remove(curTask);
                 curTask.Description += strLog;
                 //获取下一步Handler
                 nextStep = curTask.CurrentStep.NextStep;
@@ -136,20 +130,31 @@ namespace SmartTaskChain.UI_Resources
                 {
                     //完成，存入归档数据库
                     mainDataSet.ArchiveTask(curTask);
-                    mainDataSet.UpdateRuntimeDataSet();
-                    mainDataSet.UpdateArchiveDataSet();
+                    bolIsArchived = true;
+                    continue;
                 }
                 curTask.CurrentStep = nextStep;
-                //获取负责人组（单向）
-                curGroup = nextStep.HandleRole;
-                //智能分配负责人(双向)
-                curTask.Handler = GetHandler(curGroup);
+                if(nextStep.IsFeedback == false)
+                {
+                    //获取负责人组（单向）
+                    curGroup = nextStep.HandleRole;
+                    //智能分配负责人(双向)
+                    curTask.Handler = GetHandler(curGroup);
+                }
+                else
+                {
+                    //如果是反馈步骤，则不挂接处理人组，直接反馈给提交者
+                    curTask.Handler = curTask.Submitter;
+                }
                 curTask.Handler.HandleTasks.Add(curTask);
                 curTask.Status = "Process";
             }
             mainDataSet.UpdateRuntimeDataSet();
+            if(bolIsArchived == true)
+            {
+                mainDataSet.UpdateArchiveDataSet();
+            }
         }
-
 
         private IfUser GetHandler(UserGroup curGroup)
         {

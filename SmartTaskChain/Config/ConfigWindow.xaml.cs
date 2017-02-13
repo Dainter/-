@@ -409,8 +409,34 @@ namespace SmartTaskChain.Config
         {
             e.CanExecute = isDbAvailable;
         }
+        //刷新命令使能
+        private void RefreshCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = isDbAvailable;
+        }
+        //刷新命令执行
+        private void RefreshCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBoxResult choice;
+            ErrorCode err = ErrorCode.NoError;
+            string strPath = Properties.Settings.Default.DataBasePath;
 
-        
+            if (isDbAvailable == false)
+            {
+                return;
+            }
+            choice = MessageBox.Show("Reload Database without Save?", "警告", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+            if (choice == MessageBoxResult.No)
+            {
+                return;
+            }
+            AllReset();
+            gdb = new GraphDataBase();
+            gdb.OpenDataBase(strPath, ref err);
+            FillNodeList();
+            isDbAvailable = true;
+        }
+
         #endregion
 
         #region Drawing
@@ -1572,8 +1598,9 @@ namespace SmartTaskChain.Config
 
 
 
+
         #endregion
 
-
+        
     }
 }
