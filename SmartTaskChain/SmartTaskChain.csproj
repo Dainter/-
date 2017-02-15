@@ -229,7 +229,6 @@
     <Resource Include="Config\images\AddNode_small.png" />
     <Resource Include="Config\images\AddProperty.png" />
     <Resource Include="Config\images\AddProperty_small.png" />
-    <Resource Include="Config\images\AutoFilterClassic.png" />
     <Resource Include="Config\images\ChooseColor_16x16.png" />
     <Resource Include="Config\images\ClearText.png" />
     <Resource Include="Config\images\ClearText_16x16.png" />
@@ -337,6 +336,14 @@
   <ItemGroup>
     <Resource Include="Config\images\Refresh.png" />
     <Resource Include="Config\images\Refresh_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\Filter.png" />
+    <Resource Include="Config\images\Filter_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\FileSaveAsExcel.png" />
+    <Resource Include="Config\images\FileSaveAsXML.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

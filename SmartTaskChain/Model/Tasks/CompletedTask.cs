@@ -127,6 +127,25 @@ namespace SmartTaskChain.Model
             this.strDescription = Utility.GetText(Payload, "Description");
         }
 
+        public List<string> GetHandlerList()
+        {
+            const string strExtractPattern = @"Handler:[\u4E00-\u9FA5A-Za-z0-9_ ]*";  //匹配目标"Step:+Handler:"组合
+            List<string> handlers = new List<string>();
+            string strName;
+            MatchCollection matches;
+            Regex regObj;
+
+            regObj = new Regex(strExtractPattern);//正则表达式初始化，载入匹配模式
+            matches = regObj.Matches(strHandler);//正则表达式对分词结果进行匹配
+            foreach (Match match in matches)
+            {
+                strName = match.ToString();
+                strName = strName.Substring(strName.IndexOf(':')+1);
+                handlers.Add(strName.Trim());
+            }
+            return handlers;
+        }
+
         public XmlElement XMLSerialize()
         {
             XmlDocument doc = new XmlDocument();
@@ -177,5 +196,33 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
+        
+    }
+
+    public class TaskFilter
+    {
+        string strSubmitter;
+        string strHandler;
+        string strType;
+        string strQlevel;
+        DateTime datStartTime;
+        DateTime datCompletedTime;
+        
+        public TaskFilter(string sSub, string sHand, string sType, string sQlevel, DateTime dStart, DateTime dEnd)
+        {
+            strSubmitter = sSub;
+            strHandler = sHand;
+            strType = sType;
+            strQlevel = sQlevel;
+            datStartTime = dStart;
+            datCompletedTime = dEnd;
+        }
+
+
+        public bool MatchRule(CompletedTask curTask)
+        {
+
+            return false;
+        }
     }
 }

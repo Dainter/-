@@ -10,20 +10,6 @@
         mc:Ignorable="d"
         Title="History" Height="550" Width="850"
         Icon="../Config/images/SmartTaskChain.ico" Loaded="winHistory_Loaded" >
-    <r:RibbonWindow.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Config/UI_Resources/ToolTipResource.xaml"/>
-                <ResourceDictionary Source="../Config/UI_Resources/CommandResource.xaml"/>
-                <ResourceDictionary Source="../Config/UI_Resources/StyleResource.xaml"/>
-                <ResourceDictionary Source="../Config/UI_Resources/ConverterResource.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            <UI_Resources:BoolSelectedConverter x:Key="BoolSelectedConverter"/>
-        </ResourceDictionary>
-    </r:RibbonWindow.Resources>
-    <r:RibbonWindow.CommandBindings>
-
-    </r:RibbonWindow.CommandBindings>
     <Grid x:Name="MainLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -38,25 +24,63 @@
                 <r:RibbonApplicationMenu SmallImageSource="/SmartTaskChain;component/config/images/siemens_logo_16.png"/>
             </r:Ribbon.ApplicationMenu>
             <r:RibbonTab x:Name = "ribHomeTab" Header="Home" >
-                <r:RibbonGroup Header="User" >
+                <r:RibbonGroup Header="User">
+                    <Grid Margin="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Submitter:</Label>
+                        <ComboBox Name="SubmitterCombox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="SubmitterCombox_SelectionChanged"  />
+                        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Handler:</Label>
+                        <ComboBox Name="HandlerCombox"  Grid.Row="1"  Grid.Column="1" VerticalAlignment="Center" SelectionChanged="HandlerCombox_SelectionChanged"  />
+                    </Grid>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header=" Task Type" >
-
+                <r:RibbonGroup Header=" Task Type &amp; Q Level" >
+                    <Grid Margin="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Type:</Label>
+                        <ComboBox Name="TypeCombox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="TypeCombox_SelectionChanged"  />
+                        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Q Level:</Label>
+                        <ComboBox Name="QlevelCombox"  Grid.Row="1"  Grid.Column="1" VerticalAlignment="Center" SelectionChanged="QlevelCombox_SelectionChanged"  />
+                    </Grid>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header="Q Level" >
-
+                <r:RibbonGroup Header="Time" >
+                    <Grid Margin="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Task Start:</Label>
+                        <DatePicker Name="StartDataPicker" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" SelectedDateChanged="StartDataPicker_SelectedDateChanged" >
+                        </DatePicker>
+                        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Task End:</Label>
+                        <DatePicker Name="EndDataPicker" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" SelectedDateChanged="EndDataPicker_SelectedDateChanged"></DatePicker>
+                    </Grid>
                 </r:RibbonGroup>
-                <r:RibbonGroup Header="Engineer">
-
-                </r:RibbonGroup>
-                <r:RibbonGroup Header="Manager" >
-
+                <r:RibbonGroup Header="Export" >
+                    <r:RibbonButton Label="Export to XML" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAsXML.png" ToolTipTitle="Export to XML"></r:RibbonButton>
+                    <r:RibbonButton Label="Export to Excel" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAsExcel.png" ToolTipTitle="Export to Excel"></r:RibbonButton>
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
         <Border Grid.Row="1" Grid.Column="0" Margin="3" BorderBrush="SteelBlue" BorderThickness="1">
             <DataGrid x:Name="HistoryTaskGrid">
-                
             </DataGrid>
         </Border>
         <StatusBar Name="MainStatus" Grid.Row="3" Grid.ColumnSpan="{Binding ColumnDefinitions.Count, ElementName=MainLayout, Mode=OneWay}" >
