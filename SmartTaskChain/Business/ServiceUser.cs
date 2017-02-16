@@ -24,6 +24,7 @@ namespace SmartTaskChain.Business
         }
         public string Password
         {
+            set { this.user.Password = value; }
             get { return this.user.Password; }
         }
         public List<UserGroup> UserGroups
@@ -41,6 +42,7 @@ namespace SmartTaskChain.Business
         //ServiceUser私有属性
         public string EmployeeNumber
         {
+            set { strNumber = value; }
             get { return strNumber; }
         }
 

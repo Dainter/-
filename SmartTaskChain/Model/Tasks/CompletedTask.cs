@@ -100,7 +100,7 @@ namespace SmartTaskChain.Model
 
         private string ExtractHandlerName(string sDesc)
         {
-            const string strExtractPattern = @"Step:[\u4E00-\u9FA5A-Za-z0-9_ ]*Handler:[\u4E00-\u9FA5A-Za-z0-9_ ]*";  //匹配目标"Step:+Handler:"组合
+            const string strExtractPattern = @"Step:[\u4E00-\u9FA5A-Za-z0-9_ ]+Handler:[\u4E00-\u9FA5A-Za-z0-9_ ]+";  //匹配目标"Step:+Handler:"组合
             string strName = "";
             MatchCollection matches;
             Regex regObj;
@@ -196,7 +196,6 @@ namespace SmartTaskChain.Model
             return modelPayload;
         }
 
-        
     }
 
     public class TaskFilter
@@ -207,7 +206,39 @@ namespace SmartTaskChain.Model
         string strQlevel;
         DateTime datStartTime;
         DateTime datCompletedTime;
+
+        public string Submitter
+        {
+            set { this.strSubmitter = value; }
+            get { return this.strSubmitter; }
+        }
+        public string Handler
+        {
+            set { this.strHandler = value; }
+            get { return this.strHandler; }
+        }
+        public string Type
+        {
+            set { this.strType = value; }
+            get { return this.strType; }
+        }
+        public string QLevel
+        {
+            set { this.strQlevel = value; }
+            get { return this.strQlevel; }
+        }
+        public DateTime StartTime
+        {
+            set { this.datStartTime = value; }
+            get{ return this.datStartTime; }
+        }
+        public DateTime CompletedTime
+        {
+            set { this.datCompletedTime = value; }
+            get { return this.datCompletedTime; }
+        }
         
+
         public TaskFilter(string sSub, string sHand, string sType, string sQlevel, DateTime dStart, DateTime dEnd)
         {
             strSubmitter = sSub;
@@ -221,8 +252,52 @@ namespace SmartTaskChain.Model
 
         public bool MatchRule(CompletedTask curTask)
         {
-
-            return false;
+            if (strSubmitter != "")
+            {
+                if(strSubmitter != curTask.Submitter)
+                {
+                    return false;
+                }
+            }
+            if (strHandler != "")
+            {
+                bool IsMatch = false;
+                foreach(string sName in curTask.GetHandlerList())
+                {
+                    if(strHandler == sName)
+                    {
+                        IsMatch = true;
+                        break;
+                    }
+                }
+                if(IsMatch == false)
+                {
+                    return false;
+                }
+            }
+            if (strType != "")
+            {
+                if (strType != curTask.Type)
+                {
+                    return false;
+                }
+            }
+            if (strQlevel != "")
+            {
+                if (strQlevel != curTask.QLevel)
+                {
+                    return false;
+                }
+            }
+            if(datStartTime.CompareTo(curTask.StartTime) == 1)
+            {
+                return false;
+            }
+            if(datCompletedTime.CompareTo(curTask.CompletedTime) == -1)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

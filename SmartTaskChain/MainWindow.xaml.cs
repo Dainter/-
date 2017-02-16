@@ -28,8 +28,9 @@ namespace SmartTaskChain
                 return;
             }
             IsShow = true;
-            WinHistory winHistory = new WinHistory(SmartChainDataSet);
-            winHistory.ShowDialog();
+            ConfigWindow winConfig = new ConfigWindow(SmartChainDataSet);
+            winConfig.ShowDialog();
+            SmartChainDataSet.RefreshRuntimeDataSet();
             IsShow = false;
         }
 

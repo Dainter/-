@@ -26,12 +26,6 @@ namespace SmartTaskChain.Model
             get { return this.GetType().Name; }
         }
 
-        public string Description
-        {
-            get
-            { return strDescription; }
-        }
-
         public bool IsUseProcedure
         {
             get
@@ -54,6 +48,12 @@ namespace SmartTaskChain.Model
         {
             get { return procedure; }
             set { procedure = value; }
+        }
+
+        public string Description
+        {
+            set { strDescription = value; }
+            get { return strDescription; }
         }
 
         public TaskType(string sName, int iPriority = 50, string sDescription = "")

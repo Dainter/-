@@ -24,6 +24,7 @@ namespace SmartTaskChain.Business
         }
         public string Password
         {
+            set { this.user.Password = value; }
             get { return this.user.Password; }
         }
         public List<UserGroup> UserGroups

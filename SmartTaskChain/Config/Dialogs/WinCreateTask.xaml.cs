@@ -160,7 +160,7 @@ namespace SmartTaskChain.Config.Dialogs
 
         private bool InputVarification()
         {
-            const string strExtractPattern = @"Step:[\u4E00-\u9FA5A-Za-z0-9_ ]*Handler:[\u4E00-\u9FA5A-Za-z0-9_ ]*";  //匹配目标"Step:+Handler:"组合
+            const string strExtractPattern = @"[\u4E00-\u9FA5A-Za-z0-9_ ]+";  //匹配目标"Step:+Handler:"组合
             MatchCollection matches;
             Regex regObj;
 

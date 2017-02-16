@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Interop;
@@ -36,6 +32,8 @@ namespace SmartTaskChain.Config.Dialogs
             ref MARGINS pMarInset);
         //Global Elements
         MainDataSet mainDataSet;
+        string strName, strProcedure, strDescription;
+        int intPriority;
 
         public WinEditType(MainDataSet DataSet)
         {
@@ -103,19 +101,149 @@ namespace SmartTaskChain.Config.Dialogs
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             //合法性校验
-            //if (InputVarification() == false)
-            //{
-            //    return;
-            //}
-            //数据组织
-
+            if (InputVarification() == false)
+            {
+                return;
+            }
             //数据插入数据表
-            //SaveTask();
+            if(IsCreateCheckBox.IsChecked == true)
+            {
+                CreateType();
+            }
+            else
+            {
+                EditType();
+            }
+            mainDataSet.UpdateRuntimeDataSet();
+            this.DialogResult = true;
             this.Close();
+        }
+
+        private bool InputVarification()
+        {
+            const string strExtractPattern = @"[\u4E00-\u9FA5A-Za-z0-9_]+";  //匹配目标"Step:+Handler:"组合
+            MatchCollection matches;
+            Regex regObj;
+
+            //任务名
+            if(IsCreateCheckBox.IsChecked == true)
+            {
+                strName = NewNameBox.Text;
+                if (strName == "")
+                {
+                    InputWarning.PlacementTarget = NewNameBox;
+                    WarningInfo.Text = "Please enter a non-empty value.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
+                regObj = new Regex(strExtractPattern);//正则表达式初始化，载入匹配模式
+                matches = regObj.Matches(strName);//正则表达式对分词结果进行匹配
+                if (matches.Count == 0)
+                {
+                    InputWarning.PlacementTarget = NewNameBox;
+                    WarningInfo.Text = "Name field only include Chinese, English, Underline characters.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
+            }
+            //优先级
+            if (PriorityTextBox.Text == "")
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please select a submitter for the task.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            if (int.TryParse(PriorityTextBox.Text, out intPriority) == false)
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please input a number between 0 and 100.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            if (intPriority > 100 || intPriority < 0)
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please input a number between 0 and 100.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            //绑定流程
+            strProcedure = ProcedureComboBox.Text;
+            if (strProcedure != "")
+            {
+                if(mainDataSet.GetProcedureItem(strProcedure) == null)
+                {
+                    InputWarning.PlacementTarget = PriorityTextBox;
+                    WarningInfo.Text = "Selected Procedure is not exists in DB.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
+                if (mainDataSet.GetProcedureItem(strProcedure).IsBindingType == true)
+                {
+                    InputWarning.PlacementTarget = PriorityTextBox;
+                    WarningInfo.Text = "Selected Procedure already binding a Type.";
+                    InputWarning.IsOpen = true;
+                    return false;
+                }
+            }
+            //描述
+            strDescription = DescriptionBox.Text;
+            if (strDescription == "")
+            {
+                InputWarning.PlacementTarget = DescriptionBox;
+                WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            return true;
+        }
+
+        private void EditType()
+        {
+            TaskType curType;
+            strName = NameComboBox.Text;
+            curType = mainDataSet.GetTypeItem(strName);
+            if(curType == null)
+            {
+                InputWarning.PlacementTarget = NewNameBox;
+                WarningInfo.Text = "Selected Type is not exists in DB.";
+                InputWarning.IsOpen = true;
+                return;
+            }
+            curType.Priority = intPriority;
+            if (ProcedureComboBox.Text == "")
+            {
+                if(curType.BindingProcedure != null)
+                {
+                    curType.BindingProcedure.BindingType = null;
+                }
+                curType.BindingProcedure = null;
+            }
+            else
+            {
+                curType.BindingProcedure = mainDataSet.GetProcedureItem(strProcedure);
+                curType.BindingProcedure.BindingType = curType;
+            }
+            curType.Description = strDescription;
+            return;
+        }
+
+        private void CreateType()
+        {
+            TaskType newType = new TaskType(strName,intPriority, strDescription);
+            if (ProcedureComboBox.Text != "")
+            {
+                newType.BindingProcedure = mainDataSet.GetProcedureItem(strProcedure);
+                newType.BindingProcedure.BindingType = newType;
+            }
+            mainDataSet.InsertNewType(newType);
+            return;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
 

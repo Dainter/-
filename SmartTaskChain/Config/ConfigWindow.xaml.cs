@@ -418,9 +418,7 @@ namespace SmartTaskChain.Config
         private void RefreshCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MessageBoxResult choice;
-            ErrorCode err = ErrorCode.NoError;
-            string strPath = Properties.Settings.Default.DataBasePath;
-
+            
             if (isDbAvailable == false)
             {
                 return;
@@ -430,6 +428,13 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            ErrorCode err = ErrorCode.NoError;
+            string strPath = Properties.Settings.Default.DataBasePath;
             AllReset();
             gdb = new GraphDataBase();
             gdb.OpenDataBase(strPath, ref err);
@@ -931,6 +936,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
         }
         //编辑用户组按钮命令执行
         private void EditGroupCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -941,6 +947,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
         }
         //编辑重要性程度按钮命令执行
         private void EditQlevelCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -951,6 +958,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
         }
         //编辑任务类型按钮命令执行
         private void EditTypeCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -961,6 +969,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
         }
         //编辑流程按钮命令执行
         private void EditProcedureCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -971,6 +980,7 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
         }
 
         #endregion

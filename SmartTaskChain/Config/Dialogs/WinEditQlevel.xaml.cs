@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Interop;
@@ -35,6 +32,8 @@ namespace SmartTaskChain.Config.Dialogs
             ref MARGINS pMarInset);
         //Global Elements
         MainDataSet mainDataSet;
+        string strDescription;
+        int intPriority;
 
         public WinEditQlevel(MainDataSet DataSet)
         {
@@ -101,19 +100,76 @@ namespace SmartTaskChain.Config.Dialogs
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             //合法性校验
-            //if (InputVarification() == false)
-            //{
-            //    return;
-            //}
-            //数据组织
-
+            if (InputVarification() == false)
+            {
+                return;
+            }
             //数据插入数据表
-            //SaveTask();
+            EditQlevel();
+            mainDataSet.UpdateRuntimeDataSet();
+            this.DialogResult = true;
             this.Close();
         }
 
+        private bool InputVarification()
+        {
+            //优先级
+            if (PriorityTextBox.Text == "")
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please select a submitter for the task.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            if (int.TryParse(PriorityTextBox.Text, out intPriority) == false)
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please input a number between 0 and 100.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            if (intPriority > 100 || intPriority < 0)
+            {
+                InputWarning.PlacementTarget = PriorityTextBox;
+                WarningInfo.Text = "Please input a number between 0 and 100.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            //描述
+            strDescription = DescriptionBox.Text;
+            if (strDescription == "")
+            {
+                InputWarning.PlacementTarget = DescriptionBox;
+                WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            return true;
+        }
+
+        private void EditQlevel()
+        {
+            string strName;
+            QLevel curQLevel;
+
+            strName = NameComboBox.Text;
+            curQLevel = mainDataSet.GetQlevelItem(strName);
+            if (curQLevel == null)
+            {
+                InputWarning.PlacementTarget = NameComboBox;
+                WarningInfo.Text = "Selected Type is not exists in DB.";
+                InputWarning.IsOpen = true;
+                return;
+            }
+            curQLevel.Priority = intPriority;
+            curQLevel.Description = strDescription;
+            return;
+        }
+
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
 

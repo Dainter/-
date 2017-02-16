@@ -14,6 +14,9 @@
                 <ResourceDictionary Source="../UI_Resources/ToolTipResource.xaml"/>
                 <ResourceDictionary Source="../UI_Resources/StyleResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ui:EmployerVisibilityConverter x:Key="EmployerVisibilityConverter"/>
+            <ui:ManagerVisibilityConverter x:Key="ManagerVisibilityConverter"/>
+            <ui:CustomerVisibilityConverter x:Key="CustomerVisibilityConverter"/>
             <ui:BoolVisiableReverseConverter x:Key="BoolVisiableReverseConverter"/>
             <ui:BoolVisiableConverter x:Key="BoolVisiableConverter"/>
             <ui:BoolReverseConverter x:Key="BoolReverseConverter"/>
@@ -48,16 +51,37 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Content="User Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
-            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" />
-
-            <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="8" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>
-            <StackPanel Grid.Column="1" Grid.Row="8" >
-                <TextBox x:Name="DescriptionBox" MinHeight="50" MinWidth="120" Margin="3" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                    <Button x:Name="AcceptButton" Template="{DynamicResource AcceptButtonTemplate}" ToolTip="{DynamicResource AcceptTip}" Click="AcceptButton_Click" IsDefault="True" />
-                </StackPanel>
+            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" SelectionChanged="NameComboBox_SelectionChanged" />
+            <TextBox x:Name="NewNameBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCreateCheckBox}"/>
+            <CheckBox x:Name="IsCreateCheckBox" IsChecked="False" Grid.Column="1" Grid.Row="1"  Foreground="{DynamicResource TransparentForeColor}" Checked="IsCreateCheckBox_Checked" Unchecked="IsCreateCheckBox_Unchecked">Add New User</CheckBox>
+            <Label Content="User Type:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
+            <ComboBox x:Name="TypeComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" VerticalAlignment="Center" MinWidth="120" IsEnabled="{Binding IsChecked, ElementName=IsCreateCheckBox}" />
+            <Label Content="User Password:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
+            <TextBox x:Name="PasswordTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="3" VerticalAlignment="Center" MinWidth="120" />
+            <Label Content="User Groups:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="4" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="4" Grid.Row="4" MinWidth="120">
+                <ComboBox x:Name="GroupComboBox"   VerticalAlignment="Center" MinWidth="96" SelectionChanged="GroupComboBox_SelectionChanged" />
+                <Button x:Name="AddOrRemoveGroupButton" Template="{DynamicResource AddGroupButtonTemplate}" Click="AddOrRemoveGroupButton_Click" />
+            </StackPanel>
+            <ListBox x:Name="GroupListBox" Grid.Column="1" Grid.Row="5"  MinHeight="50" MinWidth ="120" Margin="3" SelectionChanged="GroupListBox_SelectionChanged" ></ListBox>
+            <Label Content="Phone:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="6" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Visibility="{Binding Text, Converter={StaticResource CustomerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <TextBox x:Name="PhoneTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="6" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding Text, Converter={StaticResource CustomerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <Label Content="Company:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="7" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Visibility="{Binding Text, Converter={StaticResource CustomerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <TextBox x:Name="CompanyTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="7" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding Text, Converter={StaticResource CustomerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <Label Content="Employee Number:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="6" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Visibility="{Binding Text, Converter={StaticResource EmployerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <TextBox x:Name="EmployeeTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="6" VerticalAlignment="Center" MinWidth="120" IsEnabled="{Binding IsChecked, ElementName=IsCreateCheckBox}" Visibility="{Binding Text, Converter={StaticResource EmployerVisibilityConverter}, ElementName=TypeComboBox}" />
+            <Label Content="Inferior:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="7" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Visibility="{Binding Text, Converter={StaticResource ManagerVisibilityConverter}, ElementName=TypeComboBox}"  />
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="7" MinWidth="120" Visibility="{Binding Text, Converter={StaticResource ManagerVisibilityConverter}, ElementName=TypeComboBox}"  >
+                <ComboBox x:Name="UserComboBox"   VerticalAlignment="Center" MinWidth="96" SelectionChanged="UserComboBox_SelectionChanged" />
+                <Button x:Name="AddOrRemoveUserButton" Template="{DynamicResource AddUserButtonTemplate}" Click="AddOrRemoveUserButton_Click" />
+            </StackPanel>
+            <ListBox x:Name="InferiorListBox" Grid.Column="1" Grid.Row="8"  MinHeight="50" MinWidth ="120" Margin="3" Visibility="{Binding Text, Converter={StaticResource ManagerVisibilityConverter}, ElementName=TypeComboBox}" SelectionChanged="InferiorListBox_SelectionChanged" >
+            </ListBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="9" >
+                <Button x:Name="AcceptButton" Template="{DynamicResource AcceptButtonTemplate}" ToolTip="{DynamicResource AcceptTip}" Click="AcceptButton_Click" IsDefault="True" />
             </StackPanel>
             <Popup x:Name="InputWarning" StaysOpen="False">
                 <Border CornerRadius="2" BorderBrush="Red" BorderThickness="1" Background="White">

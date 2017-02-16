@@ -345,6 +345,12 @@
     <Resource Include="Config\images\FileSaveAsExcel.png" />
     <Resource Include="Config\images\FileSaveAsXML.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI_Resources\IO\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\AddOrRemoveUser_16x16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

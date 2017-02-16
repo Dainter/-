@@ -54,12 +54,6 @@ namespace SmartTaskChain.Model
         }
         public List<UserGroup> NoProdureGroups
         {
-            //get
-            //{
-            //    List<UserGroup> newlist = new List<UserGroup>();
-            //    newlist.Add(new UserGroup("Test", "Test"));
-            //    return newlist;
-            //}
             get { return userGroupList.FindAll(MatchNoProcedureGroup); }
         }
         public List<IfUser> Users
@@ -369,9 +363,8 @@ namespace SmartTaskChain.Model
             newTask.Submitter.SubmitTasks.Add(newTask);
             //Handler绑定
             newTask.Handler.HandleTasks.Add(newTask);
-            taskList.Add(newTask);
             //保存节点
-            DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
+            taskList.Add(newTask);
         }
 
         public void InsertCustomTask(CustomTask newTask, TaskType newType = null)
@@ -385,7 +378,6 @@ namespace SmartTaskChain.Model
                 if(this.GetTypeItem(newType.Name) == null)
                 {
                     taskTypeList.Add(newType);
-                    DataReader.InsertRecord(new Record(newType.Name, newType.Type, newType.XMLSerialize()));
                 }
             }
             //Submitter绑定
@@ -394,7 +386,6 @@ namespace SmartTaskChain.Model
             newTask.Handler.HandleTasks.Add(newTask);
             //保存节点
             taskList.Add(newTask);
-            DataReader.InsertRecord(new Record(newTask.Name, newTask.Type, newTask.XMLSerialize()));
         }
 
         public void ArchiveTask(IfTask curTask)
@@ -410,6 +401,30 @@ namespace SmartTaskChain.Model
             //移出列表
             taskList.Remove(curTask);
             completedTasks.Add(new CompletedTask(curTask));
+        }
+
+        public void InsertNewType(TaskType newType)
+        {
+            if (newType == null)
+            {
+                return;
+            }
+            if (this.GetTypeItem(newType.Name) == null)
+            {
+                taskTypeList.Add(newType);
+            }
+        }
+
+        public void InsertNewUser(IfUser newUser)
+        {
+            if (newUser == null)
+            {
+                return;
+            }
+            if (this.GetUserItem(newUser.Name) == null)
+            {
+                userList.Add(newUser);
+            }
         }
 
         #endregion

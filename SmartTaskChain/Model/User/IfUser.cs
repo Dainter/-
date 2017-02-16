@@ -9,7 +9,7 @@ namespace SmartTaskChain.Model
     {
         string Name { get; }
         string Type { get; }
-        string Password { get; }
+        string Password { set; get; }
         List<UserGroup> UserGroups { get; }
         List<IfTask> SubmitTasks { get; }
         List<IfTask> HandleTasks { get; }

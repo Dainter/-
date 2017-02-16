@@ -113,37 +113,83 @@ namespace SmartTaskChain.UI_Resources
         private void SubmitterCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if(e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            condition.Submitter = e.AddedItems[0].ToString();
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private void HandlerCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            condition.Handler = e.AddedItems[0].ToString();
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private void TypeCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            condition.Type = e.AddedItems[0].ToString();
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private void QlevelCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            condition.QLevel = e.AddedItems[0].ToString();
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private void StartDataPicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            DateTime newTime, oldTime;
+            newTime = (DateTime)e.AddedItems[0];
+            oldTime = condition.StartTime;
+            condition.StartTime = new DateTime(newTime.Year,
+                                                                                newTime.Month,
+                                                                                newTime.Day,
+                                                                                oldTime.Hour,
+                                                                                oldTime.Minute,
+                                                                                oldTime.Second);
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private void EndDataPicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             TaskFilter condition = BuildFilterCondition();
-            CompleteTasks.FindAll(condition.MatchRule);
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            DateTime newTime, oldTime;
+            newTime = (DateTime)e.AddedItems[0];
+            oldTime = condition.CompletedTime;
+            condition.CompletedTime = new DateTime(newTime.Year,
+                                                                                newTime.Month,
+                                                                                newTime.Day,
+                                                                                oldTime.Hour,
+                                                                                oldTime.Minute,
+                                                                                oldTime.Second);
+            HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
         }
 
         private TaskFilter BuildFilterCondition()

@@ -30,6 +30,7 @@ namespace SmartTaskChain.Model
         }
         public string Password
         {
+            set {  strPassword = value; }
             get { return strPassword; }
         }
         public List<UserGroup> UserGroups

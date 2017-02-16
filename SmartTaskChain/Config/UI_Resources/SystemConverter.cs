@@ -94,7 +94,6 @@ namespace SmartTaskChain.Config.UI_Resources
         }
     }
 
-
     public class BoolSelectedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
@@ -116,6 +115,66 @@ namespace SmartTaskChain.Config.UI_Resources
                 return 0;
             }
             return -1;
+        }
+    }
+
+    public class CustomerVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+        {
+            if ((string)value == "Customer")
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+
+        }
+
+        public object ConvertBack(object value, Type targetType,
+        object parameter, System.Globalization.CultureInfo culture)
+        {
+            return "";
+        }
+    }
+
+    public class EmployerVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+        {
+            if ((string)value == "Manager" || (string)value == "Engineer" || (string)value == "ServiceUser")
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+
+        }
+
+        public object ConvertBack(object value, Type targetType,
+        object parameter, System.Globalization.CultureInfo culture)
+        {
+            return "";
+        }
+    }
+
+    public class ManagerVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+        {
+            if ((string)value == "Manager")
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+
+        }
+
+        public object ConvertBack(object value, Type targetType,
+        object parameter, System.Globalization.CultureInfo culture)
+        {
+            return "";
         }
     }
 }

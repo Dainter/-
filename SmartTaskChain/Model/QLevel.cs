@@ -21,11 +21,12 @@ namespace SmartTaskChain.Model
         }
         public string Description
         {
-            get
-            { return strDescription; }
+            set { strDescription = value; }
+            get{ return strDescription; }
         }
         public int Priority
         {
+            set { intPriority = value; }
             get { return intPriority; }
         }
 
