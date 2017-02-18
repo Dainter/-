@@ -54,7 +54,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Content="User Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
-            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" SelectionChanged="NameComboBox_SelectionChanged" />
+            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableReverseConverter}, ElementName=IsCreateCheckBox}" SelectionChanged="NameComboBox_SelectionChanged" />
             <TextBox x:Name="NewNameBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCreateCheckBox}"/>
             <CheckBox x:Name="IsCreateCheckBox" IsChecked="False" Grid.Column="1" Grid.Row="1"  Foreground="{DynamicResource TransparentForeColor}" Checked="IsCreateCheckBox_Checked" Unchecked="IsCreateCheckBox_Unchecked">Add New User</CheckBox>
             <Label Content="User Type:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />

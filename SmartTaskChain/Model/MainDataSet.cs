@@ -48,6 +48,10 @@ namespace SmartTaskChain.Model
         {
             get { return stepList; }
         }
+        public List<ProcedureStep> NoBindingSteps
+        {
+            get { return stepList.FindAll(MatchNoBindingStep); }
+        }
         public List<UserGroup> UserGroups
         {
             get { return userGroupList; }
@@ -285,6 +289,15 @@ namespace SmartTaskChain.Model
             return !obj.IsBindingStep;
         }
 
+        public bool MatchNoBindingStep(ProcedureStep obj)
+        {
+            if(obj.HandleRole == null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Event
@@ -424,6 +437,18 @@ namespace SmartTaskChain.Model
             if (this.GetUserItem(newUser.Name) == null)
             {
                 userList.Add(newUser);
+            }
+        }
+
+        public void InsertNewGroup(UserGroup newGroup)
+        {
+            if (newGroup == null)
+            {
+                return;
+            }
+            if (this.GetGroupItem(newGroup.Name) == null)
+            {
+                userGroupList.Add(newGroup);
             }
         }
 

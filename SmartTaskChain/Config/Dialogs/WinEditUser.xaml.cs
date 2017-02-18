@@ -379,8 +379,6 @@ namespace SmartTaskChain.Config.Dialogs
             return;
         }
 
-
-
         private IfUser SelectUserType(string sType)
         {
             switch(sType)
@@ -505,10 +503,11 @@ namespace SmartTaskChain.Config.Dialogs
         
         private void UserComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count != 0)
+            if (e.AddedItems.Count  == 0)
             {
-                InferiorListBox.SelectedIndex = -1;
+                return;
             }
+            InferiorListBox.SelectedIndex = -1;
         }
 
         private void AddOrRemoveGroupButton_Click(object sender, RoutedEventArgs e)
