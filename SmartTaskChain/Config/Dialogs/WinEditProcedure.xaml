@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="../UI_Resources/ToolTipResource.xaml"/>
                 <ResourceDictionary Source="../UI_Resources/StyleResource.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ui:BoolSelectedConverter x:Key="BoolSelectedConverter"/>
             <ui:BoolVisiableReverseConverter x:Key="BoolVisiableReverseConverter"/>
             <ui:BoolVisiableConverter x:Key="BoolVisiableConverter"/>
             <ui:BoolReverseConverter x:Key="BoolReverseConverter"/>
@@ -52,12 +53,25 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Content="Procedure Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" />
-            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" SelectionChanged="NameComboBox_SelectionChanged" />
+            <ComboBox x:Name="NameComboBox" Grid.Column="1" HorizontalAlignment="Stretch" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableReverseConverter}, ElementName=IsCreateCheckBox}" SelectionChanged="NameComboBox_SelectionChanged" />
+            <TextBox x:Name="NewNameBox" Grid.Column="1" HorizontalAlignment="Stretch" Height="23" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCreateCheckBox}"/>
+            <CheckBox x:Name="IsCreateCheckBox" IsChecked="False" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Checked="IsCreateCheckBox_Checked" Unchecked="IsCreateCheckBox_Unchecked">New Procedure</CheckBox>
             <Label Content="TaskType:" Grid.Column="2" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
-            <ComboBox x:Name="typeCustomComboBox" Grid.Column="3" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="Auto" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120"  Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" IsEditable="True"/>
-
-
-
+            <ComboBox x:Name="TypeComboBox" Grid.Column="3" HorizontalAlignment="Stretch" Height="Auto" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" IsEditable="True" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" />
+            <Label Content="Procedure Stpes:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" >
+                <Button x:Name="AddStepButton" Template="{DynamicResource EditProcedureButtonTemplate}" Click="AddStepButton_Click"  />
+                <Button x:Name="EditStepButton" Template="{DynamicResource EditProcedureButtonTemplate}" Click="EditStepButton_Click" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=StepsGird}"  />
+            </StackPanel>
+            <DataGrid x:Name="StepsGird" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="3" MinHeight="100" Width="400" AutoGenerateColumns="False" CanUserSortColumns="False" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Index, Mode=OneWay}"  Header="Index" />
+                    <DataGridTextColumn Binding="{Binding Path=Name, Mode=OneWay}" Header="Step Name" />
+                    <DataGridTextColumn Binding="{Binding Path=HandleRole, Mode=OneWay}" Header="Handle Group" />
+                    <DataGridCheckBoxColumn Binding="{Binding Path=IsFeedback, Mode=OneWay}" Header="Is Feedback" />
+                    <DataGridTextColumn Binding="{Binding Path=Description, Mode=OneWay}" Header="Description"/>
+                </DataGrid.Columns>
+            </DataGrid>
             <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="8" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>
             <StackPanel Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3">
                 <TextBox x:Name="DescriptionBox" MinHeight="50" MinWidth="120" Margin="3" />

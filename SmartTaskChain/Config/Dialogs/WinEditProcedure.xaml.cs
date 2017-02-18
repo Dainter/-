@@ -36,6 +36,7 @@ namespace SmartTaskChain.Config.Dialogs
             ref MARGINS pMarInset);
         //Global Elements
         MainDataSet mainDataSet;
+        List<ProcedureStep> newSteps;
 
         public WinEditProcedure(MainDataSet DataSet)
         {
@@ -89,7 +90,7 @@ namespace SmartTaskChain.Config.Dialogs
         private void DataInit()
         {
             NameComboBox.ItemsSource = mainDataSet.Procedures;
-            typeCustomComboBox.ItemsSource = mainDataSet.CustomTypes;
+            TypeComboBox.ItemsSource = mainDataSet.CustomTypes;
         }
 
         private void winEditProcedure_MouseMove(object sender, MouseEventArgs e)
@@ -111,11 +112,13 @@ namespace SmartTaskChain.Config.Dialogs
 
             //数据插入数据表
             //SaveTask();
+            this.DialogResult = true;
             this.Close();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
 
@@ -135,7 +138,8 @@ namespace SmartTaskChain.Config.Dialogs
 
         private void ClearInfo()
         {
-            typeCustomComboBox.Text = "";
+            TypeComboBox.Text = "";
+            StepsGird.ItemsSource = null;
             DescriptionBox.Clear();
         }
 
@@ -148,9 +152,68 @@ namespace SmartTaskChain.Config.Dialogs
             }
             if (curItem.IsBindingType == true)
             {
-                typeCustomComboBox.Text = curItem.BindingType.Name;
+                TypeComboBox.Text = curItem.BindingType.Name;
             }
+            StepsGird.ItemsSource = curItem.ProcedureSteps;
             DescriptionBox.Text = curItem.Description;
+        }
+
+        private void IsCreateCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ClearInfo();
+        }
+
+        private void IsCreateCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            NameComboBox.Text = "";
+            ClearInfo();
+        }
+
+        private void AddStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (newSteps == null)
+            {
+                newSteps = new List<ProcedureStep>();
+            }
+            WinEditStep winEditStep = new WinEditStep(mainDataSet);
+            winEditStep.Owner = this;
+            if (winEditStep.ShowDialog() == false)
+            {
+                return;
+            }
+        }
+
+        private void EditStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            WinEditStep winEditStep;
+            ProcedureStep curStep;
+            if (StepsGird.SelectedIndex == -1)
+            {
+                return;
+            }
+            if(IsCreateCheckBox.IsChecked == true)
+            {
+                curStep = newSteps[StepsGird.SelectedIndex];
+            }
+            else
+            {
+                Procedure curProcedure = mainDataSet.GetProcedureItem(NameComboBox.Text);
+                if(curProcedure == null)
+                {
+                    InputWarning.PlacementTarget = NewNameBox;
+                    WarningInfo.Text = "Current Procedure is not exits in DB.";
+                    InputWarning.IsOpen = true;
+                    return;
+                }
+                curStep = curProcedure.ProcedureSteps[StepsGird.SelectedIndex];
+            }
+
+            winEditStep = new WinEditStep(mainDataSet, curStep.Name);
+            winEditStep.Owner = this;
+            if (winEditStep.ShowDialog() == false)
+            {
+                return;
+            }
         }
     }
 }

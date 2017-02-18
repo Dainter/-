@@ -73,6 +73,9 @@
     <Compile Include="Config\Dialogs\WinEditQlevel.xaml.cs">
       <DependentUpon>WinEditQlevel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Dialogs\WinEditStep.xaml.cs">
+      <DependentUpon>WinEditStep.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Dialogs\WinEditType.xaml.cs">
       <DependentUpon>WinEditType.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Dialogs\WinEditQlevel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Dialogs\WinEditStep.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

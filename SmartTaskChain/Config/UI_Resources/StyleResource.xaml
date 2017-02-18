@@ -302,4 +302,17 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    <ControlTemplate x:Key="EditProcedureButtonTemplate">
+        <Image Stretch="Fill" Source="/SmartTaskChain;component/config/images/Procedure.png"/>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsPressed" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>
