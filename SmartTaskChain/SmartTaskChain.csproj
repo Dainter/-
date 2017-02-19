@@ -284,6 +284,8 @@
     <Resource Include="Config\images\RemoveNode_small.png" />
     <Resource Include="Config\images\RemoveProperty.png" />
     <Resource Include="Config\images\RemoveProperty_small.png" />
+    <Resource Include="Config\images\StepDown.png" />
+    <Resource Include="Config\images\StepUp.png" />
     <Resource Include="Config\images\Tick_16x16.png" />
     <Resource Include="Config\images\Tick_32x32.png" />
   </ItemGroup>
@@ -357,6 +359,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Config\images\AddOrRemoveUser_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\AddProcedure.png" />
+    <Resource Include="Config\images\EditProcedure.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\images\DeleteProcedure.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

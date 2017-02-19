@@ -27,8 +27,7 @@ namespace SmartTaskChain.Model
 
         public string Name
         {
-            get
-            { return strName; }
+            get { return strName; }
         }
         public string Type
         {
@@ -185,5 +184,6 @@ namespace SmartTaskChain.Model
         {
             return Name;
         }
+
     }
 }

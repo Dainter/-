@@ -28,8 +28,8 @@ namespace SmartTaskChain.Model
 
         public string Description
         {
-            get
-            { return strDescription; }
+            set { strDescription = value; }
+            get { return strDescription; }
         }
 
         public bool IsBindingType

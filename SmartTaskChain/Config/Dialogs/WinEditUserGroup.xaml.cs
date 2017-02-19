@@ -255,7 +255,6 @@ namespace SmartTaskChain.Config.Dialogs
             return;
         }
 
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -35,13 +35,14 @@ namespace SmartTaskChain.Config.Dialogs
             ref MARGINS pMarInset);
         //Global Elements
         MainDataSet mainDataSet;
-        ProcedureStep curStep;
+        string strName, strGroup, strDescription;
+        bool bIsFeedback;
+        public StepStore newStep;
 
-        public WinEditStep(MainDataSet DataSet, string sName = null)
+        public WinEditStep(MainDataSet DataSet)
         {
             InitializeComponent();
             mainDataSet = DataSet;
-            LoadInfo(sName);
         }
 
         private void winEditStep_Loaded(object sender, RoutedEventArgs e)
@@ -55,11 +56,6 @@ namespace SmartTaskChain.Config.Dialogs
             this.Resources["TransparentForeColor"] = Properties.Settings.Default.ForeColor;
             this.Background = Brushes.Transparent;
             ExtendAeroGlass(this);
-            if (curStep == null)
-            {
-                IsCreateCheckBox.IsChecked = true;
-                TitleBox.Text = "Add Procedure Step";
-            }
         }
 
         private void ExtendAeroGlass(Window window)
@@ -105,35 +101,61 @@ namespace SmartTaskChain.Config.Dialogs
             }
         }
 
-        private void LoadInfo(string sName)
-        {
-            curStep = mainDataSet.GetStepItem(sName);
-            if (curStep == null)
-            {
-                return;
-            }
-            NewNameBox.Text = curStep.Name;
-            if(curStep.IsFeedback == false)
-            {
-                GroupComboBox.SelectedItem = curStep.HandleRole;
-            }
-            IsFeedbackCheckBox.IsChecked = curStep.IsFeedback;
-            DescriptionBox.Text = curStep.Description;
-        }
-
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             //合法性校验
-            //if (InputVarification() == false)
-            //{
-            //    return;
-            //}
-            //数据组织
-
+            if (InputVarification() == false)
+            {
+                return;
+            }
             //数据插入数据表
-            //SaveTask();
+            newStep = new StepStore(strName, strGroup, bIsFeedback, strDescription);
             this.DialogResult = true;
             this.Close();
+        }
+
+        private bool InputVarification()
+        {
+            const string strExtractPattern = @"[\u4E00-\u9FA5A-Za-z0-9_]+";  //匹配目标"Step:+Handler:"组合
+            MatchCollection matches;
+            Regex regObj;
+
+            //用户名
+            strName = NewNameBox.Text;
+            if (strName == "")
+            {
+                InputWarning.PlacementTarget = NewNameBox;
+                WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            regObj = new Regex(strExtractPattern);//正则表达式初始化，载入匹配模式
+            matches = regObj.Matches(strName);//正则表达式对分词结果进行匹配
+            if (matches.Count == 0)
+            {
+                InputWarning.PlacementTarget = NewNameBox;
+                WarningInfo.Text = "Name field only include Chinese, English, Underline characters.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            //是否是feedback步骤
+            bIsFeedback = (bool)IsFeedbackCheckBox.IsChecked;
+            if(bIsFeedback == false)
+            {
+                strGroup = GroupComboBox.Text;
+
+            }
+
+            //描述
+            strDescription = DescriptionBox.Text;
+            if (strDescription == "")
+            {
+                InputWarning.PlacementTarget = DescriptionBox;
+                WarningInfo.Text = "Please enter a non-empty value.";
+                InputWarning.IsOpen = true;
+                return false;
+            }
+            return true;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

@@ -58,18 +58,23 @@
             <CheckBox x:Name="IsCreateCheckBox" IsChecked="False" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}" Checked="IsCreateCheckBox_Checked" Unchecked="IsCreateCheckBox_Unchecked">New Procedure</CheckBox>
             <Label Content="TaskType:" Grid.Column="2" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
             <ComboBox x:Name="TypeComboBox" Grid.Column="3" HorizontalAlignment="Stretch" Height="Auto" Margin="3" Grid.Row="0" VerticalAlignment="Center" MinWidth="120" IsEditable="True" Visibility="{Binding IsChecked, Converter={StaticResource BoolVisiableConverter}, ElementName=IsCustomCheckBox}" />
-            <Label Content="Procedure Stpes:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center" Foreground="{DynamicResource TransparentForeColor}"/>
+            <Label Content="Procedure Stpes:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" >
-                <Button x:Name="AddStepButton" Template="{DynamicResource EditProcedureButtonTemplate}" Click="AddStepButton_Click"  />
-                <Button x:Name="EditStepButton" Template="{DynamicResource EditProcedureButtonTemplate}" Click="EditStepButton_Click" IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=StepsGird}"  />
+                <Button x:Name="MoveUpButton" Height="32" Width="32" Template="{DynamicResource StepUpButtonTemplate}"  IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=StepsGird}" Click="MoveUpButton_Click" />
+                <Label></Label>
+                <Button x:Name="MoveDownButton" Height="32" Width="32" Template="{DynamicResource StepDownButtonTemplate}"  IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=StepsGird}" Click="MoveDownButton_Click" />
+                <Label></Label>
+                <Button x:Name="AddStepButton" Height="24" Width="24" Template="{DynamicResource AddProcedureButtonTemplate}" Click="AddStepButton_Click"  IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=NameComboBox}" />
+                <Label></Label>
+                <Button x:Name="DelStepButton" Height="24" Width="24" Template="{DynamicResource DelProcedureButtonTemplate}" Click="DelStepButton_Click"  IsEnabled="{Binding SelectedIndex, Converter={StaticResource BoolSelectedConverter}, ElementName=StepsGird}"  />
+                <Label></Label>
             </StackPanel>
-            <DataGrid x:Name="StepsGird" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="3" MinHeight="100" Width="400" AutoGenerateColumns="False" CanUserSortColumns="False" >
+            <DataGrid x:Name="StepsGird" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="3" MinHeight="100" Width="400" AutoGenerateColumns="False" CanUserSortColumns="False"  IsEnabled="{Binding IsChecked, Converter={StaticResource BoolReverseConverter}, ElementName=IsCreateCheckBox}" CanUserReorderColumns="False" CanUserResizeRows="False" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Index, Mode=OneWay}"  Header="Index" />
-                    <DataGridTextColumn Binding="{Binding Path=Name, Mode=OneWay}" Header="Step Name" />
-                    <DataGridTextColumn Binding="{Binding Path=HandleRole, Mode=OneWay}" Header="Handle Group" />
-                    <DataGridCheckBoxColumn Binding="{Binding Path=IsFeedback, Mode=OneWay}" Header="Is Feedback" />
-                    <DataGridTextColumn Binding="{Binding Path=Description, Mode=OneWay}" Header="Description"/>
+                    <DataGridTextColumn Header="Step Name" Binding="{Binding Path=Name, Mode=OneWay}" />
+                    <DataGridComboBoxColumn Header="HandleGroup" TextBinding="{Binding Path=HandleGroup}"/>
+                    <DataGridCheckBoxColumn Header="Is Feedback" Binding="{Binding Path=IsFeedback}" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Path=Description}" />
                 </DataGrid.Columns>
             </DataGrid>
             <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="8" VerticalAlignment="Top" Foreground="{DynamicResource TransparentForeColor}"/>

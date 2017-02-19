@@ -452,6 +452,30 @@ namespace SmartTaskChain.Model
             }
         }
 
+        public void InsertNewProcedure(Procedure newProce)
+        {
+            if(newProce == null)
+            {
+                return;
+            }
+            if(this.GetProcedureItem(newProce.Name) == null)
+            {
+                procedureList.Add(newProce);
+            }
+        }
+
+        public void InsertNewStep(ProcedureStep newStep)
+        {
+            if (newStep == null)
+            {
+                return;
+            }
+            if (this.GetStepItem(newStep.Name) == null)
+            {
+                stepList.Add(newStep);
+            }
+        }
+
         #endregion
 
         #region UpdateList
