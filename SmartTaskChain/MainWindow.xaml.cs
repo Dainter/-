@@ -22,16 +22,6 @@ namespace SmartTaskChain
             InitializeComponent();
             SmartChainDataSet = MainDataSet.GetDataSet();
             IsShow = false;
-            //SmartChainDataSet.InsertAllData();
-            if (IsShow == true)
-            {
-                return;
-            }
-            IsShow = true;
-            ConfigWindow winConfig = new ConfigWindow(SmartChainDataSet);
-            winConfig.ShowDialog();
-            SmartChainDataSet.RefreshRuntimeDataSet();
-            IsShow = false;
         }
 
         private void DemoItem_Click(object sender, EventArgs e)

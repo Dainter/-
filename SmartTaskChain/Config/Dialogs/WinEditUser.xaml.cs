@@ -422,6 +422,7 @@ namespace SmartTaskChain.Config.Dialogs
             PasswordTextBox.Text = "";
             GroupComboBox.Text = "";
             GroupListBox.Items.Clear();
+            EmployeeTextBox.Text = "";
             PhoneTextBox.Text = "";
             CompanyTextBox.Text = "";
             UserComboBox.Text = "";

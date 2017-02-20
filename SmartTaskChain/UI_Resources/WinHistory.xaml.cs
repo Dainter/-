@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
+using System.Reflection;
+using Microsoft.Win32;
 using Microsoft.Windows.Controls.Ribbon;
+using Excel = Microsoft.Office.Interop.Excel ;
 using SmartTaskChain.Model;
 
 namespace SmartTaskChain.UI_Resources
@@ -226,5 +229,105 @@ namespace SmartTaskChain.UI_Resources
         }
 
         #endregion
+
+        private void ExportExcelButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog savedialog;
+
+            string strPath;
+
+            //初始化对话框，文件类型，过滤器，初始路径等设置
+            savedialog = new SaveFileDialog();
+            savedialog.Filter = "Excel 97-2003 Workbook (*.xls)|*.xls";
+            savedialog.FilterIndex = 0;
+            savedialog.RestoreDirectory = true;
+            //成功选取文件后，根据文件类型执行读取函数
+            if (savedialog.ShowDialog() != true)
+            {
+                return;
+            }
+            strPath = savedialog.FileName;
+
+            switch(GetExtension(strPath))
+            {
+                case ".xls":
+                    break;
+                default:
+                    ShowStatus("Invalid file name.");
+                    return;
+            }
+            if(SaveFile(strPath) == false)
+            {
+                ShowStatus("Save Failed.");
+                return;
+            }
+            ShowStatus("Save Success.");
+        }
+
+        private bool SaveFile(string sPath)
+        {
+            Excel.Application newFile = new Excel.Application();
+
+            try
+            {
+                newFile.Visible = false;
+
+                //Create Workbook
+                Excel.Workbook excelWB = newFile.Workbooks.Add(Type.Missing);
+
+                //Create Worksheet
+                Excel.Worksheet excelWS = (Excel.Worksheet)excelWB.Worksheets[1];
+
+                Excel.Range cells = null;
+                cells = excelWS.get_Range("A1", Type.Missing);
+
+
+                PropertyInfo[] pInfos;
+                int i = 0, j = 0;
+                pInfos = typeof(CompletedTask).GetProperties();
+                foreach (PropertyInfo pInfo in pInfos)
+                {
+                    cells.get_Offset(i, j).Cells.Value2 = pInfo.Name;
+                     j++;
+                }
+                foreach (object curTask in HistoryTaskGrid.Items)
+                {
+                    pInfos = curTask.GetType().GetProperties();
+                    i++;
+                    j = 0;
+                    foreach (PropertyInfo pInfo in pInfos)
+                    {
+                        cells.get_Offset(i, j).Cells.Value2 = pInfo.GetValue(curTask, null).ToString();
+                        j++;
+                    }
+                }
+
+                newFile.ActiveWorkbook.RefreshAll();
+                newFile.Workbooks.Application.ActiveWorkbook.RefreshAll();
+
+                excelWB.SaveAs(sPath, Excel.XlSaveAction.xlSaveChanges, Type.Missing, Type.Missing, false, false, Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing,Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                excelWB.Close(false, null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxResult result = MessageBox.Show(ex.Message);
+                return false;
+            }
+            finally
+            {
+                newFile.Quit();
+            }
+            return true;
+        }
+
+        private string GetExtension(string sPath)
+        {
+            int index = sPath.LastIndexOf(".");
+            if (index < 0)
+            {
+                return "";
+            }
+            return sPath.Substring(index);
+        }
     }
 }
