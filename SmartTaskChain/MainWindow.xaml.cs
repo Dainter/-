@@ -22,6 +22,7 @@ namespace SmartTaskChain
             InitializeComponent();
             SmartChainDataSet = MainDataSet.GetDataSet();
             IsShow = false;
+            DemoItem_Click(this, null);
         }
 
         private void DemoItem_Click(object sender, EventArgs e)
