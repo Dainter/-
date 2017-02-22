@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HostView
 {
-    public class Class1
+    public abstract class KPICaculaterHostView
     {
+        public abstract double CaculateKPI(List<string> workload);
     }
 }

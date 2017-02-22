@@ -76,6 +76,19 @@
                 <r:RibbonGroup Header="Export" >
                     <r:RibbonButton x:Name="ExportExcelButton" Label="Export to Excel" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAsExcel.png" ToolTipTitle="Export to Excel" Click="ExportExcelButton_Click" ></r:RibbonButton>
                 </r:RibbonGroup>
+                <r:RibbonGroup Header="Add-In" >
+                    <ComboBox x:Name="AddInList" MinWidth="100" Margin="3">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="3,3,0,8" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" ></TextBlock>
+                                    <TextBlock Text="{Binding Path=Publisher}" ></TextBlock>
+                                    <TextBlock Text="{Binding Path=Description}" FontSize="10" FontStyle="Italic"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
         <Border Grid.Row="1" Grid.Column="0" Margin="3" BorderBrush="SteelBlue" BorderThickness="1">
@@ -88,6 +101,8 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
+                    <Label >KPI:</Label>
+                    <Label Name="KPILabel" Content="0"></Label>
                     <Label >Record:</Label>
                     <Label Name="CountLabel" Content="{Binding Items.Count, ElementName=HistoryTaskGrid, Mode=OneWay}"></Label>
                 </StackPanel>

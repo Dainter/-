@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using Microsoft.Windows.Controls.Ribbon;
 using Excel = Microsoft.Office.Interop.Excel ;
 using SmartTaskChain.Model;
+using System.AddIn.Hosting;
 
 namespace SmartTaskChain.UI_Resources
 {
@@ -16,6 +17,7 @@ namespace SmartTaskChain.UI_Resources
     public partial class WinHistory :RibbonWindow
     {
         MainDataSet mainDataSet;
+        IList<AddInToken> tokens;
         DispatcherTimer StatusUpadteTimer;
         List<CompletedTask> CompleteTasks;
         List<string> SubmitterList;
@@ -34,6 +36,7 @@ namespace SmartTaskChain.UI_Resources
         private void winHistory_Loaded(object sender, RoutedEventArgs e)
         {
             StatusUpdateTimer_Init();
+            AddInsInit();
             OnArchiveDataUpdate(null, null);
         }
 
@@ -122,6 +125,7 @@ namespace SmartTaskChain.UI_Resources
             }
             condition.Submitter = e.AddedItems[0].ToString();
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void HandlerCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -133,6 +137,7 @@ namespace SmartTaskChain.UI_Resources
             }
             condition.Handler = e.AddedItems[0].ToString();
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void TypeCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -144,6 +149,7 @@ namespace SmartTaskChain.UI_Resources
             }
             condition.Type = e.AddedItems[0].ToString();
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void QlevelCombox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -155,6 +161,7 @@ namespace SmartTaskChain.UI_Resources
             }
             condition.QLevel = e.AddedItems[0].ToString();
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void StartDataPicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -174,6 +181,7 @@ namespace SmartTaskChain.UI_Resources
                                                                                 oldTime.Minute,
                                                                                 oldTime.Second);
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void EndDataPicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -193,6 +201,7 @@ namespace SmartTaskChain.UI_Resources
                                                                                 oldTime.Minute,
                                                                                 oldTime.Second);
             HistoryTaskGrid.ItemsSource = CompleteTasks.FindAll(condition.MatchRule);
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private TaskFilter BuildFilterCondition()
@@ -228,12 +237,40 @@ namespace SmartTaskChain.UI_Resources
             return condition;
         }
 
+        private void On_HistoryTaskGrid_SourceUpdated()
+        {
+            HostView.KPICaculaterHostView addin = tokens[AddInList.SelectedIndex].Activate<HostView.KPICaculaterHostView>(AddInSecurityLevel.FullTrust);
+            List<string> workload = new List<string>();
+
+            foreach (CompletedTask curTask in HistoryTaskGrid.ItemsSource)
+            {
+                workload.Add(curTask.QLevel);
+            }
+
+            KPILabel.Content = addin.CaculateKPI(workload);
+            return;
+        }
+
+        private void AddInsInit()
+        {
+            string strAddInPath = Environment.CurrentDirectory;
+
+            AddInStore.Update(strAddInPath);
+
+            tokens = AddInStore.FindAddIns(typeof(HostView.KPICaculaterHostView), strAddInPath);
+            AddInList.ItemsSource = tokens;
+            if(tokens.Count > 0)
+            {
+                AddInList.SelectedIndex = 0;
+            }
+        }
+
+
         #endregion
 
         private void ExportExcelButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog savedialog;
-
             string strPath;
 
             //初始化对话框，文件类型，过滤器，初始路径等设置
@@ -329,5 +366,7 @@ namespace SmartTaskChain.UI_Resources
             }
             return sPath.Substring(index);
         }
+
+        
     }
 }

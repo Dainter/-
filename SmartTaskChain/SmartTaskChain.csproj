@@ -43,6 +43,7 @@
       <HintPath>C:\Program Files (x86)\Microsoft Ribbon for WPF\V4.0\RibbonControlsLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.AddIn" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -223,6 +224,11 @@
     <ProjectReference Include="..\GraphDB\GraphDB.csproj">
       <Project>{fe3ff803-3314-4205-b03c-3f31c187bcd6}</Project>
       <Name>GraphDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HostView\HostView.csproj">
+      <Project>{83ba9308-59fd-4ae1-a921-1fe0b00b447f}</Project>
+      <Name>HostView</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
