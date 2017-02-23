@@ -68,6 +68,7 @@ namespace SmartTaskChain.Config
             gdb = new GraphDataBase();
             gdb.OpenDataBase(strDBpath, ref err);
             FillNodeList();
+            isModified = false;
             isDbAvailable = true;
         }
 
@@ -271,6 +272,7 @@ namespace SmartTaskChain.Config
                 ShowStatus("Save Failed.");
                 return;
             }
+            isModified = false;
             ShowStatus("Save Success.");
         }
         //保存文件
