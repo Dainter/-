@@ -37,6 +37,7 @@ namespace SmartTaskChain.Config
         GraphDataBase gdb;
         MainDataSet DataSet;
         bool isDbAvailable = false;
+        bool isModified = false;
         DispatcherTimer StatusUpadteTimer;
         int intNodeIndex = -1;
         int intPointNodeIndex = -1;
@@ -48,6 +49,8 @@ namespace SmartTaskChain.Config
         {
             InitializeComponent();
             DataSet = dataset;
+            //订阅mainDataSet的数据更新消息
+            DataSet.RuntimeDataUpdated += OnRuntimeDataUpdate;
         }
 
         private void RibbonWindow_Loaded(object sender, RoutedEventArgs e)
@@ -360,6 +363,10 @@ namespace SmartTaskChain.Config
         {
             MessageBoxResult choice;
             ErrorCode err = ErrorCode.NoError;
+            if(isModified == false)
+            {
+                return;
+            }
             if (isDbAvailable == true)
             {
                 choice = MessageBox.Show("Save current graph database to file？", "警告", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
@@ -428,6 +435,11 @@ namespace SmartTaskChain.Config
             {
                 return;
             }
+            Refresh();
+        }
+
+        private void OnRuntimeDataUpdate(object sender, MainDataSet.RuntimeDataUpdateEvenArgs e)
+        {
             Refresh();
         }
 

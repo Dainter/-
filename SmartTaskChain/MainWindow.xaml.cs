@@ -39,7 +39,7 @@ namespace SmartTaskChain
 
         private void ConfigItem_Click(object sender, EventArgs e)
         {
-            if(IsShow == true)
+            if (IsShow == true)
             {
                 return;
             }

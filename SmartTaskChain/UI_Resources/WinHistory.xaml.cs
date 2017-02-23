@@ -45,6 +45,7 @@ namespace SmartTaskChain.UI_Resources
             CompleteTasks = mainDataSet.CompletedTasks;
             HistoryTaskGrid.ItemsSource = CompleteTasks;
             ComboxSourceUpdate();
+            On_HistoryTaskGrid_SourceUpdated();
         }
 
         private void ComboxSourceUpdate()
