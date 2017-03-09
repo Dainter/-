@@ -75,6 +75,7 @@
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Export" >
                     <r:RibbonButton x:Name="ExportExcelButton" Label="Export to Excel" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAsExcel.png" ToolTipTitle="Export to Excel" Click="ExportExcelButton_Click" ></r:RibbonButton>
+                    <r:RibbonButton x:Name="ExportXMLButton" Label="Export to XML" LargeImageSource="/SmartTaskChain;component/config/images/FileSaveAsXML.png" ToolTipTitle="Export to XML" Click="ExportXMLButton_Click" ></r:RibbonButton>
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Add-In" >
                     <ComboBox x:Name="AddInList" MinWidth="100" Margin="3">

@@ -368,6 +368,11 @@ namespace SmartTaskChain.UI_Resources
             return sPath.Substring(index);
         }
 
-        
+        delegate TResult GeneralMethod<in T, out TResult>(T arg);
+
+        private void ExportXMLButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
